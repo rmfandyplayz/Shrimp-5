@@ -8,8 +8,8 @@ public class AbilityDefinition : ScriptableObject
 
     public string iconId;
 
-    public AbilityTrigger trigger;   // OnAttack, OnSwitchIn, etc.
-    public StatusDefinition effect;                // simple modifier
+    public AbilityTrigger trigger; 
+    public StatusDefinition effect;               
 
     [TextArea]
     public string description;

@@ -4,12 +4,12 @@ using UnityEngine;
 public class ShrimpDefinition : ScriptableObject
 {
     [Header("Identity")]
-    public string shrimapId;           // unique internal ID
-    public string displayName;        // shown in UI
+    public string shrimapId;           
+    public string displayName;       
 
     [Header("UI & Animation")]
-    public Sprite portrait;           // HUD portrait
-    public string attackAnimationId;  // single attack animation
+    public Sprite portrait;           
+    public string attackAnimationId;  
     public int maxHP;
     public int baseSpeed;
     public int baseAttack;
