@@ -6,7 +6,7 @@ public class MoveDefinition : ScriptableObject
     public string moveId;
     public string displayName;
 
-    public string iconId;
+    public Sprite icon;
     public int power;              
     public MoveTarget target;      
 

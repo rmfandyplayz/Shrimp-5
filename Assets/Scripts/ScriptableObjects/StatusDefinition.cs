@@ -5,11 +5,11 @@ public class StatusDefinition : ScriptableObject
 {
     public string statusId;
     public string displayName;
-    public string iconId;
+    public Sprite icon;
     public StatAffected statChanged;
-    public TypeOfAffect type;
-    public int valueChange;
-    public float percentChange;
+    public TypeOfAffect affectType;
+    public TypeOfBuff buffType;
+    public double valueChange;
     public bool permanant;
     public int turnDuration;
     [TextArea]
@@ -23,4 +23,9 @@ public enum StatAffected
 public enum TypeOfAffect
 {
     Positive, Negative
+}
+
+public enum TypeOfBuff
+{
+    percent, value
 }
