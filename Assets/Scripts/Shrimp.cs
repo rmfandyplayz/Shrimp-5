@@ -1,10 +1,18 @@
 using UnityEngine;
 
-public class ShrimpStats : MonoBehaviour
+public class Shrimp : MonoBehaviour
 {
     [SerializeField] private int hpStat;
     [SerializeField] private int speedStat;
     [SerializeField] private int attackStat;
+    private IAbility ability;
+    private IMoves moves;
+
+    void Start()
+    {
+        ability = GetComponent<IAbility>();
+        moves = GetComponent<IMoves>();
+    }
 
     public void ChangeHP(int hpChange)
     {
