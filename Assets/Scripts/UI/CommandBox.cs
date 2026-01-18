@@ -9,6 +9,7 @@ public class CommandBox : MonoBehaviour
 {
     [Header("references")]
     [SerializeField] TextMeshProUGUI promptText; // example: "your move!"
+    [SerializeField] TextMeshProUGUI flavorText;
     [SerializeField] RectTransform moveButtonContainer;
     [SerializeField] MoveButton moveButtonPrefab; // prefab to duplicate and change the icon & text
 
@@ -17,31 +18,45 @@ public class CommandBox : MonoBehaviour
     public void Render(BattleSnapshot snapshot)
     {
         promptText.text = snapshot.promptText;
-
         List<MoveData> moves = snapshot.moves;
+        bool isCutscene = snapshot.battleMode == BattleUIMode.ResolvingAction; // whether to show flavor text, or whatever of that sort
 
-        //ensure enough buttons are there
-        while(spawnedButtons.Count < moves.Count)
+        if (isCutscene) // show text
         {
-            MoveButton newButton = Instantiate(moveButtonPrefab, moveButtonContainer);
-            spawnedButtons.Add(newButton);
+            promptText.text = snapshot.promptText;
+            flavorText.text = snapshot.flavorText;
+            moveButtonContainer.gameObject.SetActive(false);
         }
-
-        for(int i = 0; i < spawnedButtons.Count; i++ )
+        else // show buttons
         {
-            if(i < moves.Count)
-            {
-                spawnedButtons[i].gameObject.SetActive(true);
-                bool isSelected = i == snapshot.selectedIndex;
-                spawnedButtons[i].Configure(moves[i], isSelected);
-            }
-            else // hide extra buttons
-            {
-                spawnedButtons[i].gameObject.SetActive(false);
-            }
-        }
+            promptText.text = snapshot.promptText;
+            flavorText.gameObject.SetActive(false);
+            moveButtonContainer.gameObject.SetActive(true);
 
-        SetSelection(snapshot.selectedIndex);
+            //render buttons vvv
+
+            while (spawnedButtons.Count < moves.Count)
+            {
+                MoveButton newButton = Instantiate(moveButtonPrefab, moveButtonContainer);
+                spawnedButtons.Add(newButton);
+            }
+
+            for(int i = 0; i < spawnedButtons.Count; i++)
+            {
+                if(i < moves.Count)
+                {
+                    spawnedButtons[i].gameObject.SetActive(true);
+                    bool isSelected = i == snapshot.selectedIndex;
+                    spawnedButtons[i].Configure(moves[i], isSelected);
+                }
+                else // hide extra buttons
+                {
+                    spawnedButtons[i].gameObject.SetActive(false);
+                }
+            }
+
+            SetSelection(snapshot.selectedIndex);
+        }
     }
 
     public void SetSelection(int index)

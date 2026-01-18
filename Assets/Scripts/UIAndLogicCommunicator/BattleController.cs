@@ -63,7 +63,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         UpdateUI();
     }
 
-    public void Inspect(int index)
+    public void Secondary(int index)
     {
         currentSnapshot.battleMode = BattleUIMode.InspectingMove;
         UpdateUI();

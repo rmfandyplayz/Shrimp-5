@@ -59,7 +59,7 @@ public class BattleUIInput : MonoBehaviour
         // inspect
         if (gameControls.Battle.Inspect_Secondary.WasPerformedThisFrame())
         {
-            battleController.Inspect(cursorIndex);
+            battleController.Secondary(cursorIndex);
         }
     }
 

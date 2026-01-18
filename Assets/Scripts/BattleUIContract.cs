@@ -136,10 +136,13 @@ namespace Shrimp5.UIContract
 
     public interface IBattleUIActions
     {
-        void Confirm(int index); // confirm a selection (i.e. use a move)
-        void Inspect(int index);
-        void Back();
+        void Confirm(int index); // confirm a selection (i.e. use a move) (z button)
+        void Secondary(int index); // the c button, which does different things under different contexts
+        void Back(); // x button
         void PauseToggle();
         void SetTooltipTarget(string tooltipID);
+
+        void DialogueConfirm(); // go to the next dialogue after the current one finished its animation (Z)
+        void DialogueSkipAll(); // skip all queued dialogue animations and go straight to the next event (C)
     }
 }
