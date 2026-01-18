@@ -12,6 +12,8 @@ public class UnitFrame : MonoBehaviour
     [SerializeField] Image hpBarFill;
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] TextMeshProUGUI hpText;
+    [SerializeField] TextMeshProUGUI attackText;
+    [SerializeField] TextMeshProUGUI attackSpeedText;
     [SerializeField] RectTransform statusIconContainer; // horizontal layout group for these icons
 
     // meant to be called from the manager
@@ -21,7 +23,10 @@ public class UnitFrame : MonoBehaviour
 
         hpBarFill.fillAmount = (float)hudData.hp / hudData.maxHp;
 
-        hpText.text = $"{hudData.hp} / {hudData.maxHp} HP";
+        hpText.text = $"{hudData.hp} / {hudData.maxHp}";
+
+        attackSpeedText.text = $"{hudData.attackSpeed}";
+        attackText.text = $"{hudData.attack}";
 
         portraitImage.sprite = SpriteResolver.Get(hudData.portraitIconID);
     }

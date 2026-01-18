@@ -40,5 +40,19 @@ public class CommandBox : MonoBehaviour
                 spawnedButtons[i].gameObject.SetActive(false);
             }
         }
+
+        SetSelection(snapshot.selectedIndex);
+    }
+
+    public void SetSelection(int index)
+    {
+        for(int i = 0; i < spawnedButtons.Count; i++)
+        {
+            if (!spawnedButtons[i].gameObject.activeSelf)
+                continue;
+
+            bool isSelected = i == index;
+            spawnedButtons[i].GetSelectionHighlight().SetActive(isSelected);
+        }
     }
 }

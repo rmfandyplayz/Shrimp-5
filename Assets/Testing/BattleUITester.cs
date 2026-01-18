@@ -40,8 +40,8 @@ public class BattleUITester : MonoBehaviour
         };
 
         // we need dummy data for players too so the top bars don't crash
-        snapshot.playerInfoData = new HudData { teammateName = "Cool Shrimp", hp = 100, maxHp = 100, portraitIconID = "shrimp_happy" };
-        snapshot.enemyInfoData = new HudData { teammateName = "Evil Crab", hp = 80, maxHp = 80, portraitIconID = "crab_angry" };
+        snapshot.playerInfoData = new HudData { teammateName = "obama yaoi", hp = 23, maxHp = 100, portraitIconID = "shrimp_happy", attack = 69, attackSpeed = 67 };
+        snapshot.enemyInfoData = new HudData { teammateName = "trump x biden yaoi", hp = 70, maxHp = 80, portraitIconID = "crab_angry", attack = 14, attackSpeed = 26};
 
         snapshot.tooltipData = new TooltipData { isVisible = false };
 

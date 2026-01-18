@@ -32,4 +32,10 @@ public class MoveButton : MonoBehaviour
         //    iconImage.color = Color.gray;
         //}
     }
+
+
+    public GameObject GetSelectionHighlight()
+    {
+        return selectionHighlight; 
+    }
 }
