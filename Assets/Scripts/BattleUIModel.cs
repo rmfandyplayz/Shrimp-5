@@ -25,4 +25,10 @@ public class BattleUIModel : MonoBehaviour, IBattleUIModel
         return snapshot;
     }
 
+    public void SetSnapshot(BattleSnapshot newSnapshot)
+    {
+        this.snapshot = newSnapshot;
+        Changed?.Invoke();
+    }
+
 }
