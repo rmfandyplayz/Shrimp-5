@@ -1,16 +1,28 @@
+using System;
+using System.Collections.Generic;
+using Shrimp5.UIContract;
 using UnityEngine;
 
-public class BattleUiModel : MonoBehaviour
+public class BattleUIModel : MonoBehaviour, IBattleUIModel
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public event Action Changed;
+    private BattleSnapshot snapshot;
+
     void Start()
     {
-        
+        snapshot = new BattleSnapshot();
+        snapshot.battleMode = BattleUIMode.ChoosingAction;
     }
 
-    // Update is called once per frame
-    void Update()
+    // unused for now
+    public List<BattleUIEvent> DrainUIEvents()
     {
-        
+        return new List<BattleUIEvent>();
     }
+
+    public BattleSnapshot GetSnapshot()
+    {
+        return snapshot;
+    }
+
 }

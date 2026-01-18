@@ -1,16 +1,30 @@
+using Shrimp5.UIContract;
 using UnityEngine;
 
-public class BattleController : MonoBehaviour
+public class BattleController : MonoBehaviour, IBattleUIActions
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Back()
     {
-        
+        throw new System.NotImplementedException();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Confirm(int index)
     {
-        
+        throw new System.NotImplementedException();
+    }
+
+    public void Inspect(int index)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void PauseToggle()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void SetTooltipTarget(string tooltipID)
+    {
+        throw new System.NotImplementedException();
     }
 }
