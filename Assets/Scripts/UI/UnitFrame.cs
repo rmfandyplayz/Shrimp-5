@@ -24,10 +24,5 @@ public class UnitFrame : MonoBehaviour
         hpText.text = $"{hudData.hp} / {hudData.maxHp} HP";
 
         portraitImage.sprite = SpriteResolver.Get(hudData.portraitIconID);
-
-        if(portraitImage.sprite == null)
-        {
-            portraitImage.sprite = SpriteResolver.Get("test.placeholder.1"); // funny placeholder image
-        }
     }
 }
