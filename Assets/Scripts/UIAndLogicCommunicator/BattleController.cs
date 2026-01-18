@@ -240,6 +240,16 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     {
         
     }
+
+    public void DialogueConfirm()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DialogueSkipAll()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public enum ActionType
