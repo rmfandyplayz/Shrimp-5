@@ -66,6 +66,7 @@ namespace Shrimp5.UIContract
     {
         public BattleUIMode battleMode;
         public string promptText; // i.e. "your move!", "pick a shrimp"
+        public string flavorText; // i.e. "you used your mother, dealing 20 damage to the enemy, and healing yourself for 50."
 
         public int selectedIndex;
 
