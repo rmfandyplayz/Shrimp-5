@@ -3,28 +3,76 @@ using UnityEngine;
 
 public class BattleController : MonoBehaviour, IBattleUIActions
 {
+    [Header("Refs")]
+    [SerializeField] private BattleUIModel uiModel;
+    private BattleSnapshot currentSnapshot;
+    void Start()
+    {
+        currentSnapshot = new BattleSnapshot();
+        currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+        UpdateUI();
+    }
+    private void UpdateUI()
+    {
+        uiModel.SetSnapshot(currentSnapshot);
+    }
     public void Back()
     {
-        throw new System.NotImplementedException();
+        if (currentSnapshot.battleMode == BattleUIMode.InspectingMove)
+        {
+            currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+        }
+        UpdateUI();
     }
 
     public void Confirm(int index)
     {
-        throw new System.NotImplementedException();
+        if (currentSnapshot.battleMode == BattleUIMode.ChoosingAction)
+        {
+            if (index == 3)
+            {
+                currentSnapshot.battleMode = BattleUIMode.ChoosingSwitchTeammate;
+            }
+            else
+            {
+            currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
+            }
+        }
+        else if (currentSnapshot.battleMode == BattleUIMode.ChoosingSwitchTeammate)
+        {
+            if (index == 3)
+            {
+                currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+            }
+            else
+            {
+            currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
+            }
+        }
+        UpdateUI();
     }
 
     public void Inspect(int index)
     {
-        throw new System.NotImplementedException();
+        currentSnapshot.battleMode = BattleUIMode.InspectingMove;
+        UpdateUI();
     }
 
     public void PauseToggle()
     {
-        throw new System.NotImplementedException();
+        if (currentSnapshot.battleMode == BattleUIMode.Paused)
+        {
+            currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+        } 
+        else
+        {
+            currentSnapshot.battleMode = BattleUIMode.Paused;
+        }
+        UpdateUI();
     }
 
     public void SetTooltipTarget(string tooltipID)
     {
-        throw new System.NotImplementedException();
+        UpdateUI();
     }
 }
