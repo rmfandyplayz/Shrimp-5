@@ -7,7 +7,7 @@ public class StatusDefinition : ScriptableObject
     public string displayName;
     public Sprite icon;
     public StatAffected statChanged;
-    public TypeOfAffect affectType;
+    public TypeOfEffect effectType;
     public TypeOfBuff buffType;
     public double valueChange;
     public bool permanant;
@@ -20,7 +20,7 @@ public enum StatAffected
     HP, Attack, Speed
 }
 
-public enum TypeOfAffect
+public enum TypeOfEffect
 {
     Positive, Negative
 }
