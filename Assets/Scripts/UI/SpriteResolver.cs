@@ -31,7 +31,7 @@ public static class SpriteResolver
         {
             // warning
             Debug.LogWarning($"can't find sprite with id: {spriteID} at base path {BASE_PATH}{spriteID}. returning placeholder image instead!");
-            return Resources.Load<Sprite>(BASE_PATH + "test.placeholder.1");
+            return Resources.Load<Sprite>(BASE_PATH + "test.placeholder");
         }
     }
 
