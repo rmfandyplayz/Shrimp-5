@@ -145,9 +145,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                 enemyTeam[0].currentHP -= damage;
                 if (move.hasEffect)
                 {
-                    AppliedStatus newStatus = new AppliedStatus();
-                    newStatus.status = move.effect;
-                    newStatus.remainingTurns = move.effect.turnDuration;
+                    AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
                     enemyTeam[0].statuses.Add(newStatus);
                 }
             }
