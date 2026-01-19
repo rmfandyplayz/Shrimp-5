@@ -12,6 +12,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     [SerializeField] private List<ShrimpState> playerTeam;
     [SerializeField] private List<ShrimpState> enemyTeam;
     private System.Random rng;
+    private ShrimpState playerActiveShrimp;
+    private ShrimpState enemyActiveShrimp;
     void Start()
     {
         currentSnapshot = new BattleSnapshot();
@@ -19,6 +21,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         playerTeam = new List<ShrimpState>();
         enemyTeam = new List<ShrimpState>();
         rng = new System.Random();
+        playerActiveShrimp = playerTeam[0];
+        enemyActiveShrimp = enemyTeam[0]; 
         UpdateUI();
     }
     private void UpdateUI()
@@ -125,8 +129,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             }
         }
         }
-
-        currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
     }
 
     private void PlayerAttack(int index)
@@ -154,9 +156,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                 playerTeam[0].currentHP -= damage;
                 if (move.hasEffect)
                 {
-                    AppliedStatus newStatus = new AppliedStatus();
-                    newStatus.status = move.effect;
-                    newStatus.remainingTurns = move.effect.turnDuration;
+                    AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
                     playerTeam[0].statuses.Add(newStatus);
                 }
             }
@@ -213,9 +213,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                 playerTeam[0].currentHP -= damage;
                 if (move.hasEffect)
                 {
-                    AppliedStatus newStatus = new AppliedStatus();
-                    newStatus.status = move.effect;
-                    newStatus.remainingTurns = move.effect.turnDuration;
+                    AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
                     playerTeam[0].statuses.Add(newStatus);
                 }
             }
@@ -224,9 +222,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                 enemyTeam[0].currentHP -= damage;
                 if (move.hasEffect)
                 {
-                    AppliedStatus newStatus = new AppliedStatus();
-                    newStatus.status = move.effect;
-                    newStatus.remainingTurns = move.effect.turnDuration;
+                    AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
                     enemyTeam[0].statuses.Add(newStatus);
                 }
             }
