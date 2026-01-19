@@ -34,7 +34,7 @@ public class ShrimpState : MonoBehaviour
 
     public int GetSpeed()
     {
-        int totalSpeed = definition.baseAttack;
+        int totalSpeed = definition.baseSpeed;
         foreach (AppliedStatus status in statuses)
         {
             if(status.status.statChanged == StatAffected.Speed)
@@ -54,7 +54,7 @@ public class ShrimpState : MonoBehaviour
 
     public int GetHP()
     {
-        int totalHP = definition.baseAttack;
+        int totalHP = currentHP;
         foreach (AppliedStatus status in statuses)
         {
             if(status.status.statChanged == StatAffected.HP)
