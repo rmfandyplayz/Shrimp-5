@@ -1,5 +1,6 @@
-using UnityEngine;
 using Shrimp5.UIContract;
+using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 // written by andy
 // communicates with game logic on what input has been taken
@@ -20,46 +21,75 @@ public class BattleUIInput : MonoBehaviour
     }
 
     // apparently i gotta do this
-    private void OnEnable() => gameControls.Battle.Enable();
-    private void OnDisable() => gameControls.Battle.Disable();
+    private void OnEnable()
+    {
+        gameControls.Battle.Enable();
+    }
+    private void OnDisable()
+    {
+        gameControls.Battle.Disable();
+    }
+
 
     private void Update()
     {
         BattleSnapshot snapshot = battleModel.GetSnapshot();
 
-        // TODO: potentially different things we can do for pause n stuff
-        if(snapshot.battleMode != BattleUIMode.ChoosingAction && 
-            snapshot.battleMode != BattleUIMode.ChoosingSwitchTeammate)
+        if(snapshot.battleMode == BattleUIMode.ResolvingAction)
         {
-            return;
+            // z key
+            if (gameControls.Battle.Confirm.WasPerformedThisFrame())
+            {
+                if(!commandBox.IsTyping())
+                {
+                    battleController.DialogueConfirm();
+                }
+            }
+
+            // x key
+            if (gameControls.Battle.Back.WasPerformedThisFrame())
+            {
+                commandBox.SkipTyping();
+            }
+
+            // c key
+            if (gameControls.Battle.Inspect_Secondary.WasPerformedThisFrame())
+            {
+                battleController.DialogueSkipAll();
+            }
         }
 
-        // navigation
-        if (gameControls.Battle.NavRight.WasPerformedThisFrame())
-        {
-            MoveSelectionCursor(1, snapshot.moves.Count);
-        }
-        else if (gameControls.Battle.NavLeft.WasPerformedThisFrame())
-        {
-            MoveSelectionCursor(-1, snapshot.moves.Count);
-        }
 
-        // confirm
-        if (gameControls.Battle.Confirm.WasPerformedThisFrame())
+        if (snapshot.battleMode == BattleUIMode.ChoosingAction &&
+            snapshot.battleMode == BattleUIMode.ChoosingSwitchTeammate)
         {
-            battleController.Confirm(cursorIndex);
-        }
+            // navigation
+            if (gameControls.Battle.NavRight.WasPerformedThisFrame())
+            {
+                MoveSelectionCursor(1, snapshot.moves.Count);
+            }
+            else if (gameControls.Battle.NavLeft.WasPerformedThisFrame())
+            {
+                MoveSelectionCursor(-1, snapshot.moves.Count);
+            }
 
-        // back
-        if (gameControls.Battle.Confirm.WasPerformedThisFrame())
-        {
-            battleController.Back();
-        }
+            // confirm
+            if (gameControls.Battle.Confirm.WasPerformedThisFrame())
+            {
+                battleController.Confirm(cursorIndex);
+            }
 
-        // inspect
-        if (gameControls.Battle.Inspect_Secondary.WasPerformedThisFrame())
-        {
-            battleController.Secondary(cursorIndex);
+            // back
+            if (gameControls.Battle.Confirm.WasPerformedThisFrame())
+            {
+                battleController.Back();
+            }
+
+            // inspect
+            if (gameControls.Battle.Inspect_Secondary.WasPerformedThisFrame())
+            {
+                battleController.Secondary(cursorIndex);
+            }
         }
     }
 

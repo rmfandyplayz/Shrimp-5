@@ -28,7 +28,9 @@ namespace Shrimp5.UIContract
         public int attackSpeed;
 
         public string portraitIconID;  // i.e. "stallion_shrimp"
-        public List<string> statusIconIDs; // i.e. ["weaken", "slow"]
+        public List<List<string>> passives; // contains a list of status effects & abilites. as in, their icons and descriptions
+                                            // example: [ ["icons.statusEffects.weaken", "Weaken: Enemy's attack has been reduced by {cumulativeWeakenAmount}"],
+                                            // ["icons.statusEffects.slow", "Slow: Enemy's attack speed has been reduced by {cumulativeSlowAmount}"]]
     }
 
     // these count as one slot in the bottom row
