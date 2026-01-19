@@ -4,7 +4,7 @@ using UnityEngine;
 public class ShrimpDefinition : ScriptableObject
 {
     [Header("Identity")]
-    public string shrimapId;           
+    public string shrimpId;           
     public string displayName;       
 
     [Header("UI & Animation")]
