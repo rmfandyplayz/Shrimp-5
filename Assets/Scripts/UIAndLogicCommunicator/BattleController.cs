@@ -18,20 +18,24 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     private ShrimpState enemyActiveShrimp;
     void Start()
     {
+        // creates the snapshot and automatically sets the battle mode to choosing action
         currentSnapshot = new BattleSnapshot();
         currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
 
+        // creates the lists used for the actual battle logic but not UI
         playerTeam = new List<ShrimpState>();
         enemyTeam = new List<ShrimpState>();
         rng = new System.Random();
 
+        // sets the active shrimp
         playerActiveShrimp = playerTeam[0];
         enemyActiveShrimp = enemyTeam[0]; 
 
-        SetupPlayerHudData(); // player data is implemented
-        SetupEnemyHudData(); // enemy data is implemented
+        // Calls the methods to set the player and enemy HubData's to the active shrimp
+        SetupPlayerHudData(); 
+        SetupEnemyHudData(); 
 
-        // moves are implemented
+        // adds all of the active shrimps move data to the MoveData list for the UI
         for (int i = 0; i < playerActiveShrimp.definition.moves.Length; i++)
         {
             MoveData currentMove = new MoveData();
@@ -41,14 +45,17 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].description;
             currentSnapshot.moves.Add(currentMove); 
         }
-        
-        currentSnapshot.inspectData.iconID = currentSnapshot.moves[currentSnapshot.selectedIndex].iconID;
-        currentSnapshot.inspectData.title = currentSnapshot.moves[currentSnapshot.selectedIndex].moveName;
-        currentSnapshot.inspectData.body = currentSnapshot.moves[currentSnapshot.selectedIndex].moveShortDescription;
 
+        // Sets the inspect data to the current Move they are on
+        currentSnapshot.inspectData.iconID = currentSnapshot.moves[0].iconID;
+        currentSnapshot.inspectData.title = currentSnapshot.moves[0].moveName;
+        currentSnapshot.inspectData.body = currentSnapshot.moves[0].moveShortDescription;
+
+        //Removes the active shrimp from the list used to store the inactive ones
         playerTeam.RemoveAt(0);
         enemyTeam.RemoveAt(0);
 
+        // Adds the data for the shrimp in the back to the moves list
         for (int i = 0; i < playerTeam.Count; i++)
         {
             MoveData currentShrimp = new MoveData();
@@ -59,9 +66,13 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             currentSnapshot.moves.Add(currentShrimp);
         }
         
+        // updates the UI with starting data
         UpdateUI();
     }
 
+    /// <summary>
+    /// Sets the player info data to the data of the current active shrimp when called
+    /// </summary>
     private void SetupPlayerHudData()
     {
         currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack(); 
@@ -77,6 +88,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         currentSnapshot.playerInfoData.passives.Add(playerAbilityInfo);
     }
 
+    /// <summary>
+    /// sets the enemy info data to the data of the active enemy shrimp when called
+    /// </summary>
     private void SetupEnemyHudData()
     {
         currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
@@ -92,6 +106,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         currentSnapshot.enemyInfoData.passives.Add(enemyAbilityInfo);
     }
     
+    /// <summary>
+    /// Whenever a shrimp dies or is swapped out, resets the switch options to put it in the moves list
+    /// </summary>
     private void ResetPlayerSwitchOptions()
     {
        for(int i = 0; i < playerTeam.Count; i++)
@@ -105,6 +122,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         }
     }
 
+    /// <summary>
+    /// sets the moves to the moves of the active shrimp for the ui
+    /// </summary>
     private void ResetPlayerMoveOptions()
     {
         for (int i = 0; i < playerActiveShrimp.definition.moves.Length; i++)
@@ -118,10 +138,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         }
     }
 
+    /// <summary>
+    /// sends the current snapshot to the UI
+    /// </summary>
     private void UpdateUI()
     {
         uiModel.SetSnapshot(currentSnapshot);
     }
+    //exits out of inspecting to go back to choosing an action
     public void Back()
     {
         if (currentSnapshot.battleMode == BattleUIMode.InspectingMove)
@@ -131,6 +155,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         UpdateUI();
     }
 
+    // Confirms if the player chooses a move or switches, and then runs the turn
     public void Confirm(int index)
     {
         if (currentSnapshot.battleMode == BattleUIMode.ChoosingAction)
@@ -164,12 +189,17 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         UpdateUI();
     }
 
+    // Represents when a player starts to inspect something
     public void Secondary(int index)
     {
-        currentSnapshot.battleMode = BattleUIMode.InspectingMove;
-        UpdateUI();
+        if ((currentSnapshot.battleMode != BattleUIMode.Paused) && (currentSnapshot.battleMode != BattleUIMode.ResolvingAction))
+        {
+            currentSnapshot.battleMode = BattleUIMode.InspectingMove;
+            UpdateUI();
+        }
     }
 
+    // toggles pausing and unpausing the game
     public void PauseToggle()
     {
         if (currentSnapshot.battleMode == BattleUIMode.Paused)
@@ -183,13 +213,20 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         UpdateUI();
     }
 
+    // sets the target for a tooltip
     public void SetTooltipTarget(string tooltipID)
     {
         UpdateUI();
     }
     
+    /// <summary>
+    /// simulates a turn, deciding what actions take place in what order
+    /// </summary>
+    /// <param name="index"></param> The index of the move that the player used
+    /// <param name="action"></param> whether the player is switching or attacking
     public void RunTurn(int index, ActionType action)
     {
+        // if the player is switching it swaps what is active and then has the enemy choose an attack
         if (action == ActionType.Switching)
         {
             ShrimpState temp = playerActiveShrimp;
@@ -199,7 +236,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             ResetPlayerSwitchOptions();
             ResetPlayerMoveOptions();
             UpdateUI();
+            EnemyAttack(EnemyMoveSelection(index));
         }
+        // if the player is attacking it checks to see who is faster and gets to attack first
         else
         {
         int playerSpeed = playerActiveShrimp.GetSpeed();
@@ -236,10 +275,12 @@ public class BattleController : MonoBehaviour, IBattleUIActions
 
     private void PlayerAttack(int index)
     {
-        if (playerActiveShrimp.currentHP <= 0)
+        // kills the shrimp if its HP is below zero
+        if (playerActiveShrimp.GetHP() <= 0)
         {
             KillPlayerShrimp();
         }
+        // calculates the damage the shrimp does and deals it to the target and applies any statuses
         else
         {
             MoveDefinition move = playerActiveShrimp.definition.moves[index];
@@ -252,6 +293,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
                     enemyActiveShrimp.statuses.Add(newStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(newStatus.status.iconID);
+                    statusInfo.Add(newStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
                 }
             }
             else
@@ -269,12 +314,15 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             }
         }
 
+        // decreases the turns on the player's statuses and removes any ones that have expired
         List<int> removedStatuses = playerActiveShrimp.UpdateStatuses();
         foreach (int i in removedStatuses)
         {
             // i + 1 because index 0 is always the shrimp's ability
             currentSnapshot.playerInfoData.passives.RemoveAt(i + 1);
         }
+
+        //resets player and enemy stats for the UI
         currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
         currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
         currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
@@ -284,7 +332,11 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
         UpdateUI();
     }
-
+    /// <summary>
+    /// Calculates the best move for the AI to use
+    /// </summary>
+    /// <param name="playerAttackIndex"></param> the index of the attack that the player is using
+    /// <returns></returns> the index of the best attack for the enemy to use
     private int EnemyMoveSelection(int playerAttackIndex)
     {
         int enemyAttack = enemyActiveShrimp.GetAttack();
@@ -319,12 +371,18 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         
         return highestScoreIndex;
     }
+    /// <summary>
+    /// Runs the enemies attack and deals damage
+    /// </summary>
+    /// <param name="index"></param> the index of the attack it is using
     private void EnemyAttack(int index)
     {
-        if (enemyActiveShrimp.currentHP <= 0)
+        // if the enemies hp is below zero then it dies
+        if (enemyActiveShrimp.GetHP() <= 0)
         {
             KillEnemyShrimp();
         }
+        // calculates the amount of damage the enemy should deal and then deals it
         else
         {
             MoveDefinition move = enemyActiveShrimp.definition.moves[index];
@@ -338,6 +396,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
                     playerActiveShrimp.statuses.Add(newStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(newStatus.status.iconID);
+                    statusInfo.Add(newStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
                 }
             }
             else
@@ -347,16 +409,21 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
                     enemyActiveShrimp.statuses.Add(newStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(newStatus.status.iconID);
+                    statusInfo.Add(newStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
                 }
             }
-
+        // updates statuses
         List<int> removedStatuses = enemyActiveShrimp.UpdateStatuses();
         foreach (int i in removedStatuses)
         {
             // i + 1 because index 0 is always the shrimp's ability
-            currentSnapshot.playerInfoData.passives.RemoveAt(i + 1);
+            currentSnapshot.enemyInfoData.passives.RemoveAt(i + 1);
         }
 
+        // updates the snapshot on both the player and enemy stats
         currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
         currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
         currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
@@ -367,6 +434,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         UpdateUI();
         }
     }
+
+    /// <summary>
+    /// Kills the active player shrimp and replaces it with the next one in the party, makes sure it cannot be used again in battle
+    /// </summary>
     private void KillPlayerShrimp()
     {
         ShrimpState temp = playerActiveShrimp;
@@ -382,6 +453,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         
 
     }
+    /// <summary>
+    /// kills the enemy shrimp and sends out the next one
+    /// </summary>
     private void KillEnemyShrimp()
     {
         enemyActiveShrimp = enemyTeam[0];
@@ -389,11 +463,12 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         SetupEnemyHudData();
         UpdateUI();
     }
+    // confirms dialogue options
     public void DialogueConfirm()
     {
         currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
     }
-
+    // skips all dialogue
     public void DialogueSkipAll()
     {
         currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
