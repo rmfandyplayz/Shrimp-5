@@ -1,4 +1,5 @@
 using Shrimp5.UIContract;
+using TMPro;
 using UnityEngine;
 
 // written by andy
@@ -14,6 +15,7 @@ public class BattleUIView : MonoBehaviour
     [SerializeField] CommandBox commandBox;
     [SerializeField] RectTransform pauseMenu;
     [SerializeField] RectTransform tooltipPanel;
+    [SerializeField] TextMeshProUGUI tooltipText;
 
     void Start()
     {
@@ -55,6 +57,7 @@ public class BattleUIView : MonoBehaviour
         if (snapshot.tooltipData.isVisible)
         {
             tooltipPanel.gameObject.SetActive(true);
+            tooltipText.text = snapshot.tooltipData.body;
         }
         else
         {
