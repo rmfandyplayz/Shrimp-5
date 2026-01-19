@@ -154,6 +154,15 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UINavigation"",
+                    ""type"": ""Value"",
+                    ""id"": ""b2e9a786-31f9-4d19-ade7-2620d97fecb3"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -255,6 +264,61 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
                     ""action"": ""NavDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""19c3e85f-c9e5-428e-90b7-c43a03d8c0ab"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UINavigation"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""213bd7b6-a511-4a6c-9174-82adacf7cf23"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UINavigation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""0a98facc-9bad-4d3c-9f84-b6fe565fd6fd"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UINavigation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""4ca78176-9a76-4c19-b2f0-a2f6468c9eb0"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UINavigation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""8dd1d1b9-2a76-48d6-85a5-3052c3795036"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UINavigation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -808,6 +872,7 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
         m_Battle_NavRight = m_Battle.FindAction("NavRight", throwIfNotFound: true);
         m_Battle_NavUp = m_Battle.FindAction("NavUp", throwIfNotFound: true);
         m_Battle_NavDown = m_Battle.FindAction("NavDown", throwIfNotFound: true);
+        m_Battle_UINavigation = m_Battle.FindAction("UINavigation", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -908,6 +973,7 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Battle_NavRight;
     private readonly InputAction m_Battle_NavUp;
     private readonly InputAction m_Battle_NavDown;
+    private readonly InputAction m_Battle_UINavigation;
     /// <summary>
     /// Provides access to input actions defined in input action map "Battle".
     /// </summary>
@@ -947,6 +1013,10 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Battle/NavDown".
         /// </summary>
         public InputAction @NavDown => m_Wrapper.m_Battle_NavDown;
+        /// <summary>
+        /// Provides access to the underlying input action "Battle/UINavigation".
+        /// </summary>
+        public InputAction @UINavigation => m_Wrapper.m_Battle_UINavigation;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -994,6 +1064,9 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
             @NavDown.started += instance.OnNavDown;
             @NavDown.performed += instance.OnNavDown;
             @NavDown.canceled += instance.OnNavDown;
+            @UINavigation.started += instance.OnUINavigation;
+            @UINavigation.performed += instance.OnUINavigation;
+            @UINavigation.canceled += instance.OnUINavigation;
         }
 
         /// <summary>
@@ -1026,6 +1099,9 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
             @NavDown.started -= instance.OnNavDown;
             @NavDown.performed -= instance.OnNavDown;
             @NavDown.canceled -= instance.OnNavDown;
+            @UINavigation.started -= instance.OnUINavigation;
+            @UINavigation.performed -= instance.OnUINavigation;
+            @UINavigation.canceled -= instance.OnUINavigation;
         }
 
         /// <summary>
@@ -1310,6 +1386,13 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnNavDown(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "UINavigation" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUINavigation(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
