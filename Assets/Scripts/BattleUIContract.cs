@@ -58,8 +58,7 @@ namespace Shrimp5.UIContract
     public struct TooltipData
     {
         public bool isVisible;
-        public string title; // i.e. "Slowed"
-        public string body;  // i.e. "Attack Speed is reduced by 6.7"
+        public string text;  // i.e. "Attack Speed is reduced by 6.7"
     }
 
 

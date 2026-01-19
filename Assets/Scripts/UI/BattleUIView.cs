@@ -57,7 +57,7 @@ public class BattleUIView : MonoBehaviour
         if (snapshot.tooltipData.isVisible)
         {
             tooltipPanel.gameObject.SetActive(true);
-            tooltipText.text = snapshot.tooltipData.body;
+            tooltipText.text = snapshot.tooltipData.text;
         }
         else
         {
