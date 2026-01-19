@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Mono.Cecil.Cil;
 using Shrimp5.UIContract;
 using Unity.VisualScripting;
@@ -65,6 +66,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             currentShrimp.moveShortDescription = playerTeam[i].definition.maxHP.ToString();
             currentSnapshot.moves.Add(currentShrimp);
         }
+        OnSwitchInAbility(User.Player);
+        OnSwitchInAbility(User.Enemy);
         
         // updates the UI with starting data
         UpdateUI();
@@ -192,11 +195,21 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     // Represents when a player starts to inspect something
     public void Secondary(int index)
     {
-        if ((currentSnapshot.battleMode != BattleUIMode.Paused) && (currentSnapshot.battleMode != BattleUIMode.ResolvingAction))
-        {
+            if (currentSnapshot.battleMode == BattleUIMode.ChoosingAction)
+            {
+            currentSnapshot.inspectData.iconID = currentSnapshot.moves[index].iconID;
+            currentSnapshot.inspectData.title = currentSnapshot.moves[index].moveName;
+            currentSnapshot.inspectData.body = currentSnapshot.moves[index].moveShortDescription;
+            }
+            if (currentSnapshot.battleMode == BattleUIMode.ChoosingSwitchTeammate)
+            {
+            currentSnapshot.inspectData.iconID = currentSnapshot.moves[index+3].iconID;
+            currentSnapshot.inspectData.title = currentSnapshot.moves[index+3].moveName;
+            currentSnapshot.inspectData.body = currentSnapshot.moves[index+3].moveShortDescription;
+            }
             currentSnapshot.battleMode = BattleUIMode.InspectingMove;
             UpdateUI();
-        }
+        
     }
 
     // toggles pausing and unpausing the game
@@ -236,6 +249,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             ResetPlayerSwitchOptions();
             ResetPlayerMoveOptions();
             UpdateUI();
+            OnSwitchInAbility(User.Player);
+            OnTurnStartAbility(User.Enemy);
             EnemyAttack(EnemyMoveSelection(index));
         }
         // if the player is attacking it checks to see who is faster and gets to attack first
@@ -245,26 +260,42 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         int enemySpeed = enemyActiveShrimp.GetSpeed();
         if (playerSpeed > enemySpeed)
         {
+            OnTurnStartAbility(User.Player);
+            OnTurnStartAbility(User.Enemy);
             PlayerAttack(index);
             EnemyAttack(EnemyMoveSelection(index));
+            OnTurnEndAbility(User.Player);
+            OnTurnEndAbility(User.Enemy);
         }
         else if (playerSpeed < enemySpeed)
         {
+            OnTurnStartAbility(User.Enemy);
+            OnTurnStartAbility(User.Player);
             EnemyAttack(EnemyMoveSelection(index));
             PlayerAttack(index);
+            OnTurnEndAbility(User.Enemy);
+            OnTurnEndAbility(User.Player);
         }
         else
         {
             int whoseTurn = rng.Next(0,2);
             if (whoseTurn == 0)
             {
+                OnTurnStartAbility(User.Player);
+                OnTurnStartAbility(User.Enemy);
                 PlayerAttack(index);
                 EnemyAttack(EnemyMoveSelection(index));
+                OnTurnEndAbility(User.Player);
+                OnTurnEndAbility(User.Enemy);
             }
             else
             {
+                OnTurnStartAbility(User.Enemy);
+                OnTurnStartAbility(User.Player);
                 EnemyAttack(EnemyMoveSelection(index));
-                PlayerAttack(index);    
+                PlayerAttack(index);
+                OnTurnEndAbility(User.Enemy);
+                OnTurnEndAbility(User.Player);  
             }
         }
         }
@@ -298,6 +329,11 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
                 }
+                if (damage > 0)
+                {
+                    OnDamagedAbility(User.Enemy);
+                }
+                OnAttackAbility(User.Player);
             }
             else
             {
@@ -401,6 +437,11 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
                 }
+                if (damage > 0)
+                {
+                    OnDamagedAbility(User.Player);
+                }
+                OnAttackAbility(User.Enemy);
             }
             else
             {
@@ -440,6 +481,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     /// </summary>
     private void KillPlayerShrimp()
     {
+        OnDeathAbility(User.Player);
         ShrimpState temp = playerActiveShrimp;
         playerActiveShrimp = playerTeam[0];
         playerTeam.RemoveAt(0);
@@ -450,6 +492,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         MoveData deadShrimp = currentSnapshot.moves[2 + playerTeam.Count];
         deadShrimp.isEnabled = false;
         playerTeam.RemoveAt(playerTeam.Count-1);
+        UpdateUI();
+        OnSwitchInAbility(User.Player);
+        UpdateUI();
         
 
     }
@@ -458,10 +503,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     /// </summary>
     private void KillEnemyShrimp()
     {
+        OnDeathAbility(User.Enemy);
         enemyActiveShrimp = enemyTeam[0];
         enemyTeam.RemoveAt(0);
         SetupEnemyHudData();
         UpdateUI();
+        OnSwitchInAbility(User.Enemy);
+        UpdateUI();
+
     }
     // confirms dialogue options
     public void DialogueConfirm()
@@ -473,9 +522,322 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     {
         currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
     }
+
+    // methods for ability triggers
+    private void OnAttackAbility(User user)
+    {
+        if (user == User.Player)
+        {
+            AbilityDefinition ability = playerActiveShrimp.definition.ability;
+            if (ability.trigger == AbilityTrigger.OnAttack)
+            {
+                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+                if (ability.target == Target.Self)
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+        else
+        {
+            AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+            if (ability.trigger == AbilityTrigger.OnAttack)
+            {
+                if (ability.target == Target.Self)
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+    }
+    private void OnDamagedAbility(User user)
+    {
+        if (user == User.Player)
+        {
+            AbilityDefinition ability = playerActiveShrimp.definition.ability;
+            if (ability.trigger == AbilityTrigger.OnDamaged)
+            {
+                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+                if (ability.target == Target.Self)
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+        else
+        {
+            AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+            if (ability.trigger == AbilityTrigger.OnDamaged)
+            {
+                if (ability.target == Target.Self)
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+        }
+    private void OnSwitchInAbility(User user)
+    {
+        if (user == User.Player)
+        {
+            AbilityDefinition ability = playerActiveShrimp.definition.ability;
+            if (ability.trigger == AbilityTrigger.OnSwitchIn)
+            {
+                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+                if (ability.target == Target.Self)
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+        else
+        {
+            AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+            if (ability.trigger == AbilityTrigger.OnSwitchIn)
+            {
+                if (ability.target == Target.Self)
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+    }
+    private void OnTurnStartAbility(User user)
+    {
+        if (user == User.Player)
+        {
+            AbilityDefinition ability = playerActiveShrimp.definition.ability;
+            if (ability.trigger == AbilityTrigger.OnTurnStart)
+            {
+                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+                if (ability.target == Target.Self)
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+        else
+        {
+            AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+            if (ability.trigger == AbilityTrigger.OnTurnStart)
+            {
+                if (ability.target == Target.Self)
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+    }
+    private void OnTurnEndAbility(User user)
+    {
+        if (user == User.Player)
+        {
+            AbilityDefinition ability = playerActiveShrimp.definition.ability;
+            if (ability.trigger == AbilityTrigger.OnTurnEnd)
+            {
+                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+                if (ability.target == Target.Self)
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+        else
+        {
+            AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+            if (ability.trigger == AbilityTrigger.OnTurnEnd)
+            {
+                if (ability.target == Target.Self)
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+    }
+    private void OnDeathAbility(User user)
+    {
+        if (user == User.Player)
+        {
+            AbilityDefinition ability = playerActiveShrimp.definition.ability;
+            if (ability.trigger == AbilityTrigger.OnDeath)
+            {
+                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+                if (ability.target == Target.Self)
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+        else
+        {
+            AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+            if (ability.trigger == AbilityTrigger.OnDeath)
+            {
+                if (ability.target == Target.Self)
+                {
+                    enemyActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                }
+                else
+                {
+                    playerActiveShrimp.statuses.Add(abilityStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(abilityStatus.status.iconID);
+                    statusInfo.Add(abilityStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                }
+            }
+        }
+    }
+
 }
 
 public enum ActionType
 {
     Switching, Attacking
+}
+public enum User
+{
+    Player, Enemy
 }

@@ -13,6 +13,7 @@ public class AbilityDefinition : ScriptableObject
 
     [TextArea]
     public string description;
+    public Target target;
 }
 
 public enum AbilityTrigger
@@ -22,4 +23,9 @@ public enum AbilityTrigger
     OnSwitchIn,
     OnTurnStart,
     OnTurnEnd,
+    OnDeath
+}
+public enum Target
+{
+    Self, Opponent
 }
