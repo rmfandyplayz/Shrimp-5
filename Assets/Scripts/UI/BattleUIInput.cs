@@ -35,12 +35,12 @@ public class BattleUIInput : MonoBehaviour
     {
         BattleSnapshot snapshot = battleModel.GetSnapshot();
 
-        if(snapshot.battleMode == BattleUIMode.ResolvingAction)
+        if (snapshot.battleMode == BattleUIMode.ResolvingAction)
         {
             // z key
             if (gameControls.Battle.Confirm.WasPerformedThisFrame())
             {
-                if(!commandBox.IsTyping())
+                if (!commandBox.IsTyping())
                 {
                     battleController.DialogueConfirm();
                 }

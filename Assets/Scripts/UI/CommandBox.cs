@@ -15,11 +15,16 @@ public class CommandBox : MonoBehaviour
     [SerializeField] MoveButton moveButtonPrefab; // prefab to duplicate and change the icon & text
     [SerializeField, Tooltip("time between each letter being displayed. lower means faster.")] float typewriterEffectSpeed;
 
-    private List<MoveButton> spawnedButtons = new(); // 4 at most ig
+    private List<MoveButton> spawnedButtons; // 4 at most ig
 
     private bool isTyping = false;
     private string currentFullText = "";
     private Coroutine typingCoroutine;
+
+    private void Start()
+    {
+        spawnedButtons = new();
+    }
 
     public void Render(BattleSnapshot snapshot)
     {
@@ -77,7 +82,6 @@ public class CommandBox : MonoBehaviour
         }
     }
     
-    // TODO: call from Render() when in ResolvingAction mode
     public void SetFlavorText(string text)
     {
         // dont restart if same text

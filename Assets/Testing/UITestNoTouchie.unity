@@ -151,10 +151,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1291340148}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 225, y: -307.505}
+  m_SizeDelta: {x: 430, y: 595.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &63639763
 MonoBehaviour:
@@ -292,8 +292,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -433.59592, y: -75}
-  m_SizeDelta: {x: 732.8081, y: 100}
+  m_AnchoredPosition: {x: -400, y: -75}
+  m_SizeDelta: {x: 735, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &110608828
 MonoBehaviour:
@@ -408,7 +408,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -468.99994, y: 66}
+  m_AnchoredPosition: {x: -468, y: 66}
   m_SizeDelta: {x: 650, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &361066037
@@ -1930,51 +1930,6 @@ MonoBehaviour:
   uiModel: {fileID: 1159374214}
   playerTeam: []
   enemyTeam: []
---- !u!1 &1166944486
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1166944488}
-  - component: {fileID: 1166944487}
-  m_Layer: 0
-  m_Name: TEST_UI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1166944487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1166944486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1741c452487786d419e5b755ea7d390a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  model: {fileID: 1159374214}
---- !u!4 &1166944488
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1166944486}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1291340147
 GameObject:
   m_ObjectHideFlags: 0
@@ -1996,7 +1951,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1291340148
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2015,7 +1970,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 1236, y: 0.000011444}
-  m_SizeDelta: {x: 450, y: 0}
+  m_SizeDelta: {x: 450, y: 615.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1291340149
 MonoBehaviour:
@@ -2366,8 +2321,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 391.40408, y: -75}
-  m_SizeDelta: {x: 732.8081, y: 100}
+  m_AnchoredPosition: {x: 400, y: -75}
+  m_SizeDelta: {x: 735, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1451457519
 MonoBehaviour:
@@ -2389,8 +2344,8 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 100, y: 100}
-  m_Spacing: {x: 0, y: 0}
+  m_CellSize: {x: 60, y: 60}
+  m_Spacing: {x: 30, y: 30}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!1 &1550546993
@@ -3209,7 +3164,7 @@ MonoBehaviour:
   attackText: {fileID: 1150533482}
   attackSpeedText: {fileID: 392455247}
   statusIconContainer: {fileID: 1451457518}
-  statusIconPrefab: {fileID: 0}
+  statusIconPrefab: {fileID: 2939099191409709528, guid: 1acbd303c0be8fb448cff7eed3a8ca46, type: 3}
 --- !u!1 &2095883510
 GameObject:
   m_ObjectHideFlags: 0
@@ -3271,7 +3226,7 @@ MonoBehaviour:
   attackText: {fileID: 1110248725}
   attackSpeedText: {fileID: 757593898}
   statusIconContainer: {fileID: 110608827}
-  statusIconPrefab: {fileID: 0}
+  statusIconPrefab: {fileID: 2939099191409709528, guid: 1acbd303c0be8fb448cff7eed3a8ca46, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3281,4 +3236,3 @@ SceneRoots:
   - {fileID: 1869842731}
   - {fileID: 365242879}
   - {fileID: 1159374215}
-  - {fileID: 1166944488}

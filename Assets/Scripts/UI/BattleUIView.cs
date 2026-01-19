@@ -9,7 +9,7 @@ public class BattleUIView : MonoBehaviour
     [Header("data source")]
     [SerializeField] BattleUIModel battleModel;
 
-    [Header("sub-views (minion scripts)")]
+    [Header("minion scripts")]
     [SerializeField] UnitFrame playerFrame;
     [SerializeField] UnitFrame enemyFrame;
     [SerializeField] CommandBox commandBox;
@@ -56,12 +56,13 @@ public class BattleUIView : MonoBehaviour
         // tooltips
         if (snapshot.tooltipData.isVisible)
         {
-            tooltipPanel.gameObject.SetActive(true);
             tooltipText.text = snapshot.tooltipData.text;
+            tooltipPanel.gameObject.SetActive(true);
         }
         else
         {
             tooltipPanel.gameObject.SetActive(false);
+            tooltipText.text = string.Empty;
         }
     }
 }
