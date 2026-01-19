@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mono.Cecil.Cil;
 using UnityEngine;
 
 public class ShrimpState : MonoBehaviour
@@ -72,8 +73,9 @@ public class ShrimpState : MonoBehaviour
         return totalHP;
     }
 
-    public void UpdateStatuses()
+    public List<int> UpdateStatuses()
     {
+        List<int> removedList = new List<int>();
         for (int i = statuses.Count - 1; i >= 0; i--)
         {
             if (statuses[i].status.permanant == false)
@@ -83,8 +85,10 @@ public class ShrimpState : MonoBehaviour
             if (statuses[i].remainingTurns <= 0)
             {
                 statuses.RemoveAt(i);
+                removedList.Add(i);
             }
             }
         }
+        return removedList;
     }   
 }

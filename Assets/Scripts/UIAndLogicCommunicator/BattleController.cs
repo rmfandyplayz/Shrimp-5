@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using Mono.Cecil.Cil;
 using Shrimp5.UIContract;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class BattleController : MonoBehaviour, IBattleUIActions
 {
@@ -22,20 +24,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         playerTeam = new List<ShrimpState>();
         enemyTeam = new List<ShrimpState>();
         rng = new System.Random();
+
         playerActiveShrimp = playerTeam[0];
         enemyActiveShrimp = enemyTeam[0]; 
-        currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
-        currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
-        currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
-        currentSnapshot.playerInfoData.maxHp = playerActiveShrimp.definition.maxHP;
-        currentSnapshot.playerInfoData.teammateName = playerActiveShrimp.definition.name;
-        currentSnapshot.playerInfoData.portraitIconID = playerActiveShrimp.definition.shrimpSpriteID;
-        currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
-        currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
-        currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
-        currentSnapshot.enemyInfoData.maxHp = enemyActiveShrimp.definition.maxHP;
-        currentSnapshot.enemyInfoData.teammateName = enemyActiveShrimp.definition.name;
-        currentSnapshot.enemyInfoData.portraitIconID = enemyActiveShrimp.definition.shrimpSpriteID;
+
+        SetupPlayerHudData(); // player data is implemented
+        SetupEnemyHudData(); // enemy data is implemented
+
+        // moves are implemented
         for (int i = 0; i < playerActiveShrimp.definition.moves.Length; i++)
         {
             MoveData currentMove = new MoveData();
@@ -43,12 +39,85 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             currentMove.iconID = playerActiveShrimp.definition.moves[i].iconID;
             currentMove.moveName = playerActiveShrimp.definition.moves[i].displayName;
             currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].description;
-            currentSnapshot.moves.Add(currentMove);
+            currentSnapshot.moves.Add(currentMove); 
         }
+        
+        currentSnapshot.inspectData.iconID = currentSnapshot.moves[currentSnapshot.selectedIndex].iconID;
+        currentSnapshot.inspectData.title = currentSnapshot.moves[currentSnapshot.selectedIndex].moveName;
+        currentSnapshot.inspectData.body = currentSnapshot.moves[currentSnapshot.selectedIndex].moveShortDescription;
+
         playerTeam.RemoveAt(0);
         enemyTeam.RemoveAt(0);
+
+        for (int i = 0; i < playerTeam.Count; i++)
+        {
+            MoveData currentShrimp = new MoveData();
+            currentShrimp.isEnabled = true;
+            currentShrimp.iconID = playerTeam[i].definition.shrimpSpriteID;
+            currentShrimp.moveName = playerTeam[i].definition.name;
+            currentShrimp.moveShortDescription = playerTeam[i].definition.maxHP.ToString();
+            currentSnapshot.moves.Add(currentShrimp);
+        }
+        
         UpdateUI();
     }
+
+    private void SetupPlayerHudData()
+    {
+        currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack(); 
+        currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed(); 
+        currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP(); 
+        currentSnapshot.playerInfoData.maxHp = playerActiveShrimp.definition.maxHP; 
+        currentSnapshot.playerInfoData.teammateName = playerActiveShrimp.definition.name; 
+        currentSnapshot.playerInfoData.portraitIconID = playerActiveShrimp.definition.shrimpSpriteID;
+        currentSnapshot.playerInfoData.passives = new List<List<string>>(); 
+        List<string> playerAbilityInfo = new List<string>();
+        playerAbilityInfo.Add(playerActiveShrimp.definition.ability.iconID);
+        playerAbilityInfo.Add(playerActiveShrimp.definition.ability.description);
+        currentSnapshot.playerInfoData.passives.Add(playerAbilityInfo);
+    }
+
+    private void SetupEnemyHudData()
+    {
+        currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
+        currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
+        currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
+        currentSnapshot.enemyInfoData.maxHp = enemyActiveShrimp.definition.maxHP;
+        currentSnapshot.enemyInfoData.teammateName = enemyActiveShrimp.definition.name;
+        currentSnapshot.enemyInfoData.portraitIconID = enemyActiveShrimp.definition.shrimpSpriteID;
+        currentSnapshot.enemyInfoData.passives = new List<List<string>>();
+        List<string> enemyAbilityInfo = new List<string>();
+        enemyAbilityInfo.Add(enemyActiveShrimp.definition.ability.iconID);
+        enemyAbilityInfo.Add(enemyActiveShrimp.definition.ability.description);
+        currentSnapshot.enemyInfoData.passives.Add(enemyAbilityInfo);
+    }
+    
+    private void ResetPlayerSwitchOptions()
+    {
+       for(int i = 0; i < playerTeam.Count; i++)
+        {
+            MoveData currentShrimp = new MoveData();
+            currentShrimp.isEnabled = true;
+            currentShrimp.iconID = playerTeam[i].definition.shrimpSpriteID;
+            currentShrimp.moveName = playerTeam[i].definition.name;
+            currentShrimp.moveShortDescription = playerTeam[i].definition.maxHP.ToString();
+            currentSnapshot.moves[i+3] = currentShrimp;
+        }
+    }
+
+    private void ResetPlayerMoveOptions()
+    {
+        for (int i = 0; i < playerActiveShrimp.definition.moves.Length; i++)
+        {
+            MoveData currentMove = new MoveData();
+            currentMove.isEnabled = true;
+            currentMove.iconID = playerActiveShrimp.definition.moves[i].iconID;
+            currentMove.moveName = playerActiveShrimp.definition.moves[i].displayName;
+            currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].description;
+            currentSnapshot.moves[i] = currentMove;
+        }
+    }
+
     private void UpdateUI()
     {
         uiModel.SetSnapshot(currentSnapshot);
@@ -69,10 +138,12 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             if (index == 3)
             {
                 currentSnapshot.battleMode = BattleUIMode.ChoosingSwitchTeammate;
+                UpdateUI();
             }
             else
             {
             currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
+            UpdateUI();
             RunTurn(index, ActionType.Attacking);
             }
         }
@@ -81,10 +152,12 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             if (index == 3)
             {
                 currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+                UpdateUI();
             }
             else
             {
             currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
+            UpdateUI();
             RunTurn(index, ActionType.Switching);
             }
         }
@@ -122,6 +195,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             ShrimpState temp = playerActiveShrimp;
             playerActiveShrimp = playerTeam[index];
             playerTeam[index] = temp;
+            SetupPlayerHudData();
+            ResetPlayerSwitchOptions();
+            ResetPlayerMoveOptions();
+            UpdateUI();
         }
         else
         {
@@ -154,6 +231,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         }
         currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
         currentSnapshot.selectedIndex = 0;
+        UpdateUI();
     }
 
     private void PlayerAttack(int index)
@@ -183,9 +261,28 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
                     playerActiveShrimp.statuses.Add(newStatus);
+                    List<string> statusInfo = new List<string>();
+                    statusInfo.Add(newStatus.status.iconID);
+                    statusInfo.Add(newStatus.status.description);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
                 }
             }
         }
+
+        List<int> removedStatuses = playerActiveShrimp.UpdateStatuses();
+        foreach (int i in removedStatuses)
+        {
+            // i + 1 because index 0 is always the shrimp's ability
+            currentSnapshot.playerInfoData.passives.RemoveAt(i + 1);
+        }
+        currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
+        currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
+        currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
+
+        currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
+        currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
+        currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
+        UpdateUI();
     }
 
     private int EnemyMoveSelection(int playerAttackIndex)
@@ -233,6 +330,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             MoveDefinition move = enemyActiveShrimp.definition.moves[index];
             int shrimpPower = enemyActiveShrimp.GetAttack();
             int damage = shrimpPower*move.power;
+
             if (move.target == MoveTarget.Opponent)
             {
                 playerActiveShrimp.currentHP = playerActiveShrimp.GetHP() - damage;
@@ -251,19 +349,46 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     enemyActiveShrimp.statuses.Add(newStatus);
                 }
             }
+
+        List<int> removedStatuses = enemyActiveShrimp.UpdateStatuses();
+        foreach (int i in removedStatuses)
+        {
+            // i + 1 because index 0 is always the shrimp's ability
+            currentSnapshot.playerInfoData.passives.RemoveAt(i + 1);
+        }
+
+        currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
+        currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
+        currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
+
+        currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
+        currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
+        currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
+        UpdateUI();
         }
     }
     private void KillPlayerShrimp()
     {
+        ShrimpState temp = playerActiveShrimp;
         playerActiveShrimp = playerTeam[0];
         playerTeam.RemoveAt(0);
+        playerTeam.Add(temp);
+        SetupPlayerHudData();
+        ResetPlayerSwitchOptions();
+        ResetPlayerMoveOptions();
+        MoveData deadShrimp = currentSnapshot.moves[2 + playerTeam.Count];
+        deadShrimp.isEnabled = false;
+        playerTeam.RemoveAt(playerTeam.Count-1);
+        
+
     }
     private void KillEnemyShrimp()
     {
         enemyActiveShrimp = enemyTeam[0];
         enemyTeam.RemoveAt(0);
+        SetupEnemyHudData();
+        UpdateUI();
     }
-
     public void DialogueConfirm()
     {
         currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
