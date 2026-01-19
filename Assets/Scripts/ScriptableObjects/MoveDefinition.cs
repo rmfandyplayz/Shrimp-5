@@ -7,7 +7,7 @@ public class MoveDefinition : ScriptableObject
     public string displayName;
     public bool hasEffect;
     public StatusDefinition effect;
-    public Sprite icon;
+    public string iconID;
     public int power;
                   
     public MoveTarget target;      

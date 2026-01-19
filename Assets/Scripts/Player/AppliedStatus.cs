@@ -5,8 +5,10 @@ public class AppliedStatus : MonoBehaviour
     public StatusDefinition status; 
     public int remainingTurns;
 
-    public AppliedStatus()
+    public AppliedStatus(StatusDefinition s, int duration)
     {
+        status = s;
+        remainingTurns = duration;
     }
 
     public AppliedStatus(StatusDefinition statusDef)

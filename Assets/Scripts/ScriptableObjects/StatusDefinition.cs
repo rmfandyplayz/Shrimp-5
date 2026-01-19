@@ -5,7 +5,7 @@ public class StatusDefinition : ScriptableObject
 {
     public string statusId;
     public string displayName;
-    public Sprite icon;
+    public string iconID;
     public StatAffected statChanged;
     public TypeOfEffect effectType;
     public TypeOfBuff buffType;

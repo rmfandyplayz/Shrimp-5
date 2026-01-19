@@ -6,7 +6,7 @@ public class AbilityDefinition : ScriptableObject
     public string abilityId;
     public string displayName;
 
-    public Sprite icon;
+    public string iconID;
 
     public AbilityTrigger trigger; 
     public StatusDefinition effect;               

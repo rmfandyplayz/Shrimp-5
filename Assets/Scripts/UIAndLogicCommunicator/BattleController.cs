@@ -23,6 +23,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         rng = new System.Random();
         playerActiveShrimp = playerTeam[0];
         enemyActiveShrimp = enemyTeam[0]; 
+        playerTeam.RemoveAt(0);
+        enemyTeam.RemoveAt(0);
         UpdateUI();
     }
     private void UpdateUI()
@@ -95,15 +97,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     {
         if (action == ActionType.Switching)
         {
-            ShrimpState temp = playerTeam[0];
-            playerTeam[0] = playerTeam[index + 1];
-            playerTeam[index + 1] = temp;
-            EnemyAttack(EnemyMoveSelection(index));
+            ShrimpState temp = playerActiveShrimp;
+            playerActiveShrimp = playerTeam[index];
+            playerTeam[index] = temp;
         }
         else
         {
-        int playerSpeed = playerTeam[0].GetSpeed();
-        int enemySpeed = enemyTeam[0].GetSpeed();
+        int playerSpeed = playerActiveShrimp.GetSpeed();
+        int enemySpeed = enemyActiveShrimp.GetSpeed();
         if (playerSpeed > enemySpeed)
         {
             PlayerAttack(index);
@@ -133,31 +134,31 @@ public class BattleController : MonoBehaviour, IBattleUIActions
 
     private void PlayerAttack(int index)
     {
-        if (playerTeam[0].currentHP <= 0)
+        if (playerActiveShrimp.currentHP <= 0)
         {
             KillPlayerShrimp();
         }
         else
         {
-            MoveDefinition move = playerTeam[0].definition.moves[index];
-            int shrimpPower = playerTeam[0].GetAttack();
+            MoveDefinition move = playerActiveShrimp.definition.moves[index];
+            int shrimpPower = playerActiveShrimp.GetAttack();
             int damage = shrimpPower*move.power;
             if (move.target == MoveTarget.Opponent)
             {
-                enemyTeam[0].currentHP -= damage;
+                enemyActiveShrimp.currentHP -= damage;
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
-                    enemyTeam[0].statuses.Add(newStatus);
+                    enemyActiveShrimp.statuses.Add(newStatus);
                 }
             }
             else
             {
-                playerTeam[0].currentHP -= damage;
+                playerActiveShrimp.currentHP -= damage;
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
-                    playerTeam[0].statuses.Add(newStatus);
+                    playerActiveShrimp.statuses.Add(newStatus);
                 }
             }
         }
@@ -165,15 +166,15 @@ public class BattleController : MonoBehaviour, IBattleUIActions
 
     private int EnemyMoveSelection(int playerAttackIndex)
     {
-        int enemyAttack = enemyTeam[0].GetAttack();
-        int playerAttack = playerTeam[0].GetAttack();
-        MoveDefinition[] enemyMoves = enemyTeam[0].definition.moves;
-        MoveDefinition playerMove = playerTeam[0].definition.moves[playerAttackIndex];
+        int enemyAttack = enemyActiveShrimp.GetAttack();
+        int playerAttack = playerActiveShrimp.GetAttack();
+        MoveDefinition[] enemyMoves = enemyActiveShrimp.definition.moves;
+        MoveDefinition playerMove = playerActiveShrimp.definition.moves[playerAttackIndex];
         int[] moveScores = new int[3];
         int highestScoreIndex = 0;
         for (int i = 0; i <= 2; i++)
         {
-            if (enemyMoves[i].power*enemyAttack >= playerTeam[0].currentHP)
+            if (enemyMoves[i].power*enemyAttack >= playerActiveShrimp.currentHP)
             {
                 moveScores[i] += 20;
             }
@@ -181,11 +182,11 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             {
                 moveScores[i] += 5;
             }
-            if ((playerMove.power*playerAttack >= enemyTeam[0].currentHP) && ((enemyMoves[i].hasEffect && (enemyMoves[i].effect.effectType == TypeOfEffect.Positive) && (enemyMoves[i].target == MoveTarget.Self) && (enemyMoves[0].effect.statChanged == StatAffected.HP)) || (enemyMoves[i].hasEffect && (enemyMoves[i].effect.effectType == TypeOfEffect.Negative) && (enemyMoves[i].target == MoveTarget.Opponent) && (enemyMoves[i].effect.statChanged == StatAffected.Attack))))
+            if ((playerMove.power*playerAttack >= enemyActiveShrimp.currentHP) && ((enemyMoves[i].hasEffect && (enemyMoves[i].effect.effectType == TypeOfEffect.Positive) && (enemyMoves[i].target == MoveTarget.Self) && (enemyMoves[0].effect.statChanged == StatAffected.HP)) || (enemyMoves[i].hasEffect && (enemyMoves[i].effect.effectType == TypeOfEffect.Negative) && (enemyMoves[i].target == MoveTarget.Opponent) && (enemyMoves[i].effect.statChanged == StatAffected.Attack))))
             {
                 moveScores[i] += 6;
             }
-            if ((playerMove.power*playerAttack < enemyTeam[0].currentHP/2) && (((enemyMoves[i].hasEffect) && (enemyMoves[i].effect.statChanged == StatAffected.Attack)) || ((enemyMoves[i].hasEffect) && (enemyMoves[i].effect.statChanged == StatAffected.Speed) && (enemyTeam[0].GetSpeed() <= playerTeam[0].GetSpeed()))))
+            if ((playerMove.power*playerAttack < enemyActiveShrimp.currentHP/2) && (((enemyMoves[i].hasEffect) && (enemyMoves[i].effect.statChanged == StatAffected.Attack)) || ((enemyMoves[i].hasEffect) && (enemyMoves[i].effect.statChanged == StatAffected.Speed) && (enemyActiveShrimp.GetSpeed() <= playerActiveShrimp.GetSpeed()))))
             {
                 moveScores[i] += 6;
             }
@@ -199,52 +200,54 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     }
     private void EnemyAttack(int index)
     {
-        if (enemyTeam[0].currentHP <= 0)
+        if (enemyActiveShrimp.currentHP <= 0)
         {
             KillEnemyShrimp();
         }
         else
         {
-            MoveDefinition move = enemyTeam[0].definition.moves[index];
-            int shrimpPower = enemyTeam[0].GetAttack();
+            MoveDefinition move = enemyActiveShrimp.definition.moves[index];
+            int shrimpPower = enemyActiveShrimp.GetAttack();
             int damage = shrimpPower*move.power;
             if (move.target == MoveTarget.Opponent)
             {
-                playerTeam[0].currentHP -= damage;
+                playerActiveShrimp.currentHP -= damage;
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
-                    playerTeam[0].statuses.Add(newStatus);
+                    playerActiveShrimp.statuses.Add(newStatus);
                 }
             }
             else
             {
-                enemyTeam[0].currentHP -= damage;
+                enemyActiveShrimp.currentHP -= damage;
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
-                    enemyTeam[0].statuses.Add(newStatus);
+                    enemyActiveShrimp.statuses.Add(newStatus);
                 }
             }
         }
     }
     private void KillPlayerShrimp()
     {
-        
+        playerActiveShrimp = playerTeam[0];
+        playerTeam.RemoveAt(0);
     }
     private void KillEnemyShrimp()
     {
-        
+        enemyActiveShrimp = enemyTeam[0];
+        enemyTeam.RemoveAt(0);
     }
 
     public void DialogueConfirm()
     {
-        throw new NotImplementedException();
+        currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
     }
 
     public void DialogueSkipAll()
     {
-        throw new NotImplementedException();
+        currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
     }
 }
 
