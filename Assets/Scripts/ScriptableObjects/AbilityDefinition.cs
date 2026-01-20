@@ -3,7 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Battle/Ability")]
 public class AbilityDefinition : ScriptableObject
 {
-    public string abilityId;
     public string displayName;
 
     public string iconID;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AppliedStatus : MonoBehaviour
+public class AppliedStatus
 {
     public StatusDefinition status; 
     public int remainingTurns;

@@ -3,13 +3,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Battle/Shrimp")]
 public class ShrimpDefinition : ScriptableObject
 {
-    [Header("Identity")]
-    public string shrimpId;           
+    [Header("Identity")]           
     public string displayName;       
 
     [Header("UI & Animation")]
     public string shrimpSpriteID;           
-    public string attackAnimationId;  
     public int maxHP;
     public int baseSpeed;
     public int baseAttack;

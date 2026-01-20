@@ -22,10 +22,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         // creates the snapshot and automatically sets the battle mode to choosing action
         currentSnapshot = new BattleSnapshot();
         currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
-
-        // creates the lists used for the actual battle logic but not UI
-        playerTeam = new List<ShrimpState>();
-        enemyTeam = new List<ShrimpState>();
+        currentSnapshot.moves = new List<MoveData>();
         rng = new System.Random();
 
         // sets the active shrimp
@@ -65,6 +62,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             currentShrimp.moveName = playerTeam[i].definition.name;
             currentShrimp.moveShortDescription = playerTeam[i].definition.maxHP.ToString();
             currentSnapshot.moves.Add(currentShrimp);
+        }
+        foreach (MoveData move in currentSnapshot.moves)
+        {
+            Debug.Log(move.moveName);
         }
         OnSwitchInAbility(User.Player);
         OnSwitchInAbility(User.Enemy);

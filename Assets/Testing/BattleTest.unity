@@ -129,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 48060625}
   - component: {fileID: 48060624}
-  - component: {fileID: 48060623}
+  - component: {fileID: 48060626}
   m_Layer: 0
   m_Name: TestShrimpTeamEnemy
   m_TagString: Untagged
@@ -137,19 +137,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &48060623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 48060622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88f075dab2e46da4db2b3207bd8ff037, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  team: []
 --- !u!212 &48060624
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -220,6 +207,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &48060626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48060622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c6a868748553a4992f990f01c5d14c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  definition: {fileID: 11400000, guid: 676ec3ae1ad43914a99e19ff2a3c27cd, type: 2}
+  currentHP: 0
+  statuses: []
 --- !u!1 &470106170
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,8 +253,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiModel: {fileID: 470106172}
-  playerTeam: []
-  enemyTeam: []
+  playerTeam:
+  - {fileID: 2122431736}
+  - {fileID: 2122431736}
+  - {fileID: 2122431736}
+  - {fileID: 2122431736}
+  enemyTeam:
+  - {fileID: 48060626}
+  - {fileID: 48060626}
+  - {fileID: 48060626}
+  - {fileID: 48060626}
 --- !u!114 &470106172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -736,7 +746,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2122431735}
   - component: {fileID: 2122431734}
-  - component: {fileID: 2122431733}
+  - component: {fileID: 2122431736}
   m_Layer: 0
   m_Name: TestShrimpTeamPlayer
   m_TagString: Untagged
@@ -744,18 +754,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2122431733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2122431732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2b20b3e6ffe7a94c96c2b8cbb47dc27, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &2122431734
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -826,6 +824,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2122431736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122431732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c6a868748553a4992f990f01c5d14c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  definition: {fileID: 11400000, guid: 676ec3ae1ad43914a99e19ff2a3c27cd, type: 2}
+  currentHP: 200
+  statuses: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

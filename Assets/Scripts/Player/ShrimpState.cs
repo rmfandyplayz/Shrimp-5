@@ -5,14 +5,17 @@ using UnityEngine;
 public class ShrimpState : MonoBehaviour
 {
     public ShrimpDefinition definition;
-    public int currentHP;
-    public List<AppliedStatus> statuses = new List<AppliedStatus>();
+    [HideInInspector] public int currentHP;
+    [HideInInspector] public List<AppliedStatus> statuses;
     public ShrimpState(ShrimpDefinition def)
     {
         definition = def;
         currentHP = def.maxHP;
     }
-
+    void Start()
+    {
+      statuses = new List<AppliedStatus>();  
+    }
     public int GetAttack()
     {
         int totalAttack = definition.baseAttack;
@@ -27,6 +30,10 @@ public class ShrimpState : MonoBehaviour
                 else if (status.status.buffType == TypeOfBuff.value)
                 {
                 totalAttack += (int) status.status.valueChange;
+                }
+                if (totalAttack < 1)
+                {
+                    totalAttack = 1;
                 }
             }
         }
@@ -50,6 +57,10 @@ public class ShrimpState : MonoBehaviour
                 }
             }
         }
+        if (totalSpeed < 1)
+        {
+            totalSpeed = 1;
+        }
         return totalSpeed;
     }
 
@@ -69,6 +80,10 @@ public class ShrimpState : MonoBehaviour
                 totalHP += (int) status.status.valueChange;
                 }
             }
+        }
+        if (totalHP > definition.maxHP)
+        {
+            totalHP = definition.maxHP;
         }
         return totalHP;
     }

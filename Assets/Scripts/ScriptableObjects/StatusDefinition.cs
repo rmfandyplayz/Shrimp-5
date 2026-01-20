@@ -3,7 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Battle/Status")]
 public class StatusDefinition : ScriptableObject
 {
-    public string statusId;
     public string displayName;
     public string iconID;
     public StatAffected statChanged;

@@ -3,7 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Battle/Move")]
 public class MoveDefinition : ScriptableObject
 {
-    public string moveId;
     public string displayName;
     public bool hasEffect;
     public StatusDefinition effect;
