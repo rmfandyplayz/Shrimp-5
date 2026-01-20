@@ -46,6 +46,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].description;
             currentSnapshot.moves.Add(currentMove); 
         }
+        currentSnapshot.moves.Add(new MoveData());
 
         // Sets the inspect data to the current Move they are on
         currentSnapshot.inspectData.iconID = currentSnapshot.moves[0].iconID;
