@@ -6,6 +6,7 @@ using Shrimp5.UIContract;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour, IBattleUIActions
 {
@@ -17,6 +18,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     private System.Random rng;
     private ShrimpState playerActiveShrimp;
     private ShrimpState enemyActiveShrimp;
+    private List<ButtonData> moves;
+    private List<ButtonData> switchShrimp;
+
     void Start()
     {
         // creates the snapshot and automatically sets the battle mode to choosing action
@@ -36,6 +40,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         SetupPlayerHudData(); 
         SetupEnemyHudData(); 
 
+        moves = new List<ButtonData>();
         // adds all of the active shrimps move data to the MoveData list for the UI
         for (int i = 0; i < playerActiveShrimp.definition.moves.Length; i++)
         {
@@ -44,13 +49,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             currentMove.iconID = playerActiveShrimp.definition.moves[i].iconID;
             currentMove.moveName = playerActiveShrimp.definition.moves[i].displayName;
             currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].description;
-            currentSnapshot.buttons.Add(currentMove); 
+            moves.Add(currentMove);
         }
         ButtonData switchButton = new ButtonData();
         switchButton.iconID = "Replace Laterrr r r r r ejfgfhuesvgfhjuiudhgvgbhcfikjuhgdbhiodckijubgwvhyjubighbgfviuiawu;opov";
         switchButton.isEnabled = true;
         switchButton.moveShortDescription = "switch or whatever";
-        currentSnapshot.buttons.Add(switchButton);
+        moves.Add(switchButton);
+        currentSnapshot.buttons = moves;
 
         // Sets the inspect data to the current Move they are on
         currentSnapshot.inspectData.iconID = currentSnapshot.buttons[0].iconID;
@@ -61,23 +67,26 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         playerTeam.RemoveAt(0);
         enemyTeam.RemoveAt(0);
 
-        // Adds the data for the shrimp in the back to the moves list
-        // for (int i = 0; i < playerTeam.Count; i++)
-        // {
-        //     MoveData currentShrimp = new MoveData();
-        //     currentShrimp.isEnabled = true;
-        //     currentShrimp.iconID = playerTeam[i].definition.shrimpSpriteID;
-        //     currentShrimp.moveName = playerTeam[i].definition.name;
-        //     currentShrimp.moveShortDescription = playerTeam[i].definition.maxHP.ToString();
-        //     currentSnapshot.moves.Add(currentShrimp);
-        // }
+        switchShrimp = new List<ButtonData>();
+        //Adds the data for the shrimp in the back to the moves list
+        for (int i = 0; i < playerTeam.Count; i++)
+        {
+            ButtonData currentShrimp = new ButtonData();
+            currentShrimp.isEnabled = true;
+            currentShrimp.iconID = playerTeam[i].definition.shrimpSpriteID;
+            currentShrimp.moveName = playerTeam[i].definition.name;
+            currentShrimp.moveShortDescription = playerTeam[i].definition.maxHP.ToString();
+            switchShrimp.Add(currentShrimp);
+        }
+        switchShrimp.Add(switchButton);
+
         foreach (ButtonData move in currentSnapshot.buttons)
         {
             Debug.Log(move.moveName);
         }
         OnSwitchInAbility(User.Player);
         OnSwitchInAbility(User.Enemy);
-
+        
         // updates the UI with starting data
         UpdateUI();
     }
@@ -175,6 +184,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             if (index == 3)
             {
                 currentSnapshot.battleMode = BattleUIMode.ChoosingSwitchTeammate;
+                currentSnapshot.buttons = switchShrimp;
                 UpdateUI();
             }
             else
@@ -189,6 +199,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             if (index == 3)
             {
                 currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+                currentSnapshot.buttons = moves;
                 UpdateUI();
             }
             else
