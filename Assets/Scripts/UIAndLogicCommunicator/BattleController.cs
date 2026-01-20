@@ -46,7 +46,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].description;
             currentSnapshot.moves.Add(currentMove); 
         }
-        currentSnapshot.moves.Add(new MoveData());
+        MoveData switchButton = new MoveData();
+        switchButton.iconID = "Replace Laterrr r r r r ejfgfhuesvgfhjuiudhgvgbhcfikjuhgdbhiodckijubgwvhyjubighbgfviuiawu;opov";
+        switchButton.isEnabled = true;
+        currentSnapshot.moves.Add(switchButton);
 
         // Sets the inspect data to the current Move they are on
         currentSnapshot.inspectData.iconID = currentSnapshot.moves[0].iconID;
