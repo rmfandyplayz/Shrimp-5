@@ -79,14 +79,11 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             switchShrimp.Add(currentShrimp);
         }
         switchShrimp.Add(switchButton);
-
-        foreach (ButtonData move in currentSnapshot.buttons)
-        {
-            Debug.Log(move.moveName);
-        }
         OnSwitchInAbility(User.Player);
         OnSwitchInAbility(User.Enemy);
-        
+        Debug.Log(enemyActiveShrimp.definition.maxHP);
+        Debug.Log(enemyActiveShrimp.definition.name);
+        Debug.Log(enemyActiveShrimp.currentHP);
         // updates the UI with starting data
         UpdateUI();
     }
