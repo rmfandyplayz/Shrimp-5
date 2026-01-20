@@ -14,7 +14,7 @@ public class ShrimpState : MonoBehaviour
     }
     void Start()
     {
-      statuses = new List<AppliedStatus>();  
+        statuses = new List<AppliedStatus>();  
     }
     public int GetAttack()
     {

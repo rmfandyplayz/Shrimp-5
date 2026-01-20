@@ -27,7 +27,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
 
         // sets the active shrimp
         playerActiveShrimp = playerTeam[0];
-        enemyActiveShrimp = enemyTeam[0]; 
+        playerActiveShrimp.statuses = new List<AppliedStatus>();
+        enemyActiveShrimp = enemyTeam[0];
+        enemyActiveShrimp.statuses = new List<AppliedStatus>();
 
         // Calls the methods to set the player and enemy HubData's to the active shrimp
         SetupPlayerHudData(); 
