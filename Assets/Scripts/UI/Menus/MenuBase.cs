@@ -10,8 +10,12 @@ public class MenuBase : MonoBehaviour
     CanvasGroup cg;
     GameControls gameControls;
 
-    [SerializeField] MenuBase backMenu; // menu will go back to this
-    [SerializeField] GameObject firstSelected; // the first selected element when opening this menu
+    [SerializeField]
+    [Tooltip("leave blank if it doesn't apply!")]
+    MenuBase backMenu; // menu will go back to this
+    [SerializeField]
+    [Tooltip("the first selected element when opening this menu")]
+    GameObject firstSelected; // the first selected element when opening this menu
 
 
     public virtual void Awake()
