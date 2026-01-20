@@ -29,7 +29,7 @@ public class CommandBox : MonoBehaviour
     public void Render(BattleSnapshot snapshot)
     {
         promptText.text = snapshot.promptText;
-        List<MoveData> moves = snapshot.moves;
+        List<ButtonData> moves = snapshot.buttons;
         bool isCutscene = snapshot.battleMode == BattleUIMode.ResolvingAction; // whether to show flavor text, or whatever of that sort
 
         if (isCutscene) // show text

@@ -12,7 +12,7 @@ public class BattleUIModel : MonoBehaviour, IBattleUIModel
     void Awake()
     {
         snapshot = new BattleSnapshot();
-        snapshot.moves = new List<MoveData>();
+        snapshot.buttons = new List<ButtonData>();
     }
 
     // unused for now

@@ -13,7 +13,7 @@ public class MoveButton : MonoBehaviour
     [SerializeField] TextMeshProUGUI moveDescriptionText;
     [SerializeField] GameObject selectionHighlight;
 
-    public void Configure(MoveData moveData, bool isSelected)
+    public void Configure(ButtonData moveData, bool isSelected)
     {
         moveNameText.text = moveData.moveName;
         moveDescriptionText.text = moveData.moveShortDescription;
@@ -22,15 +22,14 @@ public class MoveButton : MonoBehaviour
 
         selectionHighlight.SetActive(isSelected);
 
-        // IF WE WANT TO DO DISABLED MOVES AT ALL, uncomment these lines
-        //if (moveData.isEnabled)
-        //{
-        //    iconImage.color = Color.white;
-        //}
-        //else
-        //{
-        //    iconImage.color = Color.gray;
-        //}
+        if (moveData.isEnabled)
+        {
+            iconImage.color = Color.white;
+        }
+        else
+        {
+            iconImage.color = Color.gray;
+        }
     }
 
 

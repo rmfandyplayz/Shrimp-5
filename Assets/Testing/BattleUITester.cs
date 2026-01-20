@@ -59,12 +59,12 @@ public class BattleUITester : MonoBehaviour, IBattleUIActions
         snap.promptText = "Test Ready. Hover icons or Pick a move.";
 
         // 1. Setup Moves
-        snap.moves = new List<MoveData>
+        snap.buttons = new List<ButtonData>
         {
-            new MoveData { moveName = "Slap", iconID = "attack_basic", moveShortDescription = "Basic slap.", isEnabled = true },
-            new MoveData { moveName = "Big Pinch", iconID = "attack_claw", moveShortDescription = "Deals big dmg.", isEnabled = true },
-            new MoveData { moveName = "Heal", iconID = "item_potion", moveShortDescription = "Drink soup.", isEnabled = true },
-            new MoveData { moveName = "Switch", iconID = "icon_switch", moveShortDescription = "Run away.", isEnabled = true }
+            new ButtonData { moveName = "Slap", iconID = "attack_basic", moveShortDescription = "Basic slap.", isEnabled = true },
+            new ButtonData { moveName = "Big Pinch", iconID = "attack_claw", moveShortDescription = "Deals big dmg.", isEnabled = true },
+            new ButtonData { moveName = "Heal", iconID = "item_potion", moveShortDescription = "Drink soup.", isEnabled = true },
+            new ButtonData { moveName = "Switch", iconID = "icon_switch", moveShortDescription = "Run away.", isEnabled = true }
         };
 
         // 2. Setup Player (With Status Icons!)

@@ -60,17 +60,17 @@ public class BattleUIInput : MonoBehaviour
         }
 
 
-        if (snapshot.battleMode == BattleUIMode.ChoosingAction &&
+        if (snapshot.battleMode == BattleUIMode.ChoosingAction ||
             snapshot.battleMode == BattleUIMode.ChoosingSwitchTeammate)
         {
             // navigation
             if (gameControls.Battle.NavRight.WasPerformedThisFrame())
             {
-                MoveSelectionCursor(1, snapshot.moves.Count);
+                MoveSelectionCursor(1, snapshot.buttons.Count);
             }
             else if (gameControls.Battle.NavLeft.WasPerformedThisFrame())
             {
-                MoveSelectionCursor(-1, snapshot.moves.Count);
+                MoveSelectionCursor(-1, snapshot.buttons.Count);
             }
 
             // confirm
