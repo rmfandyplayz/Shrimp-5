@@ -57,15 +57,15 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         enemyTeam.RemoveAt(0);
 
         // Adds the data for the shrimp in the back to the moves list
-        for (int i = 0; i < playerTeam.Count; i++)
-        {
-            MoveData currentShrimp = new MoveData();
-            currentShrimp.isEnabled = true;
-            currentShrimp.iconID = playerTeam[i].definition.shrimpSpriteID;
-            currentShrimp.moveName = playerTeam[i].definition.name;
-            currentShrimp.moveShortDescription = playerTeam[i].definition.maxHP.ToString();
-            currentSnapshot.moves.Add(currentShrimp);
-        }
+        // for (int i = 0; i < playerTeam.Count; i++)
+        // {
+        //     MoveData currentShrimp = new MoveData();
+        //     currentShrimp.isEnabled = true;
+        //     currentShrimp.iconID = playerTeam[i].definition.shrimpSpriteID;
+        //     currentShrimp.moveName = playerTeam[i].definition.name;
+        //     currentShrimp.moveShortDescription = playerTeam[i].definition.maxHP.ToString();
+        //     currentSnapshot.moves.Add(currentShrimp);
+        // }
         foreach (MoveData move in currentSnapshot.moves)
         {
             Debug.Log(move.moveName);
