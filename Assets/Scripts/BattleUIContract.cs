@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.Search;
 
 // the "API" that the game logic and UI logic will communicate with
 namespace Shrimp5.UIContract
@@ -33,6 +31,18 @@ namespace Shrimp5.UIContract
         public List<List<string>> passives; // contains a list of status effects & abilites. as in, their icons and descriptions
                                             // example: [ ["icons.statusEffects.weaken", "Weaken: Enemy's attack has been reduced by {cumulativeWeakenAmount}"],
                                             // ["icons.statusEffects.slow", "Slow: Enemy's attack speed has been reduced by {cumulativeSlowAmount}"]]
+
+        public override string ToString()
+        {
+            return $"HUD DATA ==========\n" +
+                $"teammateName: {teammateName}\n" +
+                $"hp (currentHP): {hp}\n" +
+                $"maxHP: {maxHp}\n" +
+                $"attack: {attack}\n" +
+                $"attackSpeed: {attackSpeed}\n" +
+                $"portraitIconID: {portraitIconID}\n" +
+                $"passives count: {passives.Count}";
+        }
     }
 
     // these count as one slot in the bottom row
@@ -40,16 +50,21 @@ namespace Shrimp5.UIContract
     public struct ButtonData
     {
         public bool isEnabled; // enable a move? enable a teammate to be selected?
-        public string iconID;    // something like "move_basic_attack"
+        public string iconID;  // something like "move_basic_attack"
         public string moveName;  // "Basic Attack" for example
-        public string moveShortDescription;    // "8 DMG, 20% to weaken by 50%"
+        public string moveShortDescription;  // "8 DMG, 20% to weaken by 50%"
 
         // hint texts
         public string hintText; // "Z to use, X to go back" lowkey useless as fuck
 
         public override string ToString()
         {
-            return $"moveName: {moveName}, moveShortDescription: {moveShortDescription}, hintText: probably null, isEnabled: {isEnabled}, iconID: {iconID}";
+            return $"BUTTON DATA =========\n" +
+                $"moveName: {moveName}\n " +
+                $"moveShortDescription: {moveShortDescription}\n" +
+                $"hintText: probably null\n" +
+                $"isEnabled: {isEnabled}\n" +
+                $"iconID: {iconID}";
         }
     }
 
@@ -59,6 +74,14 @@ namespace Shrimp5.UIContract
         public string iconID;
         public string title;
         public string body;
+
+        public override string ToString()
+        {
+            return $"INSPECT DATA ==========\n" +
+                $"iconID: {iconID}\n" +
+                $"title: {title} (note: probably unused)\n" +
+                $"body: {body}";
+        }
     }
 
     [Serializable]
@@ -66,6 +89,13 @@ namespace Shrimp5.UIContract
     {
         public bool isVisible;
         public string text;  // i.e. "Attack Speed is reduced by 6.7"
+
+        public override string ToString()
+        {
+            return $"TOOLTIP DATA ===========\n" +
+                $"isVisible: {isVisible}\n" +
+                $"text: {text}";
+        }
     }
 
 
@@ -86,6 +116,20 @@ namespace Shrimp5.UIContract
         public InspectData inspectData;
 
         public TooltipData tooltipData;
+
+        public override string ToString()
+        {
+            return $"BATTLE SNAPSHOT DATA =========\n" +
+                $"battleMode: {battleMode}\n" +
+                $"promptText: {promptText}\n" +
+                $"flavorText: {flavorText}\n" +
+                $"selectedIndex: {selectedIndex}\n" +
+                $"playerInfoData: {playerInfoData.ToString()}\n" +
+                $"enemyInfoData: {enemyInfoData.ToString()}\n" +
+                $"tooltipData: {tooltipData.ToString()}\n" +
+                $"inspectData: {inspectData.ToString()}\n" +
+                $"button count: {buttons.Count}";
+        }
     }
 
 
