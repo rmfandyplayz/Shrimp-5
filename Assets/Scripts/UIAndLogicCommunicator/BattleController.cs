@@ -49,6 +49,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         MoveData switchButton = new MoveData();
         switchButton.iconID = "Replace Laterrr r r r r ejfgfhuesvgfhjuiudhgvgbhcfikjuhgdbhiodckijubgwvhyjubighbgfviuiawu;opov";
         switchButton.isEnabled = true;
+        switchButton.moveShortDescription = "switch or whatever";
         currentSnapshot.moves.Add(switchButton);
 
         // Sets the inspect data to the current Move they are on
