@@ -23,7 +23,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         currentSnapshot = new BattleSnapshot();
         currentSnapshot.promptText = "it's your turn!";
         currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
-        currentSnapshot.moves = new List<MoveData>();
+        currentSnapshot.buttons = new List<ButtonData>();
         rng = new System.Random();
 
         // sets the active shrimp
@@ -39,22 +39,22 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         // adds all of the active shrimps move data to the MoveData list for the UI
         for (int i = 0; i < playerActiveShrimp.definition.moves.Length; i++)
         {
-            MoveData currentMove = new MoveData();
+            ButtonData currentMove = new ButtonData();
             currentMove.isEnabled = true;
             currentMove.iconID = playerActiveShrimp.definition.moves[i].iconID;
             currentMove.moveName = playerActiveShrimp.definition.moves[i].displayName;
             currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].description;
-            currentSnapshot.moves.Add(currentMove); 
+            currentSnapshot.buttons.Add(currentMove); 
         }
-        MoveData switchButton = new MoveData();
+        ButtonData switchButton = new ButtonData();
         switchButton.iconID = "Replace Laterrr r r r r ejfgfhuesvgfhjuiudhgvgbhcfikjuhgdbhiodckijubgwvhyjubighbgfviuiawu;opov";
         switchButton.isEnabled = true;
-        currentSnapshot.moves.Add(switchButton);
+        currentSnapshot.buttons.Add(switchButton);
 
         // Sets the inspect data to the current Move they are on
-        currentSnapshot.inspectData.iconID = currentSnapshot.moves[0].iconID;
-        currentSnapshot.inspectData.title = currentSnapshot.moves[0].moveName;
-        currentSnapshot.inspectData.body = currentSnapshot.moves[0].moveShortDescription;
+        currentSnapshot.inspectData.iconID = currentSnapshot.buttons[0].iconID;
+        currentSnapshot.inspectData.title = currentSnapshot.buttons[0].moveName;
+        currentSnapshot.inspectData.body = currentSnapshot.buttons[0].moveShortDescription;
 
         //Removes the active shrimp from the list used to store the inactive ones
         playerTeam.RemoveAt(0);
@@ -70,7 +70,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         //     currentShrimp.moveShortDescription = playerTeam[i].definition.maxHP.ToString();
         //     currentSnapshot.moves.Add(currentShrimp);
         // }
-        foreach (MoveData move in currentSnapshot.moves)
+        foreach (ButtonData move in currentSnapshot.buttons)
         {
             Debug.Log(move.moveName);
         }
@@ -124,12 +124,12 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     {
        for(int i = 0; i < playerTeam.Count; i++)
         {
-            MoveData currentShrimp = new MoveData();
+            ButtonData currentShrimp = new ButtonData();
             currentShrimp.isEnabled = true;
             currentShrimp.iconID = playerTeam[i].definition.shrimpSpriteID;
             currentShrimp.moveName = playerTeam[i].definition.name;
             currentShrimp.moveShortDescription = playerTeam[i].definition.maxHP.ToString();
-            currentSnapshot.moves[i+3] = currentShrimp;
+            currentSnapshot.buttons[i+3] = currentShrimp;
         }
     }
 
@@ -140,12 +140,12 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     {
         for (int i = 0; i < playerActiveShrimp.definition.moves.Length; i++)
         {
-            MoveData currentMove = new MoveData();
+            ButtonData currentMove = new ButtonData();
             currentMove.isEnabled = true;
             currentMove.iconID = playerActiveShrimp.definition.moves[i].iconID;
             currentMove.moveName = playerActiveShrimp.definition.moves[i].displayName;
             currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].description;
-            currentSnapshot.moves[i] = currentMove;
+            currentSnapshot.buttons[i] = currentMove;
         }
     }
 
@@ -205,15 +205,15 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     {
             if (currentSnapshot.battleMode == BattleUIMode.ChoosingAction)
             {
-            currentSnapshot.inspectData.iconID = currentSnapshot.moves[index].iconID;
-            currentSnapshot.inspectData.title = currentSnapshot.moves[index].moveName;
-            currentSnapshot.inspectData.body = currentSnapshot.moves[index].moveShortDescription;
+            currentSnapshot.inspectData.iconID = currentSnapshot.buttons[index].iconID;
+            currentSnapshot.inspectData.title = currentSnapshot.buttons[index].moveName;
+            currentSnapshot.inspectData.body = currentSnapshot.buttons[index].moveShortDescription;
             }
             if (currentSnapshot.battleMode == BattleUIMode.ChoosingSwitchTeammate)
             {
-            currentSnapshot.inspectData.iconID = currentSnapshot.moves[index+3].iconID;
-            currentSnapshot.inspectData.title = currentSnapshot.moves[index+3].moveName;
-            currentSnapshot.inspectData.body = currentSnapshot.moves[index+3].moveShortDescription;
+            currentSnapshot.inspectData.iconID = currentSnapshot.buttons[index+3].iconID;
+            currentSnapshot.inspectData.title = currentSnapshot.buttons[index+3].moveName;
+            currentSnapshot.inspectData.body = currentSnapshot.buttons[index+3].moveShortDescription;
             }
             currentSnapshot.battleMode = BattleUIMode.InspectingMove;
             UpdateUI();
@@ -497,7 +497,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         SetupPlayerHudData();
         ResetPlayerSwitchOptions();
         ResetPlayerMoveOptions();
-        MoveData deadShrimp = currentSnapshot.moves[2 + playerTeam.Count];
+        ButtonData deadShrimp = currentSnapshot.buttons[2 + playerTeam.Count];
         deadShrimp.isEnabled = false;
         playerTeam.RemoveAt(playerTeam.Count-1);
         UpdateUI();
@@ -561,7 +561,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         else
         {
             AbilityDefinition ability = enemyActiveShrimp.definition.ability;
-            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
+            AppliedStatus abilityStatus = new(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnAttack)
             {
                 if (ability.target == Target.Self)

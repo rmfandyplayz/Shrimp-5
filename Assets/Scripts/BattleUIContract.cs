@@ -37,7 +37,7 @@ namespace Shrimp5.UIContract
 
     // these count as one slot in the bottom row
     [Serializable]
-    public struct MoveData
+    public struct ButtonData
     {
         public bool isEnabled; // enable a move? enable a teammate to be selected?
         public string iconID;    // something like "move_basic_attack"
@@ -45,7 +45,7 @@ namespace Shrimp5.UIContract
         public string moveShortDescription;    // "8 DMG, 20% to weaken by 50%"
 
         // hint texts
-        public string hintText; // "Z to use, X to go back"
+        public string hintText; // "Z to use, X to go back" lowkey useless as fuck
 
         public override string ToString()
         {
@@ -81,7 +81,7 @@ namespace Shrimp5.UIContract
         public HudData playerInfoData;
         public HudData enemyInfoData;
 
-        public List<MoveData> moves; // usually 4 max, but just in case
+        public List<ButtonData> buttons; // usually 4 max, but just in case
 
         public InspectData inspectData;
 
