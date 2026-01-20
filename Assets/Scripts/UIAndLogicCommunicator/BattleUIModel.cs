@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Shrimp5.UIContract;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BattleUIModel : MonoBehaviour, IBattleUIModel
@@ -8,10 +9,10 @@ public class BattleUIModel : MonoBehaviour, IBattleUIModel
     public event Action Changed;
     private BattleSnapshot snapshot;
 
-    void Start()
+    void Awake()
     {
         snapshot = new BattleSnapshot();
-        snapshot.battleMode = BattleUIMode.ChoosingAction;
+        snapshot.moves = new List<MoveData>();
     }
 
     // unused for now

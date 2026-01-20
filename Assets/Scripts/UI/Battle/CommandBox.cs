@@ -21,7 +21,7 @@ public class CommandBox : MonoBehaviour
     private string currentFullText = "";
     private Coroutine typingCoroutine;
 
-    private void Start()
+    private void Awake()
     {
         spawnedButtons = new();
     }
@@ -45,6 +45,7 @@ public class CommandBox : MonoBehaviour
             moveButtonContainer.gameObject.SetActive(true);
 
             //render buttons vvv
+
 
             while (spawnedButtons.Count < moves.Count)
             {

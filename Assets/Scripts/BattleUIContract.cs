@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.Search;
 
 // the "API" that the game logic and UI logic will communicate with
 namespace Shrimp5.UIContract
@@ -44,6 +46,11 @@ namespace Shrimp5.UIContract
 
         // hint texts
         public string hintText; // "Z to use, X to go back"
+
+        public override string ToString()
+        {
+            return $"moveName: {moveName}, moveShortDescription: {moveShortDescription}, hintText: probably null, isEnabled: {isEnabled}, iconID: {iconID}";
+        }
     }
 
     [Serializable]

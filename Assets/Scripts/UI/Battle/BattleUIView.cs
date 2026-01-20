@@ -39,7 +39,7 @@ public class BattleUIView : MonoBehaviour
     {
         BattleSnapshot snapshot = battleModel.GetSnapshot();
 
-        if(snapshot.battleMode == BattleUIMode.Paused)
+        if (snapshot.battleMode == BattleUIMode.Paused)
         {
             pauseMenu.gameObject.SetActive(true);
             return;

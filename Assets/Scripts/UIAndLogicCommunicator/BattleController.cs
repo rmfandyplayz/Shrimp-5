@@ -21,6 +21,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     {
         // creates the snapshot and automatically sets the battle mode to choosing action
         currentSnapshot = new BattleSnapshot();
+        currentSnapshot.promptText = "it's your turn!";
         currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
         currentSnapshot.moves = new List<MoveData>();
         rng = new System.Random();
@@ -31,7 +32,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         enemyActiveShrimp = enemyTeam[0];
         enemyActiveShrimp.statuses = new List<AppliedStatus>();
 
-        // Calls the methods to set the player and enemy HubData's to the active shrimp
+        // Calls the methods to set the player and enemy HudData's to the active shrimp
         SetupPlayerHudData(); 
         SetupEnemyHudData(); 
 
@@ -71,7 +72,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         }
         OnSwitchInAbility(User.Player);
         OnSwitchInAbility(User.Enemy);
-        
+
         // updates the UI with starting data
         UpdateUI();
     }
