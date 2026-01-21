@@ -26,17 +26,15 @@ public class UnitFrame : MonoBehaviour
     // meant to be called from the manager
     public void Render(HudData hudData)
     {
+        Debug.Log("HUD DATA FROM UNIT FRAME: " + hudData);
         nameText.text = hudData.teammateName;
-
-        hpBarFill.fillAmount = (float)hudData.hp / hudData.maxHp;
-
         hpText.text = $"{hudData.hp} / {hudData.maxHp}";
-
         attackSpeedText.text = $"{hudData.attackSpeed}";
         attackText.text = $"{hudData.attack}";
 
-        portraitImage.sprite = SpriteResolver.Get(hudData.portraitIconID);
+        hpBarFill.fillAmount = (float)hudData.hp / hudData.maxHp;
 
+        portraitImage.sprite = SpriteResolver.Get(hudData.portraitIconID);
 
         // handle passives/status effects
         List<List<string>> passives = hudData.passives;

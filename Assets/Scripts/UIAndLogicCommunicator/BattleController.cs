@@ -363,11 +363,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
                     currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
-                    Debug.Log(currentSnapshot.playerInfoData.hp);
                     currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
                     currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
+                    
                     UpdateUI();
-
                 }
             }
         }
