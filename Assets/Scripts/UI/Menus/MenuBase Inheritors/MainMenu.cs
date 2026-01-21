@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditorInternal.ReorderableList;
 
 // written by andy
 // name might be confusing, but this is for the main part of the main menu
@@ -71,7 +70,22 @@ public class MainMenu : MenuBase
     {
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Insert(0.5f, cg.transform.DOMoveX(2046, 0.7f).SetEase(Ease.InQuint));
+        sequence.Insert(0.3f, blackPanel.DOAnchorPosX(500, 0.5f).SetEase(Ease.OutQuad));
+
+        sequence.Insert(0.55f, gameLogo.rectTransform.DOAnchorPosX(300, 0.2f).SetEase(Ease.OutCubic));
+        sequence.Insert(0.55f, gameLogo.DOFade(0, 0.2f));
+
+        sequence.Insert(0.5f, waterfallElements[0].rectTransform.DOAnchorPosX(300, 0.2f).SetEase(Ease.OutQuad));
+        sequence.Insert(0.5f, waterfallElements[0].DOFade(0, 0.2f));
+        sequence.Insert(0.45f, waterfallElements[1].rectTransform.DOAnchorPosX(300, 0.2f).SetEase(Ease.OutQuad));
+        sequence.Insert(0.45f, waterfallElements[1].DOFade(0, 0.2f));
+        sequence.Insert(0.4f, waterfallElements[2].rectTransform.DOAnchorPosX(300, 0.2f).SetEase(Ease.OutQuad));
+        sequence.Insert(0.4f, waterfallElements[2].DOFade(0, 0.2f));
+        sequence.Insert(0.35f, waterfallElements[3].rectTransform.DOAnchorPosX(300, 0.2f).SetEase(Ease.OutQuad));
+        sequence.Insert(0.35f, waterfallElements[3].DOFade(0, 0.2f));
+
+        sequence.Insert(0.35f, backgroundArt.rectTransform.DOAnchorPosY(-50, 0.7f).SetEase(Ease.OutQuint));
+        sequence.Insert(0.35f, backgroundArt.DOFade(0, 0.45f));
 
         sequence.OnComplete(() => onComplete?.Invoke());
     }
