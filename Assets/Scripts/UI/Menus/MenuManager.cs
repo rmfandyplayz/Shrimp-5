@@ -32,7 +32,7 @@ public class MenuManager : MonoBehaviour
     {
         currentMenu = mainMenu;
 
-        //settingsMenu.gameObject.SetActive(false);
+        settingsMenu.gameObject.SetActive(false);
         //creditsChoiceMenu.gameObject.SetActive(false);
         //creditsDevsMenu.gameObject.SetActive(false);
         //creditsAudioMenu.gameObject.SetActive(false);
@@ -53,13 +53,15 @@ public class MenuManager : MonoBehaviour
             return;
 
         // lock everything
-        if(currentMenu)
+        if(currentMenu != null)
             currentMenu.GetCanvasGroup().interactable = false;
         nextMenu.GetCanvasGroup().interactable = false;
 
         // close old and open new
         currentMenu.AnimateOut(() =>
         {
+            currentMenu.gameObject.SetActive(false);
+            nextMenu.gameObject.SetActive(true);
             nextMenu.AnimateIn(() =>
             {
                 // unlock controls and select first
