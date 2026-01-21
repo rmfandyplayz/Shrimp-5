@@ -24,12 +24,7 @@ public class MainMenu : MenuBase
         // however i for some fucking reason still like programming so i'm just screwing
         // myself up i suppose
 
-        transform.DOKill();
-
-        if (transform is RectTransform rectTransform)
-            rectTransform.anchoredPosition = defaultPos;
-        transform.localScale = defaultScale;
-        //cg.alpha = 0;
+        ResetState();
 
         Sequence sequence = DOTween.Sequence();
 

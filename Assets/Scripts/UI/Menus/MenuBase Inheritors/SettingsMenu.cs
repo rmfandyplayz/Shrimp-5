@@ -11,12 +11,7 @@ public class SettingsMenu : MenuBase
 
     public override void AnimateIn(Action onComplete)
     {
-        transform.DOKill();
-
-        if (transform is RectTransform rectTransform)
-            rectTransform.anchoredPosition = defaultPos;
-        transform.localScale = defaultScale;
-        //cg.alpha = 1;
+        ResetState();
 
         Sequence sequence = DOTween.Sequence();
 

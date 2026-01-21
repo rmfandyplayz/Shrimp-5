@@ -66,19 +66,26 @@ public class MenuBase : MonoBehaviour
         return firstSelected; 
     }
 
+    protected void ResetState(bool resetAlpha = false)
+    {
+        this.transform.DOKill();
+
+        if (transform is RectTransform rectTransform)
+            rectTransform.anchoredPosition = defaultPos;
+
+        transform.localScale = defaultScale;
+
+        if (resetAlpha)
+            cg.alpha = 0;
+    }
+
 
     // optional implementable methods vvvvvvvvvvvvvvvvvv
 
 
     public virtual void AnimateIn(Action onComplete)
     {
-        // RESET LOGIC. THIS NEEDS TO BE ADDED TO FUTURE INHERITORS.
-        transform.DOKill();
-
-        if(transform is RectTransform rectTransform)
-            rectTransform.anchoredPosition = defaultPos;
-        transform.localScale = defaultScale;
-        cg.alpha = 0; // optional reset logic
+        ResetState();
 
         cg.alpha = 0;
         cg.gameObject.SetActive(true);
