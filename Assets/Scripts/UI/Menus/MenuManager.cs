@@ -32,10 +32,10 @@ public class MenuManager : MonoBehaviour
     {
         currentMenu = mainMenu;
 
-        settingsMenu.gameObject.SetActive(false);
-        creditsChoiceMenu.gameObject.SetActive(false);
-        creditsDevsMenu.gameObject.SetActive(false);
-        creditsAudioMenu.gameObject.SetActive(false);
+        //settingsMenu.gameObject.SetActive(false);
+        //creditsChoiceMenu.gameObject.SetActive(false);
+        //creditsDevsMenu.gameObject.SetActive(false);
+        //creditsAudioMenu.gameObject.SetActive(false);
          
         // animate the current menu aka the main menu when game first loads in
         currentMenu.GetCanvasGroup().interactable = false;

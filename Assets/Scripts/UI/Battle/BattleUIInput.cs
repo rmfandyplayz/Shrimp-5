@@ -101,7 +101,13 @@ public class BattleUIInput : MonoBehaviour
         if (cursorIndex < 0)
             cursorIndex = totalMoves - 1;
 
+        Debug.Log("MoveSelectionCursor() setting selection to index " + cursorIndex);
         commandBox.SetSelection(cursorIndex);
+    }
+
+    public int GetSelectionIndex()
+    {
+        return cursorIndex;
     }
 
 }

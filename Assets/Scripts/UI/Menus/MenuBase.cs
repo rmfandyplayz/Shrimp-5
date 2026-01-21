@@ -1,11 +1,12 @@
 using UnityEngine;
 using DG.Tweening;
 using System;
+using UnityEngine.EventSystems;
 
 // written by andy
 // the base class for all menu animations
 [RequireComponent(typeof(CanvasGroup))]
-public class MenuBase : MonoBehaviour
+public class MenuBase : MonoBehaviour, ISelectHandler, IDeselectHandler, ISubmitHandler
 {
     CanvasGroup cg;
     GameControls gameControls;
@@ -35,32 +36,6 @@ public class MenuBase : MonoBehaviour
         }
     }
 
-    // manager calls this. override this to do more funny animations rather than just fade in/out
-    public virtual void AnimateIn(Action onComplete)
-    {
-        cg.alpha = 0;
-        cg.gameObject.SetActive(true);
-        cg.DOFade(1, 0.2f).SetUpdate(true).OnComplete(() => onComplete?.Invoke());
-    }
-
-    // manager calls this. override to do custom animation
-    public virtual void AnimateOut(Action onComplete)
-    {
-        cg.DOFade(0, 0.2f).SetUpdate(true).OnComplete(() =>
-        {
-            cg.gameObject.SetActive(false);
-            onComplete?.Invoke();
-        });
-    }
-
-    public virtual void OnBackPressed()
-    {
-        if(backMenu != null)
-        {
-            MenuManager.Instance.SwitchMenu(backMenu);
-        }
-    }
-
     private void OnEnable()
     {
         gameControls.Battle.Enable();
@@ -82,4 +57,38 @@ public class MenuBase : MonoBehaviour
     {
         return firstSelected; 
     }
+
+
+    // optional implementable methods vvvvvvvvvvvvvvvvvv
+
+
+    public virtual void AnimateIn(Action onComplete)
+    {
+        cg.alpha = 0;
+        cg.gameObject.SetActive(true);
+        cg.DOFade(1, 0.2f).SetUpdate(true).OnComplete(() => onComplete?.Invoke());
+    }
+
+    public virtual void AnimateOut(Action onComplete)
+    {
+        cg.DOFade(0, 0.2f).SetUpdate(true).OnComplete(() =>
+        {
+            cg.gameObject.SetActive(false);
+            onComplete?.Invoke();
+        });
+    }
+
+    public virtual void OnBackPressed()
+    {
+        if(backMenu != null)
+        {
+            MenuManager.Instance.SwitchMenu(backMenu);
+        }
+    }
+
+    void ISelectHandler.OnSelect(BaseEventData eventData) { }
+
+    void IDeselectHandler.OnDeselect(BaseEventData eventData) { }
+
+    void ISubmitHandler.OnSubmit(BaseEventData eventData) { }
 }

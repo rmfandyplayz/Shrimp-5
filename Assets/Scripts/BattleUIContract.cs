@@ -106,7 +106,7 @@ namespace Shrimp5.UIContract
         public string promptText; // i.e. "your move!", "pick a shrimp"
         public string flavorText; // i.e. "you used your mother, dealing 20 damage to the enemy, and healing yourself for 50."
 
-        public int selectedIndex; // a way to force the selection box to go to a certain option. probably wont be used that much
+        public int selectedIndex; // a way to force the selection box to go to a certain option. NOTE: PROBABLY ISN'T USED
 
         public HudData playerInfoData;
         public HudData enemyInfoData;

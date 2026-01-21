@@ -20,10 +20,12 @@ public class CommandBox : MonoBehaviour
     private bool isTyping = false;
     private string currentFullText = "";
     private Coroutine typingCoroutine;
+    private BattleUIInput battleInput;
 
     private void Awake()
     {
         spawnedButtons = new();
+        battleInput = FindFirstObjectByType<BattleUIInput>();
     }
 
     public void Render(BattleSnapshot snapshot)
@@ -58,7 +60,7 @@ public class CommandBox : MonoBehaviour
                 if(i < moves.Count)
                 {
                     spawnedButtons[i].gameObject.SetActive(true);
-                    bool isSelected = i == snapshot.selectedIndex;
+                    bool isSelected = i == battleInput.GetSelectionIndex();
                     spawnedButtons[i].Configure(moves[i], isSelected);
                 }
                 else // hide extra buttons
@@ -67,7 +69,7 @@ public class CommandBox : MonoBehaviour
                 }
             }
 
-            SetSelection(snapshot.selectedIndex);
+            SetSelection(battleInput.GetSelectionIndex());
         }
     }
 
