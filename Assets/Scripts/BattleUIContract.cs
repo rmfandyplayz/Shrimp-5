@@ -119,7 +119,7 @@ namespace Shrimp5.UIContract
 
         public override string ToString()
         {
-            return $"BATTLE SNAPSHOT DATA =========\n" +
+            return $"BATTLE SNAPSHOT DATA as of {DateTime.Now} =========\n" +
                 $"battleMode: {battleMode}\n" +
                 $"promptText: {promptText}\n" +
                 $"flavorText: {flavorText}\n" +
