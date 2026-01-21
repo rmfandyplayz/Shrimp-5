@@ -335,7 +335,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             {
                 
                 enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP() - damage; 
-                
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -344,6 +343,11 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
+                    currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
+                    currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
+                    UpdateUI();
                 }
                 if (damage > 0)
                 {
@@ -362,7 +366,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
-                    currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
+                    playerActiveShrimp.currentHP = playerActiveShrimp.GetHP();
+                    currentSnapshot.playerInfoData.hp = playerActiveShrimp.currentHP;
                     currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
                     currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
                     
@@ -457,6 +462,13 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
+                    currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
+                    currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
+                    
+                    UpdateUI();
+
                 }
                 if (damage > 0)
                 {
@@ -475,6 +487,11 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP();
+                    currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.currentHP;
+                    currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
+                    currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
+                    UpdateUI();
                 }
             }
         // updates statuses

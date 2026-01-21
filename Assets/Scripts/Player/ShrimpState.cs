@@ -82,6 +82,7 @@ public class ShrimpState : MonoBehaviour
         {
             totalHP = definition.maxHP;
         }
+
         return totalHP;
     }
 
