@@ -9,13 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3479c30e67d4cc41ba4ed3087899eb1, type: 3}
-  m_Name: PoisonDart
+  m_Script: {fileID: 11500000, guid: 0fe602b36f4de9740accf0c6aa66384c, type: 3}
+  m_Name: SlimeHeal
   m_EditorClassIdentifier: 
-  displayName: Poison Dart
-  hasEffect: 0
-  effect: {fileID: 0}
-  iconID: slimy.shrimp
-  power: 8
-  target: 1
-  description: 8 Power, no additional effects.
+  displayName: Heal (75)
+  iconID: balls
+  statChanged: 0
+  effectType: 0
+  buffType: 1
+  valueChange: 75
+  permanant: 0
+  turnDuration: 1
+  description: Healed 70HP

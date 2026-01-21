@@ -81,9 +81,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         switchShrimp.Add(switchButton);
         OnSwitchInAbility(User.Player);
         OnSwitchInAbility(User.Enemy);
-        Debug.Log(enemyActiveShrimp.definition.maxHP);
-        Debug.Log(enemyActiveShrimp.definition.name);
-        Debug.Log(enemyActiveShrimp.currentHP);
         // updates the UI with starting data
         UpdateUI();
     }
@@ -256,6 +253,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     /// <param name="action"></param> whether the player is switching or attacking
     public void RunTurn(int index, ActionType action)
     {
+        Debug.Log(currentSnapshot.selectedIndex);
         // if the player is switching it swaps what is active and then has the enemy choose an attack
         if (action == ActionType.Switching)
         {
@@ -336,7 +334,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             int damage = shrimpPower*move.power;
             if (move.target == MoveTarget.Opponent)
             {
-                enemyActiveShrimp.currentHP -= damage;
+                
+                enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP() - damage; 
+                
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -354,7 +354,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             }
             else
             {
-                playerActiveShrimp.currentHP -= damage;
+                playerActiveShrimp.currentHP = playerActiveShrimp.GetHP() - damage;
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -363,6 +363,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    Debug.Log(playerActiveShrimp.GetHP());
                 }
             }
         }
@@ -462,7 +463,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             }
             else
             {
-                enemyActiveShrimp.currentHP -= damage;
+                enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP() - damage;
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);

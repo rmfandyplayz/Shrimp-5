@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SlimeSlow
   m_EditorClassIdentifier: 
   displayName: Slime (-10)
-  iconID: slimy.shrimp
+  iconID: balls
   statChanged: 2
   effectType: 1
   buffType: 1

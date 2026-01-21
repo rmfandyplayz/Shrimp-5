@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StickySlow
   m_EditorClassIdentifier: 
   displayName: Slowed (75%)
-  iconID: slimy.shrimp
+  iconID: balls
   statChanged: 2
   effectType: 1
   buffType: 0

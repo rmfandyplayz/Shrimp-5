@@ -16,6 +16,6 @@ MonoBehaviour:
   hasEffect: 1
   effect: {fileID: 11400000, guid: d6782e51a3d0de64495177b50fda1608, type: 2}
   iconID: slimy.shrimp
-  power: 10
+  power: 5
   target: 1
-  description: 20 Power, lowers the speed of the opposing Shrimp by 10.
+  description: 5 Power, lowers the speed of the opposing Shrimp by 10.

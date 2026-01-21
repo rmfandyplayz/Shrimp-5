@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: EatFlies
   m_EditorClassIdentifier: 
   displayName: Eat Flies
-  hasEffect: 0
-  effect: {fileID: 0}
+  hasEffect: 1
+  effect: {fileID: 11400000, guid: e05ff582c9b30cc4098aba1d05589734, type: 2}
   iconID: slimy.shrimp
-  power: -75
+  power: 0
   target: 0
   description: Heals up to 75 HP of damage.

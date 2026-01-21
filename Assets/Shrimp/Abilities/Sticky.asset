@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sticky
   m_EditorClassIdentifier: 
   displayName: Sticky
-  iconID: slimy.shrimp
+  iconID: fuck it teto
   trigger: 1
   effect: {fileID: 11400000, guid: 776fb17191db6444687dbd5c6af3c085, type: 2}
   description: When this shrimp is hit by an attack. It reduces the attacker's speed
