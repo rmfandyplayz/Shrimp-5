@@ -16,6 +16,25 @@ public class MainMenu : MenuBase
     [SerializeField] RectTransform blackPanel;
     [SerializeField] Image backgroundArt;
 
+    private Vector2 blackPanelDefPos;
+    private Vector2 logoDefPos;
+    private Vector2 artDefPos;
+    private List<Vector2> waterfallDefPos = new();
+
+    public override void Awake()
+    {
+        base.Awake();
+
+        blackPanelDefPos = blackPanel.anchoredPosition;
+        logoDefPos = gameLogo.rectTransform.anchoredPosition;
+        artDefPos = backgroundArt.rectTransform.anchoredPosition;
+
+        foreach (var item in waterfallElements)
+        {
+            waterfallDefPos.Add(item.rectTransform.anchoredPosition);
+        }
+    }
+
     public override void AnimateIn(Action onComplete)
     {
         // sometimes i write code so bad i hope people will never trust my programming
@@ -55,5 +74,29 @@ public class MainMenu : MenuBase
         sequence.Insert(0.5f, cg.transform.DOMoveX(2046, 0.7f).SetEase(Ease.InQuint));
 
         sequence.OnComplete(() => onComplete?.Invoke());
+    }
+
+    public override void ResetState(bool resetAlpha = false)
+    {
+        base.ResetState(resetAlpha);
+
+        blackPanel.DOKill();
+        gameLogo.DOKill();
+        backgroundArt.DOKill();
+        foreach (var item in waterfallElements) 
+            item.DOKill();
+
+        blackPanel.anchoredPosition = blackPanelDefPos;
+        gameLogo.rectTransform.anchoredPosition = logoDefPos;
+        backgroundArt.rectTransform.anchoredPosition = artDefPos;
+
+        for (int i = 0; i < waterfallElements.Count; i++)
+        {
+            waterfallElements[i].rectTransform.anchoredPosition = waterfallDefPos[i];
+            waterfallElements[i].alpha = 1; // Reset text alpha
+        }
+
+        gameLogo.color = new Color(gameLogo.color.r, gameLogo.color.g, gameLogo.color.b, 1);
+        backgroundArt.color = new Color(backgroundArt.color.r, backgroundArt.color.g, backgroundArt.color.b, 1);
     }
 }

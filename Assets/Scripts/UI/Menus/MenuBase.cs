@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 
 // written by andy
 // the base class for all menu animations
-[RequireComponent(typeof(CanvasGroup))]
 public class MenuBase : MonoBehaviour
 {
 
@@ -23,7 +22,10 @@ public class MenuBase : MonoBehaviour
 
     public virtual void Awake()
     {
-        cg = GetComponent<CanvasGroup>();
+        if(cg == null)
+        {
+            cg = GetComponentInChildren<CanvasGroup>();
+        }
         gameControls = new();
 
         // store default values so it can be reset
@@ -66,16 +68,19 @@ public class MenuBase : MonoBehaviour
         return firstSelected; 
     }
 
-    protected void ResetState(bool resetAlpha = false)
+    // completely resets the state of things in the menu for them to be tweened again
+    // probably should override this in inheritor classes for custom implementation.
+    public virtual void ResetState(bool resetAlpha = false)
     {
-        this.transform.DOKill();
+        transform.DOKill();
+        cg.DOKill();
 
         if (transform is RectTransform rectTransform)
             rectTransform.anchoredPosition = defaultPos;
 
         transform.localScale = defaultScale;
 
-        if (resetAlpha)
+        if(resetAlpha)
             cg.alpha = 0;
     }
 
