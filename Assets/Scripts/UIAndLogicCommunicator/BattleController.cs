@@ -253,7 +253,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     /// <param name="action"></param> whether the player is switching or attacking
     public void RunTurn(int index, ActionType action)
     {
-        Debug.Log(currentSnapshot.selectedIndex);
         // if the player is switching it swaps what is active and then has the enemy choose an attack
         if (action == ActionType.Switching)
         {
@@ -363,7 +362,12 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
-                    Debug.Log(playerActiveShrimp.GetHP());
+                    currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
+                    Debug.Log(currentSnapshot.playerInfoData.hp);
+                    currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
+                    currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
+                    UpdateUI();
+
                 }
             }
         }
