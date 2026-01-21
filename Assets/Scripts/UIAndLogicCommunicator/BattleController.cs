@@ -335,7 +335,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             {
                 
                 enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP() - damage; 
-                Debug.Log("Enemy HP: " + enemyActiveShrimp.currentHP);
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -345,9 +344,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
-                    currentSnapshot.enemyInfoData.hp = playerActiveShrimp.GetHP();
-                    currentSnapshot.enemyInfoData.attack = playerActiveShrimp.GetAttack();
-                    currentSnapshot.enemyInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
+                    currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
+                    currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
+                    currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
                     UpdateUI();
                 }
                 if (damage > 0)
@@ -359,7 +358,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             else
             {
                 playerActiveShrimp.currentHP = playerActiveShrimp.GetHP() - damage;
-                Debug.Log("Player HP: " + playerActiveShrimp.currentHP);
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -368,7 +366,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
-                    currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
+                    playerActiveShrimp.currentHP = playerActiveShrimp.GetHP();
+                    currentSnapshot.playerInfoData.hp = playerActiveShrimp.currentHP;
                     currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
                     currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
                     
@@ -455,7 +454,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             if (move.target == MoveTarget.Opponent)
             {
                 playerActiveShrimp.currentHP = playerActiveShrimp.GetHP() - damage;
-                Debug.Log("Player HP: " + playerActiveShrimp.currentHP);
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -481,7 +479,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             else
             {
                 enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP() - damage;
-                Debug.Log("Enemy HP: " + enemyActiveShrimp.currentHP);
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -490,9 +487,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
-                    currentSnapshot.enemyInfoData.hp = playerActiveShrimp.GetHP();
-                    currentSnapshot.enemyInfoData.attack = playerActiveShrimp.GetAttack();
-                    currentSnapshot.enemyInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
+                    enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP();
+                    currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.currentHP;
+                    currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
+                    currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
                     UpdateUI();
                 }
             }
