@@ -35,7 +35,7 @@ public class UIFeedback_Scale : MonoBehaviour, IMenuFeedback
 
     void IMenuFeedback.OnDeselect()
     {
-        target.transform.DOKill();
+        target.DOKill();
         target.transform.DOScale(originalScale, scaleDuration).SetUpdate(true).SetEase(deselectEasing).OnUpdate(() =>
         {
             if(affectOthers == true && parentLayoutGroup != null)
@@ -47,15 +47,34 @@ public class UIFeedback_Scale : MonoBehaviour, IMenuFeedback
 
     void IMenuFeedback.OnSelect()
     {
-        target.transform.DOKill();
+        target.DOKill();
         target.transform.DOScale(scaleAmount, scaleDuration).SetUpdate(true).SetEase(selectEasing).OnUpdate(() =>
         {
             if (affectOthers == true && parentLayoutGroup != null)
             {
                 LayoutRebuilder.MarkLayoutForRebuild(parentLayoutGroup);
             }
-        }); ;
+        });
     }
 
-    void IMenuFeedback.OnSubmit() { } // no implementation
+    void IMenuFeedback.OnSubmit()
+    {
+        Sequence sequence = DOTween.Sequence();
+
+        target.DOKill();
+        sequence.Insert(0f, target.DOScale(scaleAmount * 1.2f, 0.1f).SetEase(Ease.OutExpo)).OnUpdate(() =>
+        {
+            if (affectOthers == true && parentLayoutGroup != null)
+            {
+                LayoutRebuilder.MarkLayoutForRebuild(parentLayoutGroup);
+            }
+        });
+        sequence.Insert(.1f, target.DOScale(scaleAmount, 0.4f).SetEase(Ease.OutCubic)).OnUpdate(() =>
+        {
+            if (affectOthers == true && parentLayoutGroup != null)
+            {
+                LayoutRebuilder.MarkLayoutForRebuild(parentLayoutGroup);
+            }
+        });
+    }
 }
