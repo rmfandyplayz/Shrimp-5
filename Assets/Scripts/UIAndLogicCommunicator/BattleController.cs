@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Mono.Cecil.Cil;
@@ -20,6 +21,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     private ShrimpState enemyActiveShrimp;
     private List<ButtonData> moves;
     private List<ButtonData> switchShrimp;
+    private bool frozen;
+    private Queue<string> flavorTextQueue;
 
     void Start()
     {
@@ -91,9 +94,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         OnSwitchInAbility(User.Player);
         OnSwitchInAbility(User.Enemy);
         // updates the UI with starting data
+        frozen = true;
+        flavorTextQueue = new Queue<string>();
+        flavorTextQueue.Enqueue("Battle Started");
+        flavorTextQueue.Enqueue("You Sent Out " + currentSnapshot.playerInfoData.teammateName);
+        flavorTextQueue.Enqueue("Your Opponent Sent Out " + currentSnapshot.enemyInfoData.teammateName);
+        currentSnapshot.flavorText = flavorTextQueue.Dequeue();
         UpdateUI();
     }
-
     /// <summary>
     /// Sets the player info data to the data of the current active shrimp when called
     /// </summary>
@@ -184,6 +192,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     // Confirms if the player chooses a move or switches, and then runs the turn
     public void Confirm(int index)
     {
+        if (!frozen)
+        {
         if (currentSnapshot.battleMode == BattleUIMode.ChoosingAction)
         {
             if (index == 3)
@@ -213,6 +223,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             UpdateUI();
             RunTurn(index, ActionType.Switching);
             }
+        }
         }
         UpdateUI();
     }
@@ -564,12 +575,15 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     // confirms dialogue options
     public void DialogueConfirm()
     {
-        currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
+        currentSnapshot.flavorText = flavorTextQueue.Dequeue();
     }
     // skips all dialogue
     public void DialogueSkipAll()
     {
-        currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+        while (!(flavorTextQueue.Count == 0))
+        {
+           currentSnapshot.flavorText = flavorTextQueue.Dequeue(); 
+        }
     }
 
     // methods for ability triggers
