@@ -13,7 +13,7 @@ public class BattleUIView : MonoBehaviour
     [SerializeField] UnitFrame playerFrame;
     [SerializeField] UnitFrame enemyFrame;
     [SerializeField] CommandBox commandBox;
-    [SerializeField] RectTransform pauseMenu;
+    [SerializeField] PauseMenu pauseMenu;
     [SerializeField] RectTransform tooltipPanel;
     [SerializeField] TextMeshProUGUI tooltipText;
 
@@ -41,8 +41,21 @@ public class BattleUIView : MonoBehaviour
 
         if (snapshot.battleMode == BattleUIMode.Paused)
         {
-            pauseMenu.gameObject.SetActive(true);
+            // already paused
+            if (!pauseMenu.GetEnabled())
+            {
+                pauseMenu.AnimateIn(null);
+            }
+
             return;
+        }
+        else
+        {
+            // not paused; ensure menu is gone
+            if (pauseMenu.GetEnabled())
+            {
+                pauseMenu.AnimateOut(null);
+            }
         }
 
         pauseMenu.gameObject.SetActive(false);
