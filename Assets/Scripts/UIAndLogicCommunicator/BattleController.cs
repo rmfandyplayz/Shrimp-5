@@ -29,7 +29,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         // creates the snapshot and automatically sets the battle mode to choosing action
         currentSnapshot = new BattleSnapshot();
         currentSnapshot.promptText = "it's your turn!";
-        currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+        currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
         currentSnapshot.buttons = new List<ButtonData>();
         rng = new System.Random();
 
@@ -100,6 +100,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         flavorTextQueue.Enqueue("You Sent Out " + currentSnapshot.playerInfoData.teammateName);
         flavorTextQueue.Enqueue("Your Opponent Sent Out " + currentSnapshot.enemyInfoData.teammateName);
         currentSnapshot.flavorText = flavorTextQueue.Dequeue();
+        Debug.Log(currentSnapshot.battleMode.ToString());
+        Debug.Log(currentSnapshot.flavorText);
         UpdateUI();
     }
     /// <summary>
