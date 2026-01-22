@@ -17,7 +17,7 @@ MonoBehaviour:
   statChanged: 2
   effectType: 1
   buffType: 1
-  valueChange: 10
+  valueChange: -10
   permanant: 0
-  turnDuration: 1
+  turnDuration: 2
   description: Lowers the afflicted's speed stat by 10 for 1 turn.
