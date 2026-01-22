@@ -1334,7 +1334,7 @@ MonoBehaviour:
   flavorText: {fileID: 3688568866623357650}
   moveButtonContainer: {fileID: 4558441628492526506}
   moveButtonPrefab: {fileID: 6451974999026174625, guid: 53240b541e78f054f9c78b280ce56a89, type: 3}
-  typewriterEffectSpeed: 0.1
+  typewriterEffectSpeed: 0.01
 --- !u!1 &2845782644085491981
 GameObject:
   m_ObjectHideFlags: 0

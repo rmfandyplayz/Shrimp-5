@@ -106,15 +106,15 @@ public class CommandBox : MonoBehaviour
     {
         isTyping = true;
 
-        flavorText.maxVisibleCharacters = 0;
+        flavorText.ForceMeshUpdate();
         int totalChars = flavorText.textInfo.characterCount;
+        flavorText.maxVisibleCharacters = 0;
 
         // reveal a character every typewriterEffectSpeed seconds
         for(int i = 0; i <= totalChars; i++)
         {
-            flavorText.textInfo.characterCount = i;
+            flavorText.maxVisibleCharacters = i;
             yield return new WaitForSeconds(typewriterEffectSpeed);
-            Debug.Log("test");
         }
 
         isTyping = false;
