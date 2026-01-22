@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,9 +9,7 @@ public class MenuManager : MonoBehaviour
     [Header("script references")]
     [SerializeField] MenuBase mainMenu;
     [SerializeField] MenuBase settingsMenu;
-    [SerializeField] MenuBase creditsChoiceMenu; // screen that prompts devs & audio button
-    [SerializeField] MenuBase creditsDevsMenu; // dev list
-    [SerializeField] MenuBase creditsAudioMenu; // music list
+    [SerializeField] MenuBase creditsMenu;
 
     private MenuBase currentMenu;
 
@@ -33,10 +32,8 @@ public class MenuManager : MonoBehaviour
         currentMenu = mainMenu;
 
         settingsMenu.gameObject.SetActive(false);
-        //creditsChoiceMenu.gameObject.SetActive(false);
-        //creditsDevsMenu.gameObject.SetActive(false);
-        //creditsAudioMenu.gameObject.SetActive(false);
-         
+        creditsMenu.gameObject.SetActive(false);
+
         // animate the current menu aka the main menu when game first loads in
         currentMenu.GetCanvasGroup().interactable = false;
         currentMenu.AnimateIn(() =>
@@ -76,5 +73,24 @@ public class MenuManager : MonoBehaviour
         });
     }
 
+    public void QuitGame()
+    {
+        currentMenu.GetCanvasGroup().interactable = false;
+        currentMenu.gameObject.SetActive(false);
+
+        StartCoroutine(QuitGameAnimation());
+    }
     
+    IEnumerator QuitGameAnimation()
+    {
+        //TODO: funny stuff before quitting game?
+
+        yield return new WaitForSeconds(0);
+
+        Application.Quit();
+
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
+    }
 }

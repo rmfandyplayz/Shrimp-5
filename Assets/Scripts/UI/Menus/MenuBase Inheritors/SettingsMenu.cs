@@ -3,6 +3,8 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
+// written by andy
+// animations for settings menu
 public class SettingsMenu : MenuBase
 {
     [SerializeField] Image backgroundImage;
@@ -52,14 +54,6 @@ public class SettingsMenu : MenuBase
         sequence.Insert(0f, scrollCanvasGroup.DOFade(0, 0.5f));
 
         sequence.OnComplete(() => onComplete.Invoke());
-    }
-
-    public override void OnBackPressed()
-    {
-        if (backMenu != null)
-        {
-            MenuManager.Instance.SwitchMenu(backMenu);
-        }
     }
 
     public override void ResetState(bool resetAlpha = false)

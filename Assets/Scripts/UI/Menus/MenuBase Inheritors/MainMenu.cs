@@ -39,7 +39,7 @@ public class MainMenu : MenuBase
         // sometimes i write code so bad i hope people will never trust my programming
         // skills again and therefore i can just design the ui without programming them
 
-        // however i for some fucking reason still like programming so i'm just screwing
+        // however i for some fking reason still like programming so i'm just screwing
         // myself up i suppose
 
         ResetState();
