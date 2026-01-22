@@ -36,20 +36,12 @@ public class CommandBox : MonoBehaviour
 
         if (isCutscene) // show text
         {
-            Debug.Log("IS A CUTSCENE.");
-            Debug.Log("PROMPT TEXT: " + snapshot.promptText);
-            Debug.Log("FLAVOR TEXT: " + snapshot.flavorText);
-
             promptText.text = snapshot.promptText;
-            flavorText.text = snapshot.flavorText;
+            SetFlavorText(snapshot.flavorText);
             moveButtonContainer.gameObject.SetActive(false);
         }
         else // show buttons
         {
-            Debug.Log("NOT A CUTSCENE.");
-            Debug.Log(snapshot);
-
-
             promptText.text = snapshot.promptText;
             flavorText.gameObject.SetActive(false);
             moveButtonContainer.gameObject.SetActive(true);
@@ -122,6 +114,7 @@ public class CommandBox : MonoBehaviour
         {
             flavorText.textInfo.characterCount = i;
             yield return new WaitForSeconds(typewriterEffectSpeed);
+            Debug.Log("test");
         }
 
         isTyping = false;

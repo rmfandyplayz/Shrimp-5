@@ -39,23 +39,23 @@ public class CreditsMenu : MenuBase
 
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Insert(0, settingsText.DOFade(0, 0.6f).From());
-        sequence.Insert(0, settingsText.rectTransform.DOScale(3.5f, 0.6f).From().SetEase(Ease.OutBack));
+        sequence.Insert(0, settingsText.DOFade(0, 0.8f).From());
+        sequence.Insert(0, settingsText.rectTransform.DOScale(3.5f, 0.8f).From().SetEase(Ease.OutExpo));
 
-        sequence.Insert(0.05f, andyGroup.DOFade(0, 0.6f).From());
-        sequence.Insert(0.05f, andyGroup.transform.DOScale(3.5f, 0.6f).From().SetEase(Ease.OutBack));
+        sequence.Insert(0.05f, andyGroup.DOFade(0, 0.8f).From());
+        sequence.Insert(0.05f, andyGroup.transform.DOScale(3.5f, 0.8f).From().SetEase(Ease.OutExpo));
 
-        sequence.Insert(0.1f, cassandraGroup.DOFade(0, 0.6f).From());
-        sequence.Insert(0.1f, cassandraGroup.transform.DOScale(3.5f, 0.6f).From().SetEase(Ease.OutBack));
+        sequence.Insert(0.1f, cassandraGroup.DOFade(0, 0.8f).From());
+        sequence.Insert(0.1f, cassandraGroup.transform.DOScale(3.5f, 0.8f).From().SetEase(Ease.OutExpo));
 
-        sequence.Insert(0.15f, owenGroup.DOFade(0, 0.6f).From());
-        sequence.Insert(0.15f, owenGroup.transform.DOScale(3.5f, 0.6f).From().SetEase(Ease.OutBack));
+        sequence.Insert(0.15f, owenGroup.DOFade(0, 0.8f).From());
+        sequence.Insert(0.15f, owenGroup.transform.DOScale(3.5f, 0.8f).From().SetEase(Ease.OutExpo));
 
-        sequence.Insert(0.2f, soundCreditsText.DOFade(0, 0.6f).From());
-        sequence.Insert(0.2f, soundCreditsText.rectTransform.DOScale(3.5f, 0.6f).From().SetEase(Ease.OutBack));
+        sequence.Insert(0.2f, soundCreditsText.DOFade(0, 0.8f).From());
+        sequence.Insert(0.2f, soundCreditsText.rectTransform.DOScale(3.5f, 0.8f).From().SetEase(Ease.OutExpo));
 
-        sequence.Insert(0.25f, soundCreditsList.DOFade(0, 0.6f).From());
-        sequence.Insert(0.25f, soundCreditsList.transform.DOScale(2f, 0.6f).From().SetEase(Ease.OutBack));
+        sequence.Insert(0.25f, soundCreditsList.DOFade(0, 0.8f).From());
+        sequence.Insert(0.25f, soundCreditsList.transform.DOScale(1.15f, 0.8f).From().SetEase(Ease.OutExpo));
 
         sequence.OnComplete(() => onComplete.Invoke());
     }
@@ -64,23 +64,23 @@ public class CreditsMenu : MenuBase
     {
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Insert(0.25f, settingsText.DOFade(0, 0.6f));
-        sequence.Insert(0.25f, settingsText.rectTransform.DOScale(2f, 0.6f).SetEase(Ease.InQuart));
+        sequence.Insert(0.25f, settingsText.DOFade(0, 0.4f));
+        sequence.Insert(0.25f, settingsText.rectTransform.DOScale(2f, 0.4f).SetEase(Ease.InQuart));
 
-        sequence.Insert(0.2f, andyGroup.DOFade(0, 0.6f));
-        sequence.Insert(0.2f, andyGroup.transform.DOScale(2f, 0.6f).SetEase(Ease.InQuart));
+        sequence.Insert(0.2f, andyGroup.DOFade(0, 0.4f));
+        sequence.Insert(0.2f, andyGroup.transform.DOScale(2f, 0.4f).SetEase(Ease.InQuart));
 
-        sequence.Insert(0.15f, cassandraGroup.DOFade(0, 0.6f));
-        sequence.Insert(0.15f, cassandraGroup.transform.DOScale(2f, 0.6f).SetEase(Ease.InQuart));
+        sequence.Insert(0.15f, cassandraGroup.DOFade(0, 0.4f));
+        sequence.Insert(0.15f, cassandraGroup.transform.DOScale(2f, 0.4f).SetEase(Ease.InQuart));
 
-        sequence.Insert(0.1f, owenGroup.DOFade(0, 0.6f));
-        sequence.Insert(0.1f, owenGroup.transform.DOScale(2f, 0.6f).SetEase(Ease.InQuart));
+        sequence.Insert(0.1f, owenGroup.DOFade(0, 0.4f));
+        sequence.Insert(0.1f, owenGroup.transform.DOScale(2f, 0.4f).SetEase(Ease.InQuart));
 
-        sequence.Insert(0.05f, soundCreditsText.DOFade(0, 0.6f));
-        sequence.Insert(0.05f, soundCreditsText.rectTransform.DOScale(2f, 0.6f).SetEase(Ease.InQuart));
+        sequence.Insert(0.05f, soundCreditsText.DOFade(0, 0.4f));
+        sequence.Insert(0.05f, soundCreditsText.rectTransform.DOScale(2f, 0.4f).SetEase(Ease.InQuart));
 
-        sequence.Insert(0f, soundCreditsList.DOFade(0, 0.6f));
-        sequence.Insert(0f, soundCreditsList.transform.DOScale(2f, 0.6f).SetEase(Ease.InQuart));
+        sequence.Insert(0f, soundCreditsList.DOFade(0, 0.4f));
+        sequence.Insert(0f, soundCreditsList.transform.DOScale(1.15f, 0.4f).SetEase(Ease.InQuart));
 
         sequence.OnComplete(() => onComplete.Invoke());
     }

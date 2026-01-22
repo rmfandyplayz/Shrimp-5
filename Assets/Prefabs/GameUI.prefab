@@ -1207,7 +1207,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: POOPSHITTERS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f73d23b78145039439dc795bae6873ef, type: 2}
   m_sharedMaterial: {fileID: -8128510454832380646, guid: f73d23b78145039439dc795bae6873ef, type: 2}
@@ -1334,7 +1334,7 @@ MonoBehaviour:
   flavorText: {fileID: 3688568866623357650}
   moveButtonContainer: {fileID: 4558441628492526506}
   moveButtonPrefab: {fileID: 6451974999026174625, guid: 53240b541e78f054f9c78b280ce56a89, type: 3}
-  typewriterEffectSpeed: 0.04
+  typewriterEffectSpeed: 0.1
 --- !u!1 &2845782644085491981
 GameObject:
   m_ObjectHideFlags: 0
