@@ -577,7 +577,16 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     // confirms dialogue options
     public void DialogueConfirm()
     {
-        currentSnapshot.flavorText = flavorTextQueue.Dequeue();
+        if (flavorTextQueue.Count <= 0)
+        {
+            currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+            frozen = false;
+        }
+        else
+        {
+            currentSnapshot.flavorText = flavorTextQueue.Dequeue();
+        }
+        UpdateUI();
     }
     // skips all dialogue
     public void DialogueSkipAll()
@@ -586,6 +595,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         {
            currentSnapshot.flavorText = flavorTextQueue.Dequeue(); 
         }
+        frozen = false;
+        currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+        UpdateUI();
     }
 
     // methods for ability triggers
