@@ -35,6 +35,7 @@ public class BattleUIInput : MonoBehaviour
     {
         BattleSnapshot snapshot = battleModel.GetSnapshot();
 
+        // resolving action context-based actions
         if (snapshot.battleMode == BattleUIMode.ResolvingAction)
         {
             // z key
@@ -59,7 +60,7 @@ public class BattleUIInput : MonoBehaviour
             }
         }
 
-
+        // action choosing context-bsed actions
         if (snapshot.battleMode == BattleUIMode.ChoosingAction ||
             snapshot.battleMode == BattleUIMode.ChoosingSwitchTeammate)
         {
@@ -90,6 +91,12 @@ public class BattleUIInput : MonoBehaviour
             {
                 battleController.Secondary(cursorIndex);
             }
+        }
+        
+        // non context-dependent actions
+        if (gameControls.Battle.Pause.WasPerformedThisFrame())
+        {
+            battleController.PauseToggle();
         }
     }
 
