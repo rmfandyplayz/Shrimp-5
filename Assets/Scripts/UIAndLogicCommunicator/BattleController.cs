@@ -16,8 +16,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     [Header("Refs")]
     [SerializeField] private BattleUIModel uiModel;
     private BattleSnapshot currentSnapshot;
-    [SerializeField] private List<ShrimpState> playerTeam;
-    [SerializeField] private List<ShrimpState> enemyTeam;
+    private List<ShrimpState> playerTeam;
+    private List<ShrimpState> enemyTeam;
+    public BattleLoopController loopController;
+    [SerializeField] private List<List<ShrimpDefinition>> enemies;
     private System.Random rng;
     private ShrimpState playerActiveShrimp;
     private ShrimpState enemyActiveShrimp;
@@ -30,7 +32,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     private bool abilityActive;
     private bool dying;
     private BattleUIMode modeBeforePause;
-    void Start()
+    private System.Action<bool> onBattleEndCallback; 
+    public void StartNewBattle(List<ShrimpState> team, System.Action<bool> callback, int battleIndex)
     {
         turnOver = true;
         // creates the snapshot and automatically sets the battle mode to choosing action
@@ -41,12 +44,23 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         rng = new System.Random();
 
         // sets the active shrimp
-        playerActiveShrimp = playerTeam[0];
-        playerActiveShrimp.statuses = new List<AppliedStatus>();
-        enemyActiveShrimp = enemyTeam[0];
-        enemyActiveShrimp.statuses = new List<AppliedStatus>();
-
+        playerTeam = team;
+        enemyTeam = new List<ShrimpState>();
+        foreach (ShrimpDefinition enemyDef in enemies[battleIndex])
+        {
+            enemyTeam.Add(new ShrimpState(enemyDef));
+        }
         // Calls the methods to set the player and enemy HudData's to the active shrimp
+
+        foreach (ShrimpState shrimp in playerTeam)
+        {
+            shrimp.ResetState();
+        }
+
+        foreach (ShrimpState shrimp in enemyTeam)
+        {
+            shrimp.ResetState();
+        }
         SetupPlayerHudData(); 
         SetupEnemyHudData(); 
 
@@ -660,6 +674,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         abilityActive = true;
         StartCoroutine(OnDeathAbilityCoroutine(User.Player));
         yield return new WaitUntil(() => !abilityActive);
+        if (playerTeam.Count == 0)
+        {
+            flavorTextQueue.Enqueue("You Lost the Battle");
+            yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
+            EndBattle(false);
+        }
+        else
+        {
         playerActiveShrimp = playerTeam[0];
         playerTeam.RemoveAt(0);
         SetupPlayerHudData();
@@ -672,6 +694,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         UpdateUI();
         dying = false;
         attacking = false;
+        }
     }
     /// <summary>
     /// kills the enemy shrimp and sends out the next one
@@ -682,6 +705,12 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         abilityActive = true;
         StartCoroutine(OnDeathAbilityCoroutine(User.Enemy));
         yield return new WaitUntil(() => !abilityActive);
+        if (enemyTeam.Count == 0)
+        {
+            flavorTextQueue.Enqueue("You Lost the Battle");
+            yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
+            EndBattle(true);
+        }
         enemyActiveShrimp = enemyTeam[0];
         enemyTeam.RemoveAt(0);
         SetupEnemyHudData();
@@ -696,6 +725,15 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         dying = false;
         attacking = false;
     }
+
+    public void EndBattle(bool playerWon)
+    {
+        // ... existing cleanup code ...
+        
+        // Tell the manager we are done
+        onBattleEndCallback?.Invoke(playerWon);
+    }
+
     // confirms dialogue options
     public void DialogueConfirm()
     {
