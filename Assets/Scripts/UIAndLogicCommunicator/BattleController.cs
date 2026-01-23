@@ -278,7 +278,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             playerActiveShrimp = playerTeam[index];
             playerTeam[index] = temp;
             flavorTextQueue.Enqueue("You Switched Out " + temp.name + " for " + playerActiveShrimp.definition.name);
-            yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+            yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
             SetupPlayerHudData();
             ResetPlayerSwitchOptions();
             ResetPlayerMoveOptions();
@@ -387,15 +387,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             yield return new WaitUntil(() => !abilityActive);
             }
         }
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
-        turnOver = true;
-        currentSnapshot.promptText = "Your Move!";
-        DialogueSkipAll();
-        UpdateUI();
+        
         }
-        currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
-        currentSnapshot.selectedIndex = 0;
-        currentSnapshot.buttons = moves;
         if (enemyActiveShrimp.GetHP() <= 0)
         {
             dying = true;
@@ -408,6 +401,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             StartCoroutine(KillPlayerShrimpCoroutine());
             yield return new WaitUntil(() => !dying);
         }
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
+        turnOver = true;
+        currentSnapshot.promptText = "Your Move!";
+        DialogueSkipAll();
+        UpdateUI();
+        currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+        currentSnapshot.selectedIndex = 0;
+        currentSnapshot.buttons = moves;
         UpdateUI();
     }
 
@@ -506,7 +507,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
         currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
         UpdateUI();
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
         attacking = false;
     }
     /// <summary>
@@ -584,11 +585,11 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + move.effect.displayName);
                 }
                 currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
                 currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
                 currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
-                flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + move.effect.displayName);
                 UpdateUI();
                 
                 if (damage > 0)
@@ -645,7 +646,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
         currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
         UpdateUI();
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
         attacking = false;
         }
     }
@@ -667,7 +668,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         abilityActive = true;
         StartCoroutine(OnSwitchInAbilityCoroutine(User.Player));
         yield return new WaitUntil(() => !abilityActive);
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
         UpdateUI();
         dying = false;
         attacking = false;
@@ -688,7 +689,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         flavorTextQueue.Enqueue("Your opponent sent out " + enemyActiveShrimp.definition.name);
         abilityActive = true;
         UpdateUI();
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
         StartCoroutine(OnSwitchInAbilityCoroutine(User.Enemy));
         yield return new WaitUntil(() => !abilityActive);
         UpdateUI();
@@ -700,10 +701,13 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     {
         if (flavorTextQueue.Count <= 0)
         {
+            // add this line! clear the text so we know the player is done reading
+            currentSnapshot.flavorText = ""; 
+            
             if (turnOver == true)
             {
-            currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
-            frozen = false;
+                currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+                frozen = false;
             }
         }
         else
@@ -785,7 +789,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             }
         }
         UpdateUI();
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
         abilityActive = false;
     }
     private IEnumerator OnDamagedAbilityCoroutine(User user)
@@ -845,7 +849,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             }
         }
         UpdateUI();
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
         abilityActive = false;
         }
     private IEnumerator OnSwitchInAbilityCoroutine(User user)
@@ -905,7 +909,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             }
         }
         UpdateUI();
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
         abilityActive = false;
     }
     private IEnumerator OnTurnStartAbilityCoroutine(User user)
@@ -965,7 +969,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             }
         }
         UpdateUI();
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
         abilityActive = false;
     }
     private IEnumerator OnTurnEndAbilityCoroutine(User user)
@@ -1025,7 +1029,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             }
         }
         UpdateUI();
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
         abilityActive = false;
     }
     private IEnumerator OnDeathAbilityCoroutine(User user)
@@ -1085,7 +1089,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             }
         }
         UpdateUI();
-        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
         abilityActive = false;
     }
 }
