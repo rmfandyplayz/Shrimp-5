@@ -16,6 +16,6 @@ MonoBehaviour:
   iconID: idk
   trigger: 0
   effect: {fileID: 11400000, guid: 5a2e29bc7d2fdd64fa33441b07bcd25d, type: 2}
-  description: Every time the Asshole Shrimp attacks, its attack stat is permanantly
-    doubled.
+  description: Every time the Asshole Shrimp attacks, its attack stat increases by
+    5 permanantly.
   target: 0

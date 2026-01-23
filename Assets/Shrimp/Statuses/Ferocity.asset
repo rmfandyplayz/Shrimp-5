@@ -16,8 +16,8 @@ MonoBehaviour:
   iconID: balls
   statChanged: 1
   effectType: 0
-  buffType: 0
-  valueChange: 2
+  buffType: 1
+  valueChange: 5
   permanant: 1
   turnDuration: 100
-  description: Attack is Doubled
+  description: Attack increases by 5

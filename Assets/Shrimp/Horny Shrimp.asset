@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 478e5088755db424b9aa2eacd121e3b9, type: 3}
   m_Name: Horny Shrimp
   m_EditorClassIdentifier: 
-  displayName: 
-  shrimpSpriteID: 
-  maxHP: 0
-  baseSpeed: 0
-  baseAttack: 0
-  ability: {fileID: 0}
+  displayName: Horny Shrimp
+  shrimpSpriteID: horny.shrimp
+  maxHP: 500
+  baseSpeed: 3
+  baseAttack: 3
+  ability: {fileID: 11400000, guid: 8d310eb792a48d64dbcce3195e154736, type: 2}
   moves:
   - {fileID: 0}
   - {fileID: 0}

@@ -528,7 +528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01c6a868748553a4992f990f01c5d14c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  definition: {fileID: 11400000, guid: 676ec3ae1ad43914a99e19ff2a3c27cd, type: 2}
+  definition: {fileID: 11400000, guid: cebce9f5fcb3789409c846392a19624e, type: 2}
   currentHP: 200
 --- !u!212 &600394542
 SpriteRenderer:
@@ -1369,7 +1369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01c6a868748553a4992f990f01c5d14c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  definition: {fileID: 11400000, guid: 676ec3ae1ad43914a99e19ff2a3c27cd, type: 2}
+  definition: {fileID: 11400000, guid: cebce9f5fcb3789409c846392a19624e, type: 2}
   currentHP: 200
 --- !u!212 &1475456838
 SpriteRenderer:
@@ -1654,7 +1654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01c6a868748553a4992f990f01c5d14c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  definition: {fileID: 11400000, guid: 676ec3ae1ad43914a99e19ff2a3c27cd, type: 2}
+  definition: {fileID: 11400000, guid: cebce9f5fcb3789409c846392a19624e, type: 2}
   currentHP: 200
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

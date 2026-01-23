@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adeaff4132f8a5348a86012f3d6b6a36, type: 3}
   m_Name: Aggrivated
   m_EditorClassIdentifier: 
-  displayName: 
-  iconID: 
-  trigger: 0
-  effect: {fileID: 0}
-  description: 
+  displayName: Aggrivated
+  iconID: l
+  trigger: 1
+  effect: {fileID: 11400000, guid: 2afd7c60f4d80e542944c6c1b4ee8f07, type: 2}
+  description: When this shrimp is attacked, its attack stat increases by 2
   target: 0

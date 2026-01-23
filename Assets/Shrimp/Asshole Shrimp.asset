@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 478e5088755db424b9aa2eacd121e3b9, type: 3}
   m_Name: Asshole Shrimp
   m_EditorClassIdentifier: 
-  displayName: 
-  shrimpSpriteID: 
-  maxHP: 0
-  baseSpeed: 0
-  baseAttack: 0
-  ability: {fileID: 0}
+  displayName: Asshole Shrimp
+  shrimpSpriteID: asshole.shrimp
+  maxHP: 125
+  baseSpeed: 100
+  baseAttack: 5
+  ability: {fileID: 11400000, guid: 8ae418cd9dd77f846b507e764770e6a3, type: 2}
   moves:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 99db82bee07fee5429b4ac466af83666, type: 2}
+  - {fileID: 11400000, guid: 663d4d8338c03b043989d673c945780a, type: 2}
+  - {fileID: 11400000, guid: 1c60b33b28f12a94cb30d983e6245a7e, type: 2}

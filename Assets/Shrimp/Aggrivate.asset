@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fe602b36f4de9740accf0c6aa66384c, type: 3}
   m_Name: Aggrivate
   m_EditorClassIdentifier: 
-  displayName: 
-  iconID: 
-  statChanged: 0
+  displayName: Attack (+2)
+  iconID: fghjk
+  statChanged: 1
   effectType: 0
-  buffType: 0
-  valueChange: 0
-  permanant: 0
+  buffType: 1
+  valueChange: 2
+  permanant: 1
   turnDuration: 0
-  description: 
+  description: Attack is increased by 2
