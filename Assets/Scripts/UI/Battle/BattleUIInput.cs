@@ -102,11 +102,9 @@ public class BattleUIInput : MonoBehaviour
 
     private void MoveSelectionCursor(int direction, int totalMoves)
     {
-        Debug.Log("move selection cursor called");
         if (PauseMenu.GetEnabled())
             return;
 
-        Debug.Log("move selection cursor processed");
         cursorIndex += direction;
         if (cursorIndex >= totalMoves)
             cursorIndex = 0;
