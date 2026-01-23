@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adeaff4132f8a5348a86012f3d6b6a36, type: 3}
+  m_Name: Overprotective
+  m_EditorClassIdentifier: 
+  displayName: Overprotective
+  iconID: dfghj
+  trigger: 1
+  effect: {fileID: 11400000, guid: 5462b346215956743b201f80f53e41ef, type: 2}
+  description: When Hit, deals 10 damage to opposing shrimp
+  target: 1

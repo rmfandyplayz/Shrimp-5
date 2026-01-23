@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adeaff4132f8a5348a86012f3d6b6a36, type: 3}
+  m_Name: Camouflage
+  m_EditorClassIdentifier: 
+  displayName: Camouflage
+  iconID: ftghjk
+  trigger: 2
+  effect: {fileID: 11400000, guid: 65489efa493d52c42a8198b1ef5f5ef1, type: 2}
+  description: When this shrimp switches in, the opponents attack is halved
+  target: 1

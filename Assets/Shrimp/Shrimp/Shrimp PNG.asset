@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478e5088755db424b9aa2eacd121e3b9, type: 3}
+  m_Name: Shrimp PNG
+  m_EditorClassIdentifier: 
+  displayName: shrimp.png
+  shrimpSpriteID: shrimp.shrimp
+  maxHP: 999
+  baseSpeed: 999
+  baseAttack: 10
+  ability: {fileID: 11400000, guid: f7d5a3ec6075f5b45b21e24657c6f00e, type: 2}
+  moves:
+  - {fileID: 11400000, guid: 5d3a325ad2752fb40b0e99137a02e263, type: 2}
+  - {fileID: 11400000, guid: bc8e7b90de4509e46ad00b32ba7d32ff, type: 2}
+  - {fileID: 11400000, guid: 02dc1c0303b05544ab66ebc7895f80e3, type: 2}

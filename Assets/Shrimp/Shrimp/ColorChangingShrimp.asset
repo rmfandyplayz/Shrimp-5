@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478e5088755db424b9aa2eacd121e3b9, type: 3}
+  m_Name: ColorChangingShrimp
+  m_EditorClassIdentifier: 
+  displayName: Color Changing Shrimp
+  shrimpSpriteID: colorchanging.shrimp
+  maxHP: 145
+  baseSpeed: 40
+  baseAttack: 8
+  ability: {fileID: 11400000, guid: 678a78ee5fea34f458d932d5bc780342, type: 2}
+  moves:
+  - {fileID: 11400000, guid: a8df47e8ca9204d4d8ced1159042966c, type: 2}
+  - {fileID: 11400000, guid: f63df718d20e19a488acf8aca070d5ad, type: 2}
+  - {fileID: 11400000, guid: b644e5ace897b6d4ab23598a1b90f1c6, type: 2}

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3479c30e67d4cc41ba4ed3087899eb1, type: 3}
+  m_Name: Scurry
+  m_EditorClassIdentifier: 
+  displayName: Scurry
+  hasEffect: 0
+  effect: {fileID: 0}
+  iconID: tyuiuk
+  power: 0
+  target: 0
+  description: Does Nothing

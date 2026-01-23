@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478e5088755db424b9aa2eacd121e3b9, type: 3}
+  m_Name: AnnoyingShrimp
+  m_EditorClassIdentifier: 
+  displayName: Annoying Shrimp
+  shrimpSpriteID: annoying.shrimp
+  maxHP: 140
+  baseSpeed: 110
+  baseAttack: 4
+  ability: {fileID: 11400000, guid: 1559ef4c56a378d449ed6da915d09490, type: 2}
+  moves:
+  - {fileID: 11400000, guid: 432f9554a811fe94098dfe18f713343c, type: 2}
+  - {fileID: 11400000, guid: af1db2e4875d8cf4080c2fcee45960a2, type: 2}
+  - {fileID: 11400000, guid: 40a36e677f7dbb348975833e75b7c6b4, type: 2}
