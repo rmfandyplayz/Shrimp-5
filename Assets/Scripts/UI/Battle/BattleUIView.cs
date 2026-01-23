@@ -43,9 +43,9 @@ public class BattleUIView : MonoBehaviour
         if (snapshot.battleMode == BattleUIMode.Paused)
         {
             // already paused
-            if (!pauseMenu.GetEnabled())
+            if (!PauseMenu.GetEnabled())
             {
-                pauseMenu.AnimateIn(null);
+                pauseMenu.OpenSettings();
             }
 
             return;
@@ -53,13 +53,11 @@ public class BattleUIView : MonoBehaviour
         else
         {
             // not paused; ensure menu is gone
-            if (pauseMenu.GetEnabled())
+            if (PauseMenu.GetEnabled())
             {
-                pauseMenu.AnimateOut(null);
+                pauseMenu.ResumeGame();
             }
         }
-
-        pauseMenu.gameObject.SetActive(false);
 
         // minion scripts
         playerFrame.Render(snapshot.playerInfoData);

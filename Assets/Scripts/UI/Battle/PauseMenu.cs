@@ -18,51 +18,64 @@ public class PauseMenu : MenuBase
     [SerializeField] Image resumeIcon;
     [SerializeField] Image pauseIcon;
 
-    private bool isEnabled = false;
+    private static bool isEnabled = false;
+    private static bool isAnimating = false; // if if some form of animation is in progress and shouldn't be disturbed
     private bool canQuit = false; // is the quit button "active" as in is it currently on the "r u sure about that?" text
-    private bool isQuitting = false; // if the game isn't in a quit coroutine
 
-    private void Awake()
+    private Vector2 menuOriginalPos;
+
+    public override void Awake()
     {
+        base.Awake();
+        
+        menuOriginalPos = cg.transform.position;
         translucentBackground.color = new Color(0, 0, 0, 0);
-
     }
 
     public override void OnBackPressed()
     {
-        if(!isQuitting)
+        if(!isAnimating)
             ResumeGame();
     }
 
     public void ResumeGame()
     {
+        isAnimating = true;
+        cg.interactable = false;
         battleController.PauseToggle();
 
         AnimateOut(() =>
         {
             EventSystem.current.SetSelectedGameObject(null);
-            // disable gameobject if animate out doesn't handle it well enough
+            isEnabled = false;
+            isAnimating = false;
         });
     }
 
     public void OpenSettings()
     {
         // TODO: potentially set game time to zero????
+
+        isEnabled = true;
+        isAnimating = true;
         AnimateIn(() =>
         {
             EventSystem.current.SetSelectedGameObject(null);
             EventSystem.current.SetSelectedGameObject(firstSelected);
+            isAnimating = false;
+            cg.interactable = true;
         });
     }
 
+
     public void QuitToMainMenu()
     {
-        if(canQuit && !isQuitting)
+        if(canQuit && !isAnimating)
         {
-            isQuitting = true;
+            isAnimating = true;
             StartCoroutine(QuitToMainMenuSequence());
         }
-        else if (!isQuitting)
+        else if (!isAnimating && !canQuit)
         {
             StartCoroutine(QuitToMainMenuButtonSequence());
         }
@@ -88,8 +101,8 @@ public class PauseMenu : MenuBase
     {
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Insert(0, cg.transform.DOMoveY(-720, 0.5f).SetEase(Ease.OutBack));
-        sequence.Insert(0, translucentBackground.DOFade(1, 0.35f));
+        sequence.Insert(0, cg.transform.DOMoveY(400, 0.5f).SetEase(Ease.OutExpo));
+        sequence.Insert(0, translucentBackground.DOColor(new Color(0, 0, 0, 0.6f), 0.35f));
 
         sequence.SetUpdate(true);
 
@@ -100,16 +113,21 @@ public class PauseMenu : MenuBase
     {
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Insert(0, cg.transform.DOMoveY(-720, 0.5f).From().SetEase(Ease.OutBack));
-        sequence.Insert(0, translucentBackground.DOFade(1, 0.35f).From());
+        sequence.Insert(0, cg.transform.DOMove(menuOriginalPos, 0.5f).SetEase(Ease.OutExpo));
+        sequence.Insert(0, translucentBackground.DOFade(0, 0.35f));
 
         sequence.SetUpdate(true);
 
         sequence.OnComplete(() => onComplete.Invoke());
     }
 
-    public bool GetEnabled()
+    public static bool GetEnabled()
     {
         return isEnabled;
+    }
+
+    public static bool GetAnimating()
+    {
+        return isAnimating;
     }
 }

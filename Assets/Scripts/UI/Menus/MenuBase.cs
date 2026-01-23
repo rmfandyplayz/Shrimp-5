@@ -15,7 +15,7 @@ public class MenuBase : MonoBehaviour
     [Tooltip("the first selected element when opening this menu")]
     protected GameObject firstSelected; // the first selected element when opening this menu
 
-    protected CanvasGroup cg;
+    [SerializeField] protected CanvasGroup cg;
     protected GameControls gameControls;
     protected Vector2 defaultPos;
     protected Vector3 defaultScale;

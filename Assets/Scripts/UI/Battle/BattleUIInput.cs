@@ -48,7 +48,7 @@ public class BattleUIInput : MonoBehaviour
             }
 
             // x key
-            if (gameControls.Battle.Back.WasPerformedThisFrame())
+            if (gameControls.Battle.Back.WasPerformedThisFrame() && !PauseMenu.GetEnabled())
             {
                 commandBox.SkipTyping();
             }
@@ -81,7 +81,7 @@ public class BattleUIInput : MonoBehaviour
             }
 
             // back
-            if (gameControls.Battle.Confirm.WasPerformedThisFrame())
+            if (gameControls.Battle.Confirm.WasPerformedThisFrame() && !PauseMenu.GetEnabled())
             {
                 battleController.Back();
             }
@@ -94,7 +94,7 @@ public class BattleUIInput : MonoBehaviour
         }
         
         // non context-dependent actions
-        if (gameControls.Battle.Pause.WasPerformedThisFrame())
+        if (gameControls.Battle.Pause.WasPerformedThisFrame() && !PauseMenu.GetAnimating())
         {
             battleController.PauseToggle();
         }
@@ -102,6 +102,11 @@ public class BattleUIInput : MonoBehaviour
 
     private void MoveSelectionCursor(int direction, int totalMoves)
     {
+        Debug.Log("move selection cursor called");
+        if (PauseMenu.GetEnabled())
+            return;
+
+        Debug.Log("move selection cursor processed");
         cursorIndex += direction;
         if (cursorIndex >= totalMoves)
             cursorIndex = 0;

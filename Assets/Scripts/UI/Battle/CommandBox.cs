@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using Unity.VisualScripting;
 
 // written by andy
 // handles things related to the command box (dialogue, move selection)
@@ -77,9 +78,6 @@ public class CommandBox : MonoBehaviour
 
     public void SetSelection(int index)
     {
-        if (currentSnapshot.battleMode == BattleUIMode.Paused)
-            return;
-
         for(int i = 0; i < spawnedButtons.Count; i++)
         {
             if (!spawnedButtons[i].gameObject.activeSelf)
