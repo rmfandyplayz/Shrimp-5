@@ -1,5 +1,7 @@
 using Shrimp5.UIContract;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 
 // written by andy
@@ -18,6 +20,10 @@ public class BattleUIInput : MonoBehaviour
     private void Awake()
     {
         gameControls = new GameControls();
+
+        string rebinds = PlayerPrefs.GetString("Rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+            gameControls.asset.LoadBindingOverridesFromJson(rebinds);
     }
 
     // apparently i gotta do this
@@ -119,4 +125,11 @@ public class BattleUIInput : MonoBehaviour
         return cursorIndex;
     }
 
+
+    public void LoadUserRebinds(GameControls controls)
+    {
+        string rebinds = PlayerPrefs.GetString("Rebinds");
+        if (!string.IsNullOrEmpty(rebinds))
+            controls.asset.LoadBindingOverridesFromJson(rebinds);
+    }
 }
