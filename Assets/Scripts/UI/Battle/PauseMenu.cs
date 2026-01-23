@@ -78,7 +78,7 @@ public class PauseMenu : MenuBase
         if(canQuit && !isAnimating)
         {
             isAnimating = true;
-            StartCoroutine(QuitToMainMenuSequence());
+            TransitionManager.Instance.TransitionTo("MainMenu");
         }
         else if (!isAnimating && !canQuit)
         {
@@ -96,17 +96,11 @@ public class PauseMenu : MenuBase
         canQuit = false;
     }
 
-    IEnumerator QuitToMainMenuSequence()
-    {
-        // call scene transition
-        yield return null;
-    }
-
     public override void AnimateIn(Action onComplete)
     {
         Sequence sequence = DOTween.Sequence();
 
-        sequence.Insert(0, cg.transform.DOMoveY(400, 0.5f).SetEase(Ease.OutExpo));
+        sequence.Insert(0, cg.transform.DOMoveY(450, 0.5f).SetEase(Ease.OutExpo));
         sequence.Insert(0, translucentBackground.DOColor(new Color(0, 0, 0, 0.6f), 0.35f));
 
         sequence.SetUpdate(true);

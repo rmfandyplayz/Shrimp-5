@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FakeLoadingScene.unity
     guid: 44d4ad0d21dea42478837fe8cc941247
+  - enabled: 1
+    path: Assets/Testing/BattleTest.unity
+    guid: 078e677a6c8221a418a0cb50efd236ec
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 6afcc1afd183f6946aa6518204483924, type: 3}
   m_UseUCBPForAssetBundles: 0

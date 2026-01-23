@@ -73,6 +73,17 @@ public class MenuManager : MonoBehaviour
         });
     }
 
+    public void PlayGame(string sceneName)
+    {
+        if (currentMenu != null)
+            currentMenu.GetCanvasGroup().interactable = false;
+
+        currentMenu.AnimateOut(() =>
+        {
+            SceneLoader.Load(sceneName);
+        });
+    }
+
     public void QuitGame()
     {
         currentMenu.GetCanvasGroup().interactable = false;

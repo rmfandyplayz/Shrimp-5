@@ -12,7 +12,9 @@ public class TransitionManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] CanvasGroup transitionCanvasGroup;
-    [SerializeField] RectTransform transitionElement;
+    [SerializeField] CanvasGroup pauseMenuGroup; // to disable interactions
+    [SerializeField] RectTransform leftPanel;
+    [SerializeField] RectTransform rightPanel;
 
     [Header("Settings")]
     // scenes that have their own custom intro animations (like waterfall)
@@ -54,7 +56,6 @@ public class TransitionManager : MonoBehaviour
             }
         }
 
-        // otherwise, start the scene covered and fade in
         StartCoroutine(AnimateIn());
     }
 
@@ -63,7 +64,7 @@ public class TransitionManager : MonoBehaviour
         StartCoroutine(TransitionRoutine(sceneName));
     }
 
-    // helper to reset the canvas
+
     private void ResetState(bool forceTransparent)
     {
         if (transitionCanvasGroup != null)
@@ -75,39 +76,34 @@ public class TransitionManager : MonoBehaviour
 
     IEnumerator TransitionRoutine(string sceneName)
     {
-        // 1. ANIMATE OUT (Cover Screen)
         transitionCanvasGroup.blocksRaycasts = true;
         yield return StartCoroutine(AnimateOut());
 
-        // 2. LOAD SCENE
-        // call the fake loader we made earlier
         SceneLoader.Load(sceneName);
-
-        // note: we don't need to call AnimateIn() here anymore
-        // because OnSceneLoaded will trigger automatically when the new scene arrives
     }
-
-    // vvvvv FILL IN UR TWEENS vvvvv
 
     IEnumerator AnimateOut()
     {
-        // this is "Closing the curtain" (Exiting the old scene)
+        pauseMenuGroup.interactable = false;
 
-        transitionCanvasGroup.alpha = 0;
+        Sequence sequence = DOTween.Sequence();
 
-        // example: fade to black
-        yield return transitionCanvasGroup.DOFade(1, 0.5f).SetUpdate(true).WaitForCompletion();
+        sequence.Append(leftPanel.DOMoveX(100, 0.5f).SetEase(Ease.OutQuart).SetUpdate(true));
+        sequence.Join(rightPanel.DOMoveX(1100, 0.5f).SetEase(Ease.OutQuart).SetUpdate(true));
 
+        yield return sequence.WaitForCompletion();
     }
 
     IEnumerator AnimateIn()
     {
-
-        transitionCanvasGroup.alpha = 1;
         transitionCanvasGroup.blocksRaycasts = true;
 
-        // example: fade to clear
-        yield return transitionCanvasGroup.DOFade(0, 0.5f).SetEase(Ease.InQuad).SetUpdate(true).WaitForCompletion();
+        Sequence sequence = DOTween.Sequence();
+
+        sequence.Append(leftPanel.DOMoveX(-700, 0.5f).SetEase(Ease.InQuart).SetUpdate(true));
+        sequence.Join(rightPanel.DOMoveX(1900, 0.5f).SetEase(Ease.InQuart).SetUpdate(true));
+
+        yield return sequence.WaitForCompletion();
 
         transitionCanvasGroup.blocksRaycasts = false;
     }
