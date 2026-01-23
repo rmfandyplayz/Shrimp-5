@@ -5088,6 +5088,9 @@ MonoBehaviour:
   returnMenuText: {fileID: 4255224230533457559}
   resumeIcon: {fileID: 0}
   pauseIcon: {fileID: 0}
+  masterSlider: {fileID: 4015069422358882081}
+  musicSlider: {fileID: 3026281705061348303}
+  sfxSlider: {fileID: 2764883236139664362}
 --- !u!1 &8631697336625038616
 GameObject:
   m_ObjectHideFlags: 0
