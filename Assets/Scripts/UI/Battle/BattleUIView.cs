@@ -55,7 +55,7 @@ public class BattleUIView : MonoBehaviour
             // not paused; ensure menu is gone
             if (PauseMenu.GetEnabled())
             {
-                pauseMenu.ResumeGame();
+                pauseMenu.CloseVisuals();
             }
         }
 

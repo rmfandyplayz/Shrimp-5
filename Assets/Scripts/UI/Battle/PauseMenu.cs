@@ -34,15 +34,20 @@ public class PauseMenu : MenuBase
 
     public override void OnBackPressed()
     {
-        if(!isAnimating)
-            ResumeGame();
+        //if(!isAnimating)
+        //    ResumeGame();
     }
 
     public void ResumeGame()
     {
+        battleController.PauseToggle(); // tell logic to unpause
+        CloseVisuals();
+    }
+
+    public void CloseVisuals()
+    {
         isAnimating = true;
         cg.interactable = false;
-        battleController.PauseToggle();
 
         AnimateOut(() =>
         {
