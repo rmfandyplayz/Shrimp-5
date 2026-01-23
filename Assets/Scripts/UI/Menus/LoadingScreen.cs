@@ -5,6 +5,7 @@ using DG.Tweening;
 
 // written by Google Gemini 3 Pro (i'm too lazy okay sorry also im running low on time and there's more important stuff to do :wilted_rose:)
 // checked & revised by andy
+// the fake funny loading screen lol
 public class LoadingScreen : MonoBehaviour
 {
     [Header("Fake Load Settings")]
