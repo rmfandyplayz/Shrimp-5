@@ -1,6 +1,7 @@
 using Shrimp5.UIContract;
 using TMPro;
 using UnityEngine;
+using DG.Tweening;
 
 // written by andy
 // this is THE ONLY SCRIPT that talks to BattleUIModel.

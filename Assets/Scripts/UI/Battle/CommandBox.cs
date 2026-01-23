@@ -21,6 +21,7 @@ public class CommandBox : MonoBehaviour
     private string currentFullText = "";
     private Coroutine typingCoroutine;
     private BattleUIInput battleInput;
+    private BattleSnapshot currentSnapshot;
 
     private void Awake()
     {
@@ -30,6 +31,7 @@ public class CommandBox : MonoBehaviour
 
     public void Render(BattleSnapshot snapshot)
     {
+        currentSnapshot = snapshot;
         promptText.text = snapshot.promptText;
         List<ButtonData> moves = snapshot.buttons;
         bool isCutscene = snapshot.battleMode == BattleUIMode.ResolvingAction; // whether to show flavor text, or whatever of that sort
@@ -75,6 +77,9 @@ public class CommandBox : MonoBehaviour
 
     public void SetSelection(int index)
     {
+        if (currentSnapshot.battleMode == BattleUIMode.Paused)
+            return;
+
         for(int i = 0; i < spawnedButtons.Count; i++)
         {
             if (!spawnedButtons[i].gameObject.activeSelf)
