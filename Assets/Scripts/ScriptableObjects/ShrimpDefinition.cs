@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Battle/Shrimp")]
+[CreateAssetMenu(menuName = "Battle/ShrimpDef")]
 public class ShrimpDefinition : ScriptableObject
 {
     [Header("Identity")]           

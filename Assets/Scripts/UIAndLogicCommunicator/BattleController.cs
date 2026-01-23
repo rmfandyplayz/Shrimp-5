@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 using JetBrains.Annotations;
 using Mono.Cecil.Cil;
 using Shrimp5.UIContract;
@@ -23,9 +25,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     private List<ButtonData> switchShrimp;
     private bool frozen;
     private Queue<string> flavorTextQueue;
-
+    private bool turnOver;
+    private bool attacking;
+    private bool abilityActive;
+    private bool dying;
+    private BattleUIMode modeBeforePause;
     void Start()
     {
+        turnOver = true;
         // creates the snapshot and automatically sets the battle mode to choosing action
         currentSnapshot = new BattleSnapshot();
         currentSnapshot.promptText = "it's your turn!";
@@ -91,8 +98,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             switchShrimp.Add(currentShrimp);
         }
         switchShrimp.Add(shrimpSwitchButton);
-        OnSwitchInAbility(User.Player);
-        OnSwitchInAbility(User.Enemy);
+        abilityActive = true;
         // updates the UI with starting data
         frozen = true;
         flavorTextQueue = new Queue<string>();
@@ -100,8 +106,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         flavorTextQueue.Enqueue("You Sent Out " + currentSnapshot.playerInfoData.teammateName);
         flavorTextQueue.Enqueue("Your Opponent Sent Out " + currentSnapshot.enemyInfoData.teammateName);
         currentSnapshot.flavorText = flavorTextQueue.Dequeue();
-        Debug.Log(currentSnapshot.battleMode.ToString());
-        Debug.Log(currentSnapshot.flavorText);
         UpdateUI();
     }
     /// <summary>
@@ -208,7 +212,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             {
             currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
             UpdateUI();
-            RunTurn(index, ActionType.Attacking);
+            StartCoroutine(RunTurnCoroutine(index, ActionType.Attacking));
             }
         }
         else if (currentSnapshot.battleMode == BattleUIMode.ChoosingSwitchTeammate)
@@ -223,7 +227,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             {
             currentSnapshot.battleMode = BattleUIMode.ResolvingAction;
             UpdateUI();
-            RunTurn(index, ActionType.Switching);
+            StartCoroutine(RunTurnCoroutine(index, ActionType.Switching));
             }
         }
         }
@@ -233,21 +237,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     // Represents when a player starts to inspect something
     public void Secondary(int index)
     {
-            if (currentSnapshot.battleMode == BattleUIMode.ChoosingAction)
-            {
-            currentSnapshot.inspectData.iconID = currentSnapshot.buttons[index].iconID;
-            currentSnapshot.inspectData.title = currentSnapshot.buttons[index].moveName;
-            currentSnapshot.inspectData.body = currentSnapshot.buttons[index].moveShortDescription;
-            }
-            if (currentSnapshot.battleMode == BattleUIMode.ChoosingSwitchTeammate)
-            {
-            currentSnapshot.inspectData.iconID = currentSnapshot.buttons[index+3].iconID;
-            currentSnapshot.inspectData.title = currentSnapshot.buttons[index+3].moveName;
-            currentSnapshot.inspectData.body = currentSnapshot.buttons[index+3].moveShortDescription;
-            }
-            currentSnapshot.battleMode = BattleUIMode.InspectingMove;
-            UpdateUI();
-        
     }
 
     // toggles pausing and unpausing the game
@@ -255,10 +244,11 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     {
         if (currentSnapshot.battleMode == BattleUIMode.Paused)
         {
-            currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+            currentSnapshot.battleMode = modeBeforePause;
         } 
         else
         {
+            modeBeforePause = currentSnapshot.battleMode;
             currentSnapshot.battleMode = BattleUIMode.Paused;
         }
         UpdateUI();
@@ -275,21 +265,34 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     /// </summary>
     /// <param name="index"></param> The index of the move that the player used
     /// <param name="action"></param> whether the player is switching or attacking
-    public void RunTurn(int index, ActionType action)
+
+    private IEnumerator RunTurnCoroutine(int index, ActionType action)
     {
+        frozen = true;
+        currentSnapshot.promptText = "Running Turn";
+        turnOver = false;
         // if the player is switching it swaps what is active and then has the enemy choose an attack
         if (action == ActionType.Switching)
         {
             ShrimpState temp = playerActiveShrimp;
             playerActiveShrimp = playerTeam[index];
             playerTeam[index] = temp;
+            flavorTextQueue.Enqueue("You Switched Out " + temp.name + " for " + playerActiveShrimp.definition.name);
+            yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
             SetupPlayerHudData();
             ResetPlayerSwitchOptions();
             ResetPlayerMoveOptions();
             UpdateUI();
-            OnSwitchInAbility(User.Player);
-            OnTurnStartAbility(User.Enemy);
-            EnemyAttack(EnemyMoveSelection(index));
+            abilityActive = true;
+            StartCoroutine(OnSwitchInAbilityCoroutine(User.Player));
+            yield return new WaitUntil( () => !abilityActive);
+            abilityActive = true;
+            StartCoroutine(OnTurnStartAbilityCoroutine(User.Enemy));
+            yield return new WaitUntil( () => !abilityActive);
+            UpdateUI();
+            attacking = true;
+            StartCoroutine(EnemyAttackCoroutine(EnemyMoveSelection(index)));
+            yield return new WaitUntil( () => !attacking);
         }
         // if the player is attacking it checks to see who is faster and gets to attack first
         else
@@ -298,65 +301,125 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         int enemySpeed = enemyActiveShrimp.GetSpeed();
         if (playerSpeed > enemySpeed)
         {
-            OnTurnStartAbility(User.Player);
-            OnTurnStartAbility(User.Enemy);
-            PlayerAttack(index);
-            EnemyAttack(EnemyMoveSelection(index));
-            OnTurnEndAbility(User.Player);
-            OnTurnEndAbility(User.Enemy);
+            abilityActive = true;
+            StartCoroutine(OnTurnStartAbilityCoroutine(User.Player));
+            yield return new WaitUntil(() => !abilityActive);
+            abilityActive = true;
+            StartCoroutine(OnTurnStartAbilityCoroutine(User.Enemy));
+            yield return new WaitUntil(() => !abilityActive);
+            attacking = true;
+            StartCoroutine(PlayerAttackCoroutine(index));
+            yield return new WaitUntil(() => !attacking);
+            attacking = true;
+            StartCoroutine(EnemyAttackCoroutine(EnemyMoveSelection(index)));   
+            yield return new WaitUntil(() => !attacking);
+            abilityActive = true;         
+            StartCoroutine(OnTurnEndAbilityCoroutine(User.Player));
+            yield return new WaitUntil(() => !abilityActive);
+            abilityActive = true;
+            StartCoroutine(OnTurnEndAbilityCoroutine(User.Enemy));
+            yield return new WaitUntil(() => !abilityActive);
         }
         else if (playerSpeed < enemySpeed)
         {
-            OnTurnStartAbility(User.Enemy);
-            OnTurnStartAbility(User.Player);
-            EnemyAttack(EnemyMoveSelection(index));
-            PlayerAttack(index);
-            OnTurnEndAbility(User.Enemy);
-            OnTurnEndAbility(User.Player);
+            abilityActive = true;
+            StartCoroutine(OnTurnStartAbilityCoroutine(User.Enemy));
+            yield return new WaitUntil(() => !abilityActive);
+            abilityActive = true;
+            StartCoroutine(OnTurnStartAbilityCoroutine(User.Player));
+            yield return new WaitUntil(() => !abilityActive);
+            attacking = true;
+            StartCoroutine(EnemyAttackCoroutine(EnemyMoveSelection(index)));
+            yield return new WaitUntil(() => !attacking);
+            attacking = true;
+            StartCoroutine(PlayerAttackCoroutine(index));
+            yield return new WaitUntil(() => !attacking);
+            abilityActive = true;
+            StartCoroutine(OnTurnEndAbilityCoroutine(User.Enemy));
+            yield return new WaitUntil(() => !abilityActive);
+            abilityActive = true;
+            StartCoroutine(OnTurnEndAbilityCoroutine(User.Player));
+            yield return new WaitUntil(() => !abilityActive);
         }
         else
         {
             int whoseTurn = rng.Next(0,2);
             if (whoseTurn == 0)
             {
-                OnTurnStartAbility(User.Player);
-                OnTurnStartAbility(User.Enemy);
-                PlayerAttack(index);
-                EnemyAttack(EnemyMoveSelection(index));
-                OnTurnEndAbility(User.Player);
-                OnTurnEndAbility(User.Enemy);
+                abilityActive = true;
+            StartCoroutine(OnTurnStartAbilityCoroutine(User.Player));
+            yield return new WaitUntil(() => !abilityActive);
+            abilityActive = true;
+            StartCoroutine(OnTurnStartAbilityCoroutine(User.Enemy));
+            yield return new WaitUntil(() => !abilityActive);
+            attacking = true;
+            StartCoroutine(PlayerAttackCoroutine(index));
+            yield return new WaitUntil(() => !attacking);
+            attacking = true;
+            StartCoroutine(EnemyAttackCoroutine(EnemyMoveSelection(index)));   
+            yield return new WaitUntil(() => !attacking);
+            abilityActive = true;         
+            StartCoroutine(OnTurnEndAbilityCoroutine(User.Player));
+            yield return new WaitUntil(() => !abilityActive);
+            abilityActive = true;
+            StartCoroutine(OnTurnEndAbilityCoroutine(User.Enemy));
+            yield return new WaitUntil(() => !abilityActive);
             }
             else
             {
-                OnTurnStartAbility(User.Enemy);
-                OnTurnStartAbility(User.Player);
-                EnemyAttack(EnemyMoveSelection(index));
-                PlayerAttack(index);
-                OnTurnEndAbility(User.Enemy);
-                OnTurnEndAbility(User.Player);  
+                abilityActive = true;
+            StartCoroutine(OnTurnStartAbilityCoroutine(User.Enemy));
+            yield return new WaitUntil(() => !abilityActive);
+            abilityActive = true;
+            StartCoroutine(OnTurnStartAbilityCoroutine(User.Player));
+            yield return new WaitUntil(() => !abilityActive);
+            attacking = true;
+            StartCoroutine(EnemyAttackCoroutine(EnemyMoveSelection(index)));
+            yield return new WaitUntil(() => !attacking);
+            attacking = true;
+            StartCoroutine(PlayerAttackCoroutine(index));
+            yield return new WaitUntil(() => !attacking);
+            abilityActive = true;
+            StartCoroutine(OnTurnEndAbilityCoroutine(User.Enemy));
+            yield return new WaitUntil(() => !abilityActive);
+            abilityActive = true;
+            StartCoroutine(OnTurnEndAbilityCoroutine(User.Player));
+            yield return new WaitUntil(() => !abilityActive);
             }
         }
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        turnOver = true;
+        currentSnapshot.promptText = "Your Move!";
+        DialogueSkipAll();
+        UpdateUI();
         }
         currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
         currentSnapshot.selectedIndex = 0;
         currentSnapshot.buttons = moves;
         if (enemyActiveShrimp.GetHP() <= 0)
         {
-            KillEnemyShrimp();
+            dying = true;
+            StartCoroutine(KillEnemyShrimpCoroutine());
+            yield return new WaitUntil(() => !dying);
         }
         if (playerActiveShrimp.GetHP() <= 0)
         {
-            KillEnemyShrimp();
+            dying = true;
+            StartCoroutine(KillPlayerShrimpCoroutine());
+            yield return new WaitUntil(() => !dying);
         }
         UpdateUI();
     }
 
-    private void PlayerAttack(int index)
+    private IEnumerator PlayerAttackCoroutine(int index)
     {
+        yield return null;
         // kills the shrimp if its HP is below zero
         if (playerActiveShrimp.GetHP() <= 0)
         {
-            KillPlayerShrimp();
+            dying = true;
+            StartCoroutine(KillPlayerShrimpCoroutine());
+            yield return new WaitUntil(() => !dying);
         }
         // calculates the damage the shrimp does and deals it to the target and applies any statuses
         else
@@ -364,10 +427,15 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             MoveDefinition move = playerActiveShrimp.definition.moves[index];
             int shrimpPower = playerActiveShrimp.GetAttack();
             int damage = shrimpPower*move.power;
+            flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " used " + move.name);
             if (move.target == MoveTarget.Opponent)
             {
-                
                 enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP() - damage; 
+                UpdateUI();
+                if (damage > 0)
+                {
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " took " + damage + " damage");
+                }
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -376,20 +444,33 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
-                    currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
-                    currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
-                    currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
+                    flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + " recieved the status " + move.effect.displayName);
                     UpdateUI();
                 }
+                currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
+                currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
+                currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
                 if (damage > 0)
                 {
-                    OnDamagedAbility(User.Enemy);
+                    abilityActive = true;
+                    StartCoroutine(OnAttackAbilityCoroutine(User.Player));
+                    yield return new WaitUntil(() => !abilityActive);
+                    abilityActive = true;
+                    StartCoroutine(OnDamagedAbilityCoroutine(User.Enemy));
+                    yield return new WaitUntil(() => !abilityActive);
                 }
-                OnAttackAbility(User.Player);
             }
             else
             {
                 playerActiveShrimp.currentHP = playerActiveShrimp.GetHP() - damage;
+                if (damage < 0)
+                {
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " healed " + damage + " damage");
+                }
+                if (damage > 0)
+                {
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " took " + damage + " damage");
+                }
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -399,12 +480,12 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
                     playerActiveShrimp.currentHP = playerActiveShrimp.GetHP();
-                    currentSnapshot.playerInfoData.hp = playerActiveShrimp.currentHP;
-                    currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
-                    currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
-                    
-                    UpdateUI();
                 }
+                currentSnapshot.playerInfoData.hp = playerActiveShrimp.currentHP;
+                currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
+                currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
+                flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + move.effect.displayName);
+                UpdateUI();
             }
         }
 
@@ -425,6 +506,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
         currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
         UpdateUI();
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        attacking = false;
     }
     /// <summary>
     /// Calculates the best move for the AI to use
@@ -469,12 +552,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     /// Runs the enemies attack and deals damage
     /// </summary>
     /// <param name="index"></param> the index of the attack it is using
-    private void EnemyAttack(int index)
+    private IEnumerator EnemyAttackCoroutine(int index)
     {
         // if the enemies hp is below zero then it dies
         if (enemyActiveShrimp.GetHP() <= 0)
         {
-            KillEnemyShrimp();
+            dying = true;
+            StartCoroutine(KillEnemyShrimpCoroutine());
+            yield return new WaitUntil(() => !dying);
         }
         // calculates the amount of damage the enemy should deal and then deals it
         else
@@ -482,10 +567,15 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             MoveDefinition move = enemyActiveShrimp.definition.moves[index];
             int shrimpPower = enemyActiveShrimp.GetAttack();
             int damage = shrimpPower*move.power;
-
+            flavorTextQueue.Enqueue("Your opponents  " + enemyActiveShrimp.definition.name + " used " + move.name);
             if (move.target == MoveTarget.Opponent)
             {
                 playerActiveShrimp.currentHP = playerActiveShrimp.GetHP() - damage;
+                UpdateUI();
+                if (damage > 0)
+                {
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " took " + damage + " damage");
+                }
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -494,22 +584,34 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
-                    currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
-                    currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
-                    currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
-                    
-                    UpdateUI();
-
                 }
+                currentSnapshot.playerInfoData.hp = playerActiveShrimp.GetHP();
+                currentSnapshot.playerInfoData.attack = playerActiveShrimp.GetAttack();
+                currentSnapshot.playerInfoData.attackSpeed = playerActiveShrimp.GetSpeed();
+                flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + move.effect.displayName);
+                UpdateUI();
+                
                 if (damage > 0)
                 {
-                    OnDamagedAbility(User.Player);
+                    abilityActive = true;
+                    StartCoroutine(OnAttackAbilityCoroutine(User.Enemy));
+                    yield return new WaitUntil(() => !abilityActive);
+                    abilityActive = true;
+                    StartCoroutine(OnDamagedAbilityCoroutine(User.Player));
+                    yield return new WaitUntil(() => !abilityActive);
                 }
-                OnAttackAbility(User.Enemy);
             }
             else
             {
                 enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP() - damage;
+                if (damage < 0)
+                {
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " healed " + damage + " damage");
+                }
+                if (damage > 0)
+                {
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " took " + damage + " damage");
+                }
                 if (move.hasEffect)
                 {
                     AppliedStatus newStatus = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -518,12 +620,13 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(newStatus.status.iconID);
                     statusInfo.Add(newStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
-                    enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP();
-                    currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.currentHP;
-                    currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
-                    currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
-                    UpdateUI();
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + move.effect.displayName);
                 }
+                enemyActiveShrimp.currentHP = enemyActiveShrimp.GetHP();
+                currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.currentHP;
+                currentSnapshot.enemyInfoData.attack = enemyActiveShrimp.GetAttack();
+                currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
+                UpdateUI();
             }
         // updates statuses
         List<int> removedStatuses = enemyActiveShrimp.UpdateStatuses();
@@ -542,45 +645,66 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         currentSnapshot.enemyInfoData.attackSpeed = enemyActiveShrimp.GetSpeed();
         currentSnapshot.enemyInfoData.hp = enemyActiveShrimp.GetHP();
         UpdateUI();
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        attacking = false;
         }
     }
 
     /// <summary>
     /// Kills the active player shrimp and replaces it with the next one in the party, makes sure it cannot be used again in battle
     /// </summary>
-    private void KillPlayerShrimp()
+    private IEnumerator KillPlayerShrimpCoroutine()
     {
-        OnDeathAbility(User.Player);
+        flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " died ");
+        abilityActive = true;
+        StartCoroutine(OnDeathAbilityCoroutine(User.Player));
+        yield return new WaitUntil(() => !abilityActive);
         playerActiveShrimp = playerTeam[0];
         playerTeam.RemoveAt(0);
         SetupPlayerHudData();
         UpdateUI();
-        OnSwitchInAbility(User.Player);
+        flavorTextQueue.Enqueue("You sent out " + playerActiveShrimp.definition.name);
+        abilityActive = true;
+        StartCoroutine(OnSwitchInAbilityCoroutine(User.Player));
+        yield return new WaitUntil(() => !abilityActive);
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
         UpdateUI();
-        
-
+        dying = false;
+        attacking = false;
     }
     /// <summary>
     /// kills the enemy shrimp and sends out the next one
     /// </summary>
-    private void KillEnemyShrimp()
+    private IEnumerator KillEnemyShrimpCoroutine()
     {
-        OnDeathAbility(User.Enemy);
+        flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " died ");
+        abilityActive = true;
+        StartCoroutine(OnDeathAbilityCoroutine(User.Enemy));
+        yield return new WaitUntil(() => !abilityActive);
         enemyActiveShrimp = enemyTeam[0];
         enemyTeam.RemoveAt(0);
         SetupEnemyHudData();
         UpdateUI();
-        OnSwitchInAbility(User.Enemy);
+        flavorTextQueue.Enqueue("Your opponent sent out " + enemyActiveShrimp.definition.name);
+        abilityActive = true;
         UpdateUI();
-
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        StartCoroutine(OnSwitchInAbilityCoroutine(User.Enemy));
+        yield return new WaitUntil(() => !abilityActive);
+        UpdateUI();
+        dying = false;
+        attacking = false;
     }
     // confirms dialogue options
     public void DialogueConfirm()
     {
         if (flavorTextQueue.Count <= 0)
         {
+            if (turnOver == true)
+            {
             currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
             frozen = false;
+            }
         }
         else
         {
@@ -595,19 +719,23 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         {
            currentSnapshot.flavorText = flavorTextQueue.Dequeue(); 
         }
-        frozen = false;
+        if (turnOver)
+        {
         currentSnapshot.battleMode = BattleUIMode.ChoosingAction;
+        frozen = false;
+        }
         UpdateUI();
     }
 
     // methods for ability triggers
-    private void OnAttackAbility(User user)
+    private IEnumerator OnAttackAbilityCoroutine(User user)
     {
         if (user == User.Player)
         {
             AbilityDefinition ability = playerActiveShrimp.definition.ability;
             if (ability.trigger == AbilityTrigger.OnAttack)
             {
+                flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 if (ability.target == Target.Self)
                 {
@@ -616,6 +744,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -624,15 +753,17 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
         else
         {
             AbilityDefinition ability = enemyActiveShrimp.definition.ability;
-            AppliedStatus abilityStatus = new(ability.effect, ability.effect.turnDuration);
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnAttack)
             {
+                flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 if (ability.target == Target.Self)
                 {
                     enemyActiveShrimp.statuses.Add(abilityStatus);
@@ -640,6 +771,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -648,17 +780,22 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
+        UpdateUI();
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        abilityActive = false;
     }
-    private void OnDamagedAbility(User user)
+    private IEnumerator OnDamagedAbilityCoroutine(User user)
     {
         if (user == User.Player)
         {
             AbilityDefinition ability = playerActiveShrimp.definition.ability;
             if (ability.trigger == AbilityTrigger.OnDamaged)
             {
+                flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 if (ability.target == Target.Self)
                 {
@@ -667,6 +804,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -675,6 +813,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
@@ -684,6 +823,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnDamaged)
             {
+                flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 if (ability.target == Target.Self)
                 {
                     enemyActiveShrimp.statuses.Add(abilityStatus);
@@ -691,6 +831,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -699,17 +840,22 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
+        UpdateUI();
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        abilityActive = false;
         }
-    private void OnSwitchInAbility(User user)
+    private IEnumerator OnSwitchInAbilityCoroutine(User user)
     {
         if (user == User.Player)
         {
             AbilityDefinition ability = playerActiveShrimp.definition.ability;
             if (ability.trigger == AbilityTrigger.OnSwitchIn)
             {
+                flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 if (ability.target == Target.Self)
                 {
@@ -718,6 +864,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -726,6 +873,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
@@ -735,6 +883,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnSwitchIn)
             {
+                flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 if (ability.target == Target.Self)
                 {
                     enemyActiveShrimp.statuses.Add(abilityStatus);
@@ -742,6 +891,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -750,17 +900,22 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
+        UpdateUI();
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        abilityActive = false;
     }
-    private void OnTurnStartAbility(User user)
+    private IEnumerator OnTurnStartAbilityCoroutine(User user)
     {
         if (user == User.Player)
         {
             AbilityDefinition ability = playerActiveShrimp.definition.ability;
             if (ability.trigger == AbilityTrigger.OnTurnStart)
             {
+                flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 if (ability.target == Target.Self)
                 {
@@ -769,6 +924,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -777,6 +933,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
@@ -786,6 +943,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnTurnStart)
             {
+                flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 if (ability.target == Target.Self)
                 {
                     enemyActiveShrimp.statuses.Add(abilityStatus);
@@ -793,6 +951,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -801,17 +960,22 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
+        UpdateUI();
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        abilityActive = false;
     }
-    private void OnTurnEndAbility(User user)
+    private IEnumerator OnTurnEndAbilityCoroutine(User user)
     {
         if (user == User.Player)
         {
             AbilityDefinition ability = playerActiveShrimp.definition.ability;
             if (ability.trigger == AbilityTrigger.OnTurnEnd)
             {
+                flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 if (ability.target == Target.Self)
                 {
@@ -820,6 +984,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -828,6 +993,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
@@ -837,6 +1003,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnTurnEnd)
             {
+                flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 if (ability.target == Target.Self)
                 {
                     enemyActiveShrimp.statuses.Add(abilityStatus);
@@ -844,6 +1011,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -852,17 +1020,22 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
+        UpdateUI();
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        abilityActive = false;
     }
-    private void OnDeathAbility(User user)
+    private IEnumerator OnDeathAbilityCoroutine(User user)
     {
         if (user == User.Player)
         {
             AbilityDefinition ability = playerActiveShrimp.definition.ability;
             if (ability.trigger == AbilityTrigger.OnDeath)
             {
+                flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 if (ability.target == Target.Self)
                 {
@@ -871,6 +1044,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -879,6 +1053,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
@@ -888,6 +1063,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnDeath)
             {
+                flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 if (ability.target == Target.Self)
                 {
                     enemyActiveShrimp.statuses.Add(abilityStatus);
@@ -895,6 +1071,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.enemyInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your opponents " + enemyActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
                 else
                 {
@@ -903,11 +1080,14 @@ public class BattleController : MonoBehaviour, IBattleUIActions
                     statusInfo.Add(abilityStatus.status.iconID);
                     statusInfo.Add(abilityStatus.status.description);
                     currentSnapshot.playerInfoData.passives.Add(statusInfo);
+                    flavorTextQueue.Enqueue("Your " + playerActiveShrimp.definition.name + " recieved the status " + ability.effect.displayName);
                 }
             }
         }
+        UpdateUI();
+        yield return new WaitUntil(() => flavorTextQueue.Count <= 0);
+        abilityActive = false;
     }
-
 }
 
 public enum ActionType
