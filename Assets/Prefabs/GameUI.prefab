@@ -357,7 +357,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 75}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7765156754454695269
@@ -3296,7 +3296,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -720}
+  m_AnchoredPosition: {x: 0, y: 400}
   m_SizeDelta: {x: 900, y: 1100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7516726974134215496
@@ -3346,7 +3346,7 @@ CanvasGroup:
   m_GameObject: {fileID: 4778453869761501787}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
+  m_Interactable: 0
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
 --- !u!1 &4803493259391476752
@@ -4931,11 +4931,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backMenu: {fileID: 0}
   firstSelected: {fileID: 3948588108407232799}
+  cg: {fileID: 3809217215349589186}
   battleController: {fileID: 0}
-  resumeIcon: {fileID: 0}
-  pauseIcon: {fileID: 0}
   translucentBackground: {fileID: 2636837575808595641}
   returnMenuText: {fileID: 4255224230533457559}
+  resumeIcon: {fileID: 0}
+  pauseIcon: {fileID: 0}
 --- !u!1 &8631697336625038616
 GameObject:
   m_ObjectHideFlags: 0
