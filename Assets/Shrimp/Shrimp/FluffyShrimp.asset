@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478e5088755db424b9aa2eacd121e3b9, type: 3}
+  m_Name: FluffyShrimp
+  m_EditorClassIdentifier: 
+  displayName: Fluffy Shrimp
+  shrimpSpriteID: fluffy.shrimp
+  maxHP: 150
+  baseSpeed: 100
+  baseAttack: 5
+  ability: {fileID: 11400000, guid: dc576a14d9150294b93f3ba343e62137, type: 2}
+  moves:
+  - {fileID: 11400000, guid: 40a36e677f7dbb348975833e75b7c6b4, type: 2}
+  - {fileID: 11400000, guid: 9fc2041bd1b18c440a6483227ce5b0ff, type: 2}
+  - {fileID: 11400000, guid: 2d1da51604387b64ca68038a6b6157d1, type: 2}

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 478e5088755db424b9aa2eacd121e3b9, type: 3}
-  m_Name: Horny Shrimp
+  m_Name: Soft Shrimp
   m_EditorClassIdentifier: 
-  displayName: Horny Shrimp
-  shrimpSpriteID: horny.shrimp
-  maxHP: 500
-  baseSpeed: 3
+  displayName: Soft Shrimp
+  shrimpSpriteID: soft.shrimp
+  maxHP: 70
+  baseSpeed: 150
   baseAttack: 3
-  ability: {fileID: 11400000, guid: 8d310eb792a48d64dbcce3195e154736, type: 2}
+  ability: {fileID: 11400000, guid: 561962141bd654a4a9866d5b473137c2, type: 2}
   moves:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 8303acfd76f0e444695201a2b94fbe60, type: 2}
+  - {fileID: 11400000, guid: 6041667572f4f674181d43453528bcd0, type: 2}
+  - {fileID: 11400000, guid: 47ac1bf309b974641ac33b7cdf282deb, type: 2}

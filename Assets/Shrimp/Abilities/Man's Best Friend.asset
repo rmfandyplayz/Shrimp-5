@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adeaff4132f8a5348a86012f3d6b6a36, type: 3}
+  m_Name: Man's Best Friend
+  m_EditorClassIdentifier: 
+  displayName: Man's Best Friend
+  iconID: fgthyuj
+  trigger: 5
+  effect: {fileID: 11400000, guid: c7c1225e0198183409b8cb95d5592953, type: 2}
+  description: When this shrimp dies, it quarters the attack of its killer
+  target: 1

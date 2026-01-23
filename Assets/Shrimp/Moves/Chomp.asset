@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c3479c30e67d4cc41ba4ed3087899eb1, type: 3}
-  m_Name: New Move Definition
+  m_Name: Chomp
   m_EditorClassIdentifier: 
-  displayName: 
-  hasEffect: 0
-  effect: {fileID: 0}
-  iconID: 
-  power: 0
-  target: 0
-  description: 
+  displayName: Chomp
+  hasEffect: 1
+  effect: {fileID: 11400000, guid: a1875248d77c9b74e871ecb9d962099b, type: 2}
+  iconID: ghjk
+  power: 7
+  target: 1
+  description: 7 Power, halves opponents attack for 1 turn

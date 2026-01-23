@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 478e5088755db424b9aa2eacd121e3b9, type: 3}
+  m_Name: SpikyShrimp
+  m_EditorClassIdentifier: 
+  displayName: Spiky Shrimp
+  shrimpSpriteID: Spiky.Shrimp
+  maxHP: 250
+  baseSpeed: 45
+  baseAttack: 1
+  ability: {fileID: 11400000, guid: 91c5eff1c9848c943a063461dfb2da1c, type: 2}
+  moves:
+  - {fileID: 11400000, guid: 2731020cb2ed9f34a8022736e30bbc67, type: 2}
+  - {fileID: 11400000, guid: 7e9ca1c20d11023479212fc47a3c8af3, type: 2}
+  - {fileID: 11400000, guid: 1777299c75fee1a4e9d2288d09232822, type: 2}

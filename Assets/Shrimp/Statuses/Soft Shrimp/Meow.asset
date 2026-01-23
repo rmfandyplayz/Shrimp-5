@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fe602b36f4de9740accf0c6aa66384c, type: 3}
-  m_Name: Immobilized
+  m_Name: Meow
   m_EditorClassIdentifier: 
-  displayName: Attack (50%)
-  iconID: e
+  displayName: Attack (-2)
+  iconID: hjk,
   statChanged: 1
-  effectType: 1
-  buffType: 0
-  valueChange: 0.5
-  permanant: 0
-  turnDuration: 1
-  description: The afflicted's attack is 50% of what it would be otherwise
+  effectType: 0
+  buffType: 1
+  valueChange: -2
+  permanant: 1
+  turnDuration: 344
+  description: Attack Decreased by 2

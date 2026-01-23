@@ -18,4 +18,4 @@ MonoBehaviour:
   iconID: balls
   power: 4
   target: 1
-  description: 4 Power, Cuts the opposing shrimps attack in half for their next attack
+  description: 4 Power, Cuts the opponents attack in half
