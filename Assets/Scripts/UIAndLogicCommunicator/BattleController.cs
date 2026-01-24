@@ -46,6 +46,19 @@ public class BattleController : MonoBehaviour, IBattleUIActions
 
     void Start()
     {
+        enemies = new List<List<ShrimpDefinition>>
+        {
+            enemyTeam1,
+            enemyTeam2,
+            enemyTeam3,
+            enemyTeam4,
+            enemyTeam5,
+            enemyTeam6,
+            enemyTeam7,
+            enemyTeam8,
+            enemyTeam9,
+            enemyTeam10
+        };
     }
     public void StartNewBattle(List<ShrimpState> team, System.Action<bool> callback, int battleIndex)
     {
