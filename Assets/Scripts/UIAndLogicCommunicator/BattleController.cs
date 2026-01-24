@@ -46,17 +46,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
 
     void Start()
     {
-        enemies = new List<List<ShrimpDefinition>>();
-        enemies.Add(enemyTeam1);
-        enemies.Add(enemyTeam2);
-        enemies.Add(enemyTeam3);
-        enemies.Add(enemyTeam4);
-        enemies.Add(enemyTeam5);
-        enemies.Add(enemyTeam6);
-        enemies.Add(enemyTeam7);
-        enemies.Add(enemyTeam8);
-        enemies.Add(enemyTeam9);
-        enemies.Add(enemyTeam10);
+        
     }
     public void StartNewBattle(List<ShrimpState> team, System.Action<bool> callback, int battleIndex)
     {
@@ -86,8 +76,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         {
             shrimp.ResetState();
         }
-        playerActiveShrimp = playerTeam[0];
-        enemyActiveShrimp = enemyTeam[0];
         SetupPlayerHudData(); 
         SetupEnemyHudData(); 
 
@@ -734,11 +722,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         yield return new WaitUntil(() => !abilityActive);
         if (enemyTeam.Count == 0)
         {
-            flavorTextQueue.Enqueue("You Won the Battle");
+            flavorTextQueue.Enqueue("You Lost the Battle");
             yield return new WaitUntil(() => flavorTextQueue.Count <= 0 && currentSnapshot.flavorText == "");
             EndBattle(true);
         }
-        else{
         enemyActiveShrimp = enemyTeam[0];
         enemyTeam.RemoveAt(0);
         SetupEnemyHudData();
@@ -752,7 +739,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         UpdateUI();
         dying = false;
         attacking = false;
-        }
     }
 
     public void EndBattle(bool playerWon)
@@ -760,7 +746,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         // ... existing cleanup code ...
         
         // Tell the manager we are done
-        loopController.OnBattleEnded(playerWon);
+        onBattleEndCallback?.Invoke(playerWon);
     }
 
     // confirms dialogue options
@@ -831,10 +817,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         else
         {
             AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnAttack)
             {
                 flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
-                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 if (ability.target == Target.Self)
                 {
                     enemyActiveShrimp.statuses.Add(abilityStatus);
@@ -891,9 +877,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         else
         {
             AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnDamaged)
             {
-                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 if (ability.target == Target.Self)
                 {
@@ -951,10 +937,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         else
         {
             AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnSwitchIn)
             {
                 flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
-                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 if (ability.target == Target.Self)
                 {
                     enemyActiveShrimp.statuses.Add(abilityStatus);
@@ -1011,9 +997,9 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         else
         {
             AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnTurnStart)
             {
-                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
                 if (ability.target == Target.Self)
                 {
@@ -1071,10 +1057,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         else
         {
             AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnTurnEnd)
             {
                 flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
-                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 if (ability.target == Target.Self)
                 {
                     enemyActiveShrimp.statuses.Add(abilityStatus);
@@ -1131,10 +1117,10 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         else
         {
             AbilityDefinition ability = enemyActiveShrimp.definition.ability;
+            AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
             if (ability.trigger == AbilityTrigger.OnDeath)
             {
                 flavorTextQueue.Enqueue("Your opponents" + enemyActiveShrimp.definition.name + "'s ability, " + ability.name + ", triggered!");
-                AppliedStatus abilityStatus = new AppliedStatus(ability.effect, ability.effect.turnDuration);
                 if (ability.target == Target.Self)
                 {
                     enemyActiveShrimp.statuses.Add(abilityStatus);

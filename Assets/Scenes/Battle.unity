@@ -164,22 +164,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6954f73c9007caa4aa68e1730ba9926c, type: 2}
   enemyTeam2:
   - {fileID: 11400000, guid: 5f318b82646b8ea42a57544f66997971, type: 2}
+  - {fileID: 11400000, guid: f2f5305086e821f4397ffeeae7889989, type: 2}
   enemyTeam3:
-  - {fileID: 11400000, guid: f595336a1dadf0b458948f5ccac1bfcf, type: 2}
-  enemyTeam4:
-  - {fileID: 11400000, guid: ab0ef2e966769e54dbbdc05c58993afc, type: 2}
-  enemyTeam5:
-  - {fileID: 11400000, guid: c1bb256985dffa5459ec9e3acdc600ac, type: 2}
-  enemyTeam6:
-  - {fileID: 11400000, guid: cebce9f5fcb3789409c846392a19624e, type: 2}
-  enemyTeam7:
-  - {fileID: 11400000, guid: ec70101d210163b4b82f91af3014d701, type: 2}
-  enemyTeam8:
-  - {fileID: 11400000, guid: 09c3bf1f0d808354fbbc0770cd7dd4e8, type: 2}
-  enemyTeam9:
-  - {fileID: 11400000, guid: 7de4e703161914f4e884f8064c124f24, type: 2}
-  enemyTeam10:
-  - {fileID: 11400000, guid: 2c297ea1ae7294d45bb624b675df89ee, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  enemyTeam4: []
+  enemyTeam5: []
+  enemyTeam6: []
+  enemyTeam7: []
+  enemyTeam8: []
+  enemyTeam9: []
+  enemyTeam10: []
   uiModel: {fileID: 470106172}
   loopController: {fileID: 470106174}
 --- !u!114 &470106172
@@ -332,45 +328,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-<<<<<<< Updated upstream
-=======
-    - target: {fileID: 1602009952158614507, guid: e38c329572d4f134589cb32526aca4db, type: 3}
-      propertyPath: gameManager
-      value: 
-      objectReference: {fileID: 470106174}
-    - target: {fileID: 1602009952158614507, guid: e38c329572d4f134589cb32526aca4db, type: 3}
-      propertyPath: battleUIObject.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1602009952158614507, guid: e38c329572d4f134589cb32526aca4db, type: 3}
-      propertyPath: 'battleUIObject.Array.data[0]'
-      value: 
-      objectReference: {fileID: 106659824}
-    - target: {fileID: 1602009952158614507, guid: e38c329572d4f134589cb32526aca4db, type: 3}
-      propertyPath: 'battleUIObject.Array.data[1]'
-      value: 
-      objectReference: {fileID: 1543221213}
-    - target: {fileID: 1602009952158614507, guid: e38c329572d4f134589cb32526aca4db, type: 3}
-      propertyPath: 'battleUIObject.Array.data[2]'
-      value: 
-      objectReference: {fileID: 106666168}
-    - target: {fileID: 1721876571366562346, guid: e38c329572d4f134589cb32526aca4db, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1721876571366562346, guid: e38c329572d4f134589cb32526aca4db, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1721876571366562346, guid: e38c329572d4f134589cb32526aca4db, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1721876571366562346, guid: e38c329572d4f134589cb32526aca4db, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
->>>>>>> Stashed changes
     - target: {fileID: 1747692325119328183, guid: e38c329572d4f134589cb32526aca4db, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
