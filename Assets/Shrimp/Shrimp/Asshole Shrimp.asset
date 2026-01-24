@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Asshole Shrimp
   shrimpSpriteID: asshole.shrimp
+  shrimpPortraitID: asshole
   maxHP: 125
   baseSpeed: 100
   baseAttack: 5

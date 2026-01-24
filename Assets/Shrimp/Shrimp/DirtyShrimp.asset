@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Dirty Shrimp
   shrimpSpriteID: dirty.shrimp
+  shrimpPortraitID: dirty
   maxHP: 50
   baseSpeed: 500
   baseAttack: 0

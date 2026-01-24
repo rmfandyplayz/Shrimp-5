@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Slimy Shrimp
   shrimpSpriteID: slimy.shrimp
+  shrimpPortraitID: slimy
   maxHP: 200
   baseSpeed: 30
   baseAttack: 10

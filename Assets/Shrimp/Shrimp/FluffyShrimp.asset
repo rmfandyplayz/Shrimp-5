@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Fluffy Shrimp
   shrimpSpriteID: fluffy.shrimp
+  shrimpPortraitID: furry
   maxHP: 150
   baseSpeed: 100
   baseAttack: 5

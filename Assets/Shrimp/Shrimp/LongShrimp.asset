@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Long Shrimp
   shrimpSpriteID: long.shrimp
+  shrimpPortraitID: long
   maxHP: 150
   baseSpeed: 35
   baseAttack: 1
