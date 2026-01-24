@@ -88,6 +88,8 @@ public class BattleController : MonoBehaviour, IBattleUIActions
         {
             shrimp.ResetState();
         }
+        playerActiveShrimp = playerTeam[0];
+        enemyActiveShrimp = enemyTeam[0];
         SetupPlayerHudData(); 
         SetupEnemyHudData(); 
 
