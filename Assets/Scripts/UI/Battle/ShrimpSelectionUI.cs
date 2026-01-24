@@ -8,7 +8,7 @@ public class ShrimpSelectionUI : MonoBehaviour
 {
     [Header("Dependencies")]
     public BattleLoopController gameManager; // Drag the manager here
-    public GameObject battleUIObject;   // Drag the "GameUI" or "BattleCanvas" here
+    public List<GameObject> battleUIObject;   // Drag the "GameUI" or "BattleCanvas" here
     [SerializeField] GameObject firstSelected;
 
     [Header("Button Components")]
@@ -24,7 +24,10 @@ public class ShrimpSelectionUI : MonoBehaviour
         currentOptions = options;
 
         // 1. Hide Battle UI, Show Selection
-        battleUIObject.SetActive(false);
+        foreach (GameObject canvas in battleUIObject)
+        {
+        canvas.SetActive(false);
+        }
         gameObject.SetActive(true);
 
         // 2. Setup Buttons
@@ -60,5 +63,9 @@ public class ShrimpSelectionUI : MonoBehaviour
 
         // 2. Hide self
         gameObject.SetActive(false);
+        foreach (GameObject canvas in battleUIObject)
+        {
+        canvas.SetActive(true);
+        }
     }
 }

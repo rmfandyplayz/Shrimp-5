@@ -46,7 +46,6 @@ public class BattleController : MonoBehaviour, IBattleUIActions
 
     void Start()
     {
-        
     }
     public void StartNewBattle(List<ShrimpState> team, System.Action<bool> callback, int battleIndex)
     {
