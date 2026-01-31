@@ -15,6 +15,6 @@ MonoBehaviour:
   displayName: Venomous
   iconID: dfgh
   trigger: 0
-  effect: {fileID: 0}
+  effect: {fileID: 11400000, guid: d2f77004eecec934fa9ab55a33af5ef0, type: 2}
   description: Inflicts poison to enemy on switch in, which does 5 damage every turn
   target: 1
