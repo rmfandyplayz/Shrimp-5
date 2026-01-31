@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Runtime.CompilerServices;
-using UnityEngine.SceneManagement;
 
 public class BattleLoopController : MonoBehaviour
 {
@@ -93,12 +92,12 @@ public class BattleLoopController : MonoBehaviour
     }
 
     // --- PHASE 3: CLEANUP ---
-    public void OnBattleEnded(bool playerWon)
+    private void OnBattleEnded(bool playerWon)
     {
         if (!playerWon)
         {
             // Game Over logic here
-            SceneManager.LoadScene(0);
+            Debug.Log("Game Over!");
             // TODO: load title screen
 
             return;
@@ -114,7 +113,6 @@ public class BattleLoopController : MonoBehaviour
         {
             shrimp.ResetState();
         }
-        battleIndex++;
 
         // 3. Loop back to selection
         ShowSelectionScreen();
