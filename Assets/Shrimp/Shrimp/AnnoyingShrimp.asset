@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Annoying Shrimp
   shrimpSpriteID: annoying.shrimp
-  shrimpPortraitID: annoying
   maxHP: 140
   baseSpeed: 110
   baseAttack: 4

@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Shrimp?
   shrimpSpriteID: maybe.shrimp
-  shrimpPortraitID: lobster
   maxHP: 100
   baseSpeed: 50
   baseAttack: 5

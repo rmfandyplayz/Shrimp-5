@@ -13,23 +13,13 @@ using UnityEngine.UI;
 
 public class BattleController : MonoBehaviour, IBattleUIActions
 {
-    private List<List<ShrimpDefinition>> enemies;
-    public List<ShrimpDefinition> enemyTeam1;
-    public List<ShrimpDefinition> enemyTeam2;
-    public List<ShrimpDefinition> enemyTeam3;
-    public List<ShrimpDefinition> enemyTeam4;
-    public List<ShrimpDefinition> enemyTeam5;
-    public List<ShrimpDefinition> enemyTeam6;
-    public List<ShrimpDefinition> enemyTeam7;
-    public List<ShrimpDefinition> enemyTeam8;
-    public List<ShrimpDefinition> enemyTeam9;
-    public List<ShrimpDefinition> enemyTeam10;
     [Header("Refs")]
     [SerializeField] private BattleUIModel uiModel;
     private BattleSnapshot currentSnapshot;
     private List<ShrimpState> playerTeam;
     private List<ShrimpState> enemyTeam;
     public BattleLoopController loopController;
+    [SerializeField] private List<List<ShrimpDefinition>> enemies;
     private System.Random rng;
     private ShrimpState playerActiveShrimp;
     private ShrimpState enemyActiveShrimp;
@@ -42,12 +32,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     private bool abilityActive;
     private bool dying;
     private BattleUIMode modeBeforePause;
-    private System.Action<bool> onBattleEndCallback;
-
-    void Start()
-    {
-        
-    }
+    private System.Action<bool> onBattleEndCallback; 
     public void StartNewBattle(List<ShrimpState> team, System.Action<bool> callback, int battleIndex)
     {
         turnOver = true;

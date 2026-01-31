@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: AncientShrimp
   shrimpSpriteID: ancient.shrimp
-  shrimpPortraitID: ancient
   maxHP: 200
   baseSpeed: 90
   baseAttack: 15

@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: shrimp.png
   shrimpSpriteID: shrimp.shrimp
-  shrimpPortraitID: png
   maxHP: 999
   baseSpeed: 999
   baseAttack: 10

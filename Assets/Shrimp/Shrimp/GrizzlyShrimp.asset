@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Grizzly Shrimp
   shrimpSpriteID: grizzly.shrimp
-  shrimpPortraitID: grizzly
   maxHP: 300
   baseSpeed: 70
   baseAttack: 20

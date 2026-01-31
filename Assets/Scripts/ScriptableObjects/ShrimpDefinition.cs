@@ -7,8 +7,7 @@ public class ShrimpDefinition : ScriptableObject
     public string displayName;       
 
     [Header("UI & Animation")]
-    public string shrimpSpriteID;
-    public string shrimpPortraitID;           
+    public string shrimpSpriteID;           
     public int maxHP;
     public int baseSpeed;
     public int baseAttack;

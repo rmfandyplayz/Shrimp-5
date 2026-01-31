@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Soft Shrimp
   shrimpSpriteID: soft.shrimp
-  shrimpPortraitID: soft
   maxHP: 70
   baseSpeed: 150
   baseAttack: 3

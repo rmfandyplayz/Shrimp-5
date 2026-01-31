@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Tall Shrimp
   shrimpSpriteID: tall.shrimp
-  shrimpPortraitID: tall
   maxHP: 300
   baseSpeed: 20
   baseAttack: 5

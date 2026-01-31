@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Spiky Shrimp
   shrimpSpriteID: spiky.shrimp
-  shrimpPortraitID: spiky
   maxHP: 250
   baseSpeed: 45
   baseAttack: 1

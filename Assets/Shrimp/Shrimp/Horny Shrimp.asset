@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Horny Shrimp
   shrimpSpriteID: horny.shrimp
-  shrimpPortraitID: horny
   maxHP: 500
   baseSpeed: 3
   baseAttack: 3

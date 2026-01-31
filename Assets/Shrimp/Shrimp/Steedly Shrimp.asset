@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Steedly Shrimp
   shrimpSpriteID: steedly.shrimp
-  shrimpPortraitID: steedly
   maxHP: 250
   baseSpeed: 100
   baseAttack: 10

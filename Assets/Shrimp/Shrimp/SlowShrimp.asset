@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Slow Shrimp
   shrimpSpriteID: slow.shrimp
-  shrimpPortraitID: slow
   maxHP: 175
   baseSpeed: 1
   baseAttack: 8

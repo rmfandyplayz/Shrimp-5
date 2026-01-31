@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Stinky Shrimp
   shrimpSpriteID: stinky.shrimp
-  shrimpPortraitID: stinky
   maxHP: 200
   baseSpeed: 55
   baseAttack: 5
