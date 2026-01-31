@@ -1,8 +1,6 @@
 using Shrimp5.UIContract;
-using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
 
 // written by andy
 // communicates with game logic on what input has been taken
