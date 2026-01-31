@@ -366,8 +366,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e54bf48f4bbf6244945d2bbfc3511ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minWaitTime: 0.75
-  maxWaitTime: 1.8
+  minWaitTime: 1.75
+  maxWaitTime: 3.5
   uiCanvasGroup: {fileID: 756427908}
 --- !u!1 &880152395
 GameObject:
