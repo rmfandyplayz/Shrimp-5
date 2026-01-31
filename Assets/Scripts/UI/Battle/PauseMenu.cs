@@ -17,13 +17,9 @@ public class PauseMenu : MenuBase
     [Header("sprite refs")]
     [SerializeField] Image resumeIcon;
     [SerializeField] Image pauseIcon;
-    [SerializeField] Slider masterSlider;
-    [SerializeField] Slider musicSlider;
-    [SerializeField] Slider sfxSlider;
-
 
     private static bool isEnabled = false;
-    private static bool isAnimating = false; // if some form of animation is in progress and shouldn't be disturbed
+    private static bool isAnimating = false; // if if some form of animation is in progress and shouldn't be disturbed
     private bool canQuit = false; // is the quit button "active" as in is it currently on the "r u sure about that?" text
 
     private Vector2 menuOriginalPos;
@@ -34,20 +30,6 @@ public class PauseMenu : MenuBase
         
         menuOriginalPos = cg.transform.position;
         translucentBackground.color = new Color(0, 0, 0, 0);
-    }
-
-    private void OnEnable()
-    {
-        float masterVol = PlayerPrefs.GetFloat("MasterVol", 1f);
-        float musicVol = PlayerPrefs.GetFloat("MusicVol", 1f);
-        float sfxVol = PlayerPrefs.GetFloat("SFXVol", 1f);
-
-        // Update visuals WITHOUT triggering the 'OnValueChanged' event if possible
-        // (assigning .value usually triggers the listener, which is fine, 
-        // but just so u know it re-sets the volume to the same thing, which is harmless)
-        masterSlider.value = masterVol;
-        musicSlider.value = musicVol;
-        sfxSlider.value = sfxVol;
     }
 
     public override void OnBackPressed()
@@ -137,10 +119,6 @@ public class PauseMenu : MenuBase
 
         sequence.OnComplete(() => onComplete.Invoke());
     }
-
-    public void OnMasterChanged(float val) => AudioManager.Instance.SetMasterVolume(val);
-    public void OnMusicChanged(float val) => AudioManager.Instance.SetMusicVolume(val);
-    public void OnSFXChanged(float val) => AudioManager.Instance.SetSFXVolume(val);
 
     public static bool GetEnabled()
     {
