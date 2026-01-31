@@ -7,13 +7,6 @@ public class ShrimpState : MonoBehaviour
     public ShrimpDefinition definition;
     [HideInInspector] public int currentHP;
     [HideInInspector] public List<AppliedStatus> statuses;
-
-    public ShrimpState(ShrimpDefinition def)
-    {
-        definition = def;
-        currentHP = definition.maxHP;
-        statuses = new List<AppliedStatus>();
-    }
     
     void Start()
     {
@@ -110,10 +103,5 @@ public class ShrimpState : MonoBehaviour
             }
         }
         return removedList;
-    }
-    public void ResetState()
-    {
-        currentHP = definition.maxHP;
-        statuses.Clear();
-    }
+    }   
 }
