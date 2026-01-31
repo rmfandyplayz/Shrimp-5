@@ -11,10 +11,6 @@ public class SettingsMenu : MenuBase
     [SerializeField] RectTransform blackPanel;
     [SerializeField] CanvasGroup scrollCanvasGroup;
 
-    [SerializeField] Slider masterSlider;
-    [SerializeField] Slider musicSlider;
-    [SerializeField] Slider sfxSlider;
-
     private Vector2 blackPanelDefPos;
     private Vector2 backgroundDefPos;
     private Vector2 scrollDefPos;
@@ -26,13 +22,6 @@ public class SettingsMenu : MenuBase
         blackPanelDefPos = blackPanel.anchoredPosition;
         backgroundDefPos = backgroundImage.rectTransform.anchoredPosition;
         scrollDefPos = scrollCanvasGroup.transform.localPosition;
-    }
-
-    void Start()
-    {
-        masterSlider.value = PlayerPrefs.GetFloat("MasterVol", 1f);
-        musicSlider.value = PlayerPrefs.GetFloat("MusicVol", 1f);
-        sfxSlider.value = PlayerPrefs.GetFloat("SFXVol", 1f);
     }
 
     public override void AnimateIn(Action onComplete)
