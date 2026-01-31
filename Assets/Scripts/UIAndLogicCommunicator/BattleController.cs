@@ -16,11 +16,11 @@ public class BattleController : MonoBehaviour, IBattleUIActions
     [Header("Refs")]
     [SerializeField] private BattleUIModel uiModel;
     private BattleSnapshot currentSnapshot;
-    [SerializeField] private List<ShrimpState> playerTeam;
-    [SerializeField] private List<ShrimpState> enemyTeam;
+    public List<ShrimpState> playerTeam;
+    public List<ShrimpState> enemyTeam;
     private System.Random rng;
-    private ShrimpState playerActiveShrimp;
-    private ShrimpState enemyActiveShrimp;
+    [HideInInspector] public ShrimpState playerActiveShrimp;
+    [HideInInspector] public ShrimpState enemyActiveShrimp;
     private List<ButtonData> moves;
     private List<ButtonData> switchShrimp;
     private bool frozen;
@@ -58,7 +58,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             currentMove.isEnabled = true;
             currentMove.iconID = playerActiveShrimp.definition.moves[i].iconID;
             currentMove.moveName = playerActiveShrimp.definition.moves[i].displayName;
-            currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].description;
+            currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].shortDescription;
             moves.Add(currentMove);
         }
 
@@ -173,7 +173,7 @@ public class BattleController : MonoBehaviour, IBattleUIActions
             currentMove.isEnabled = true;
             currentMove.iconID = playerActiveShrimp.definition.moves[i].iconID;
             currentMove.moveName = playerActiveShrimp.definition.moves[i].displayName;
-            currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].description;
+            currentMove.moveShortDescription = playerActiveShrimp.definition.moves[i].shortDescription;
             moves[i] = currentMove;
         }
     }
