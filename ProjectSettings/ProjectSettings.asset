@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: Twindrill Goose | sand undertale burner fan club
-  productName: shrimp gaem
+  productName: crustacean combat
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
@@ -142,7 +142,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: r1.0
+  bundleVersion: tetov2
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0

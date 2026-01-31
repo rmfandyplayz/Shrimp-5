@@ -110,11 +110,11 @@ namespace Shrimp5.UIContract
 
         public HudData playerInfoData;
         public HudData enemyInfoData;
-
+        
         public List<ButtonData> buttons; // usually 4 max, but just in case
 
         public InspectData inspectData;
-
+        
         public TooltipData tooltipData;
 
         public override string ToString()
