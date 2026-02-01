@@ -13,7 +13,11 @@ public class TurnManager : MonoBehaviour
     {
         if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnTurnStart)
         {
-            
+            abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);
+        }
+        if (controller.enemyActiveShrimp.definition.ability.trigger == AbilityTrigger.OnTurnStart)
+        {
+            abilityManager.ActivateAbility(controller.enemyActiveShrimp, controller.playerActiveShrimp);
         }
         int playerSpeed = controller.playerActiveShrimp.GetSpeed();
         int enemySpeed = controller.enemyActiveShrimp.GetSpeed();
@@ -22,6 +26,10 @@ public class TurnManager : MonoBehaviour
             ShrimpState temp = controller.playerActiveShrimp;
             controller.playerActiveShrimp = controller.playerTeam[playerActionIndex];
             controller.playerTeam[playerActionIndex] = temp;
+            if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnSwitchIn)
+            {
+                abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);
+            }
             attackManager.RunAttack(controller.enemyActiveShrimp, controller.playerActiveShrimp, attackManager.ChooseEnemyMove(playerActionIndex));
         }
         else
@@ -47,7 +55,16 @@ public class TurnManager : MonoBehaviour
             }
         }
         deathManager.CheckForDeath();
+        if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnTurnEnd)
+        {
+            abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);
+        }
+        if (controller.enemyActiveShrimp.definition.ability.trigger == AbilityTrigger.OnTurnEnd)
+        {
+            abilityManager.ActivateAbility(controller.enemyActiveShrimp, controller.playerActiveShrimp);
+        }
         statusManager.DecreaseStatusTurnsLeft(controller.playerActiveShrimp);
         statusManager.DecreaseStatusTurnsLeft(controller.enemyActiveShrimp);
+
     }
 }

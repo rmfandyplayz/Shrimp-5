@@ -4,6 +4,7 @@ public class AttackManager : MonoBehaviour
 {
     public BattleController controller;
     public StatusManager statusManager;
+    public AbilityManager abilityManager;
     
     public void RunAttack(ShrimpState attacker, ShrimpState target, int attackIndex)
     {
@@ -12,6 +13,10 @@ public class AttackManager : MonoBehaviour
         if (move.target == MoveTarget.Self)
         {
             attacker.currentHP = attacker.GetHP() - damage;
+            if(damage > 0 && (attacker.definition.ability.trigger == AbilityTrigger.OnDamaged || attacker.definition.ability.trigger == AbilityTrigger.OnAttack))
+            {
+                abilityManager.ActivateAbility(attacker, target);
+            }
             if (move.hasEffect)
             {
                 AppliedStatus status = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -21,6 +26,17 @@ public class AttackManager : MonoBehaviour
         else
         {
             target.currentHP = target.GetHP() - damage;
+            if (damage > 0)
+            {
+                if (attacker.definition.ability.trigger == AbilityTrigger.OnAttack)
+                {
+                    abilityManager.ActivateAbility(attacker, target);
+                }
+                if (target.definition.ability.trigger == AbilityTrigger.OnDamaged)
+                {
+                    abilityManager.ActivateAbility(target, attacker);
+                }
+            }
             if (move.hasEffect)
             {
                 AppliedStatus status = new AppliedStatus(move.effect, move.effect.turnDuration);
