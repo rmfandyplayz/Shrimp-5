@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections;
 
 // the "API" that the game logic and UI logic will communicate with
 namespace Sh.UIContract
@@ -79,9 +80,36 @@ namespace Sh.UIContract
     public interface IBattleUI
     {
         void InitializeBattle(BattleSetupData setupData);
-        void QueueEvent(BattleEvent gameEvent);
+        void QueueEvent(BattleEvent gameEvent); // called when anything happens that require ui to react
     }
 
+
+    // ui will use this to tell game logic what player wants to do
+    public interface IBattleCommands
+    {
+        void SelectMove(string moveID);
+
+        void Back();
+
+        void TogglePause();
+
+        void DialogueSkip();
+        void DialogueSkipAll();
+        void DialogueConfirm();
+    }
+
+
+    public interface IBattleEventHandler
+    {
+        /// <summary>
+        /// Returns true if this handler can process an event right now.
+        /// </summary>
+        /// <param name="eventType"></param>
+        /// <returns></returns>
+        bool CanHandle(BattleEventType eventType);
+
+        IEnumerator HandleEvent(BattleEvent evt);
+    }
 
 
     // a dictionary of string names so typos are pretty much impossible.
