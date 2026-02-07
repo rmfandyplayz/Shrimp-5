@@ -24,15 +24,21 @@ public class TurnManager : MonoBehaviour
         int enemySpeed = controller.enemyActiveShrimp.GetSpeed();
         if (action == ActionType.Switching)
         {
-            MoveDefinition playerMove = ResourceManager.Get<MoveDefinition>("resources/movedata");
-            ShrimpState temp = controller.playerActiveShrimp;
-            controller.playerActiveShrimp = controller.playerTeam[playerActionIndex];
-            controller.playerTeam[playerActionIndex] = temp;
+            ShrimpDefinition newShrimp = ResourceManager.Get<ShrimpDefinition>("ShrimpData");
+            for (int i = 0; i < controller.playerTeam.Count; i++)
+            {
+                if (controller.playerTeam[i].definition.shrimpID == playerActionID)
+                {
+                    ShrimpState temp = controller.playerActiveShrimp;
+                    controller.playerActiveShrimp = controller.playerTeam[i];
+                    controller.playerTeam[i] = temp;
+                }
+            }
             if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnSwitchIn)
             {
                 abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);
             }
-            attackManager.RunAttack(controller.enemyActiveShrimp, controller.playerActiveShrimp, attackManager.ChooseEnemyMove(playerActionIndex));
+            attackManager.RunAttack(controller.enemyActiveShrimp, controller.playerActiveShrimp, attackManager.ChooseEnemyMove(null));
         }
         else
         {
@@ -46,15 +52,15 @@ public class TurnManager : MonoBehaviour
             }
             if (playerSpeed > enemySpeed)
             {
-                attackManager.RunAttack(controller.playerActiveShrimp, controller.enemyActiveShrimp, playerActionIndex);
+                attackManager.RunAttack(controller.playerActiveShrimp, controller.enemyActiveShrimp, playerMove);
                 deathManager.CheckForDeath();
-                attackManager.RunAttack(controller.enemyActiveShrimp, controller.playerActiveShrimp, attackManager.ChooseEnemyMove(playerActionIndex));
+                attackManager.RunAttack(controller.enemyActiveShrimp, controller.playerActiveShrimp, attackManager.ChooseEnemyMove(playerMove));
             }
             else
             {
-                attackManager.RunAttack(controller.enemyActiveShrimp, controller.playerActiveShrimp, attackManager.ChooseEnemyMove(playerActionIndex));
+                attackManager.RunAttack(controller.enemyActiveShrimp, controller.playerActiveShrimp, attackManager.ChooseEnemyMove(playerMove));
                 deathManager.CheckForDeath();
-                attackManager.RunAttack(controller.playerActiveShrimp, controller.enemyActiveShrimp, playerActionIndex);
+                attackManager.RunAttack(controller.playerActiveShrimp, controller.enemyActiveShrimp, playerMove);
             }
         }
         deathManager.CheckForDeath();

@@ -153,6 +153,8 @@ namespace Sh.UIContract
         {
             public const string UI_ROOT_PATH = "Art/UI/";
             public const string SFX_ROOT_PATH = "Audio/SFX/";
+            public const string SHRIMP_DATA_ROOT_PATH = "ShrimpData/";
+            public const string SHRIMP_MOVE_ROOT_PATH = "MoveData/";
         }
 
 
@@ -166,6 +168,12 @@ namespace Sh.UIContract
         {
             // example:
             // public const string MOVE_SLIMYSHRIMP_BASICATTACK = Paths.UI_ROOT_PATH + "moves.slimyShrimp.basicAttack";
+        }
+
+        public static class ShrimpData
+        {
+            // example:
+            // public const string SHRIMPDATA_SLIMYSHRIMP = Paths.SHRIMP_DATA_ROOT_PATH + "shrimpdata.slimyshrimp"
         }
     }
 }

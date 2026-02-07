@@ -6,10 +6,9 @@ public class AttackManager : MonoBehaviour
     public StatusManager statusManager;
     public AbilityManager abilityManager;
     
-    public void RunAttack(ShrimpState attacker, ShrimpState target, int attackIndex)
+    public void RunAttack(ShrimpState attacker, ShrimpState target, MoveDefinition move)
     {
-        int damage = attacker.GetAttack()*attacker.definition.moves[attackIndex].power;
-        MoveDefinition move = attacker.definition.moves[attackIndex];
+        int damage = attacker.GetAttack()*move.power;
         if (move.target == MoveTarget.Self)
         {
             attacker.currentHP = attacker.GetHP() - damage;
@@ -45,14 +44,14 @@ public class AttackManager : MonoBehaviour
         }
         
     }
-    public int ChooseEnemyMove(int playerAttackIndex)
+    public MoveDefinition ChooseEnemyMove(MoveDefinition playerMove)
     {
         int enemyAttack =  controller.enemyActiveShrimp.GetAttack();
         int playerAttack = controller.playerActiveShrimp.GetAttack();
         MoveDefinition[] enemyMoves = controller.enemyActiveShrimp.definition.moves;
-        MoveDefinition playerMove = controller.playerActiveShrimp.definition.moves[playerAttackIndex];
         int[] moveScores = new int[3];
         int highestScoreIndex = 0;
+        MoveDefinition highestScoreMove = enemyMoves[0];
         for (int i = 0; i <= 2; i++)
         {
             if (enemyMoves[i].power*enemyAttack >= controller.playerActiveShrimp.currentHP)
@@ -63,20 +62,21 @@ public class AttackManager : MonoBehaviour
             {
                 moveScores[i] += 5;
             }
-            if ((playerMove.power*playerAttack >= controller.enemyActiveShrimp.currentHP) && ((enemyMoves[i].hasEffect && (enemyMoves[i].effect.effectType == TypeOfEffect.Positive) && (enemyMoves[i].target == MoveTarget.Self) && (enemyMoves[0].effect.statChanged == StatAffected.HP)) || (enemyMoves[i].hasEffect && (enemyMoves[i].effect.effectType == TypeOfEffect.Negative) && (enemyMoves[i].target == MoveTarget.Opponent) && (enemyMoves[i].effect.statChanged == StatAffected.Attack))))
+            if ((playerMove != null && (playerMove.power*playerAttack >= controller.enemyActiveShrimp.currentHP)) && ((enemyMoves[i].hasEffect && (enemyMoves[i].effect.effectType == TypeOfEffect.Positive) && (enemyMoves[i].target == MoveTarget.Self) && (enemyMoves[0].effect.statChanged == StatAffected.HP)) || (enemyMoves[i].hasEffect && (enemyMoves[i].effect.effectType == TypeOfEffect.Negative) && (enemyMoves[i].target == MoveTarget.Opponent) && (enemyMoves[i].effect.statChanged == StatAffected.Attack))))
             {
                 moveScores[i] += 6;
             }
-            if ((playerMove.power*playerAttack < controller.enemyActiveShrimp.currentHP/2) && (((enemyMoves[i].hasEffect) && (enemyMoves[i].effect.statChanged == StatAffected.Attack)) || ((enemyMoves[i].hasEffect) && (enemyMoves[i].effect.statChanged == StatAffected.Speed) && (controller.enemyActiveShrimp.GetSpeed() <= controller.playerActiveShrimp.GetSpeed()))))
+            if ((playerMove != null && (playerMove.power*playerAttack < controller.enemyActiveShrimp.currentHP/2)) && (((enemyMoves[i].hasEffect) && (enemyMoves[i].effect.statChanged == StatAffected.Attack)) || ((enemyMoves[i].hasEffect) && (enemyMoves[i].effect.statChanged == StatAffected.Speed) && (controller.enemyActiveShrimp.GetSpeed() <= controller.playerActiveShrimp.GetSpeed()))))
             {
                 moveScores[i] += 6;
             }
             if (moveScores[i] > moveScores[highestScoreIndex])
             {
                 highestScoreIndex = i;
+                highestScoreMove = enemyMoves[i];
             }
         }
         
-        return highestScoreIndex;
+        return highestScoreMove;
     }
 }

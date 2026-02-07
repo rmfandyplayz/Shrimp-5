@@ -9,6 +9,7 @@ public class ShrimpDefinition : ScriptableObject
     [Header("UI & Animation")]
     public string shrimpSpriteID;           
     public int maxHP;
+    public string shrimpID;
     public int baseSpeed;
     public int baseAttack;
     public AbilityDefinition ability;
