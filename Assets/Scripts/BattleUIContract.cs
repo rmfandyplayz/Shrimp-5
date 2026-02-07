@@ -37,7 +37,7 @@ namespace Sh.UIContract
         public string targetId;    // i.e. shrimp.enemy.3
 
         // what happened
-        public string abilityId;   // "move.punch", "status.weaken", "move.heal", etc.
+        public string moveId;   // "move.punch", "status.weaken", "move.heal", etc.
         public string flavorText;  // "move.punch.effective", "move.heal", "move.status.apply", etc.
 
         // the change and the truth
