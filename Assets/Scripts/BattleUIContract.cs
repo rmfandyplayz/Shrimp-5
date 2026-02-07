@@ -100,8 +100,8 @@ namespace Sh.UIContract
 
         void TogglePause();
 
-        void DialogueSkip();
         void DialogueSkipAll();
+        
         void DialogueConfirm();
     }
 
