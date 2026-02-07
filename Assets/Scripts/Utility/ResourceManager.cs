@@ -17,7 +17,7 @@ public static class ResourceManager
     {
         if (string.IsNullOrEmpty(path))
         {
-            Debug.LogWarning("[ResourceManager] you passed an empty path");
+            Debug.LogWarning("[ResourceManager] >> you passed an empty path");
             return null;
         }
 
@@ -44,7 +44,7 @@ public static class ResourceManager
         else
         {
             // asset missing
-            Debug.LogError($"[ResourceManager] can\'t find: '{path}' as type {typeof(T).Name}. returning null.");
+            Debug.LogError($"[ResourceManager] >> can\'t find: '{path}' as type {typeof(T).Name}. returning null.");
             return null;
         }
     }
@@ -52,7 +52,7 @@ public static class ResourceManager
     // call this when switching scenes
     public static void ClearCache()
     {
-        Debug.Log("[ResourceManager] cache cleared.");
+        Debug.Log("[ResourceManager] >> cache cleared.");
         cache.Clear();
         Resources.UnloadUnusedAssets();
     }
