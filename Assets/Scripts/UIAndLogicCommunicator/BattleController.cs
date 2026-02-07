@@ -14,7 +14,6 @@ using UnityEngine.UI;
 public class BattleController : MonoBehaviour, IBattleCommands
 {
     [Header("Refs")]
-    [SerializeField] private BattleUIModel uiModel;
     public List<ShrimpState> playerTeam;
     public List<ShrimpState> enemyTeam;
     private System.Random rng;
