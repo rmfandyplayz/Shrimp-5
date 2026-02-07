@@ -8,7 +8,7 @@ public class MoveDefinition : ScriptableObject
     public StatusDefinition effect;
     public string iconID;
     public int power;
-                  
+    public string moveID;     
     public MoveTarget target;      
 
     [TextArea]
