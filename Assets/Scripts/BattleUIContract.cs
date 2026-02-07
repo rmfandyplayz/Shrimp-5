@@ -9,7 +9,7 @@ namespace Sh.UIContract
     {
         BattleWon,
         BattleLost,
-        TurnStart, // switch to active character
+        ChoosingMove, // switch to active character
         CharacterDied,
         StatusApplied,
         StatusRemoved,

@@ -9,8 +9,9 @@ public class TurnManager : MonoBehaviour
     public StatusManager statusManager;
     public DeathManager deathManager;
     public AbilityManager abilityManager;
-    public void RunTurn(int playerActionIndex, ActionType action)
+    public void RunTurn(string playerActionID, ActionType action)
     {
+        int playerActionIndex = 0;
         if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnTurnStart)
         {
             abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);
