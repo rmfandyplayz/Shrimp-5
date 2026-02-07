@@ -89,7 +89,7 @@ namespace Sh.UIContract
     // ui will use this to tell game logic what player wants to do
     public interface IBattleCommands
     {
-        void SelectMove(string moveID);
+        void SelectAction(string actionID);
 
         void Back();
 
