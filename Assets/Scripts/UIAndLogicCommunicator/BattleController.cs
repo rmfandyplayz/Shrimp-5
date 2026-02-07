@@ -32,8 +32,8 @@ public class BattleController : MonoBehaviour, IBattleCommands
     void Start() 
     {
         // example usage
-        ui.InitializeBattle();
-        ui.QueueEvent();
+        // ui.InitializeBattle();
+        // ui.QueueEvent();
     }
 
     public void SelectMove(string moveID)
