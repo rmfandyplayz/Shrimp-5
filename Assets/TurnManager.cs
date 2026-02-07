@@ -12,7 +12,6 @@ public class TurnManager : MonoBehaviour
     public AbilityManager abilityManager;
     public void RunTurn(string playerActionID, ActionType action)
     {
-        MoveDefinition playerMove = ResourceManager.Get<MoveDefinition>("resources/movedata");
         if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnTurnStart)
         {
             abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);
@@ -25,6 +24,7 @@ public class TurnManager : MonoBehaviour
         int enemySpeed = controller.enemyActiveShrimp.GetSpeed();
         if (action == ActionType.Switching)
         {
+            MoveDefinition playerMove = ResourceManager.Get<MoveDefinition>("resources/movedata");
             ShrimpState temp = controller.playerActiveShrimp;
             controller.playerActiveShrimp = controller.playerTeam[playerActionIndex];
             controller.playerTeam[playerActionIndex] = temp;
@@ -36,6 +36,7 @@ public class TurnManager : MonoBehaviour
         }
         else
         {
+            MoveDefinition playerMove = ResourceManager.Get<MoveDefinition>("resources/movedata");
             if (controller.playerActiveShrimp.GetSpeed() == controller.enemyActiveShrimp.GetSpeed())
             {
                 System.Random rng = new System.Random();

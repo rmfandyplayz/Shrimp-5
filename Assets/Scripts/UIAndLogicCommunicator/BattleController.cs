@@ -20,7 +20,6 @@ public class BattleController : MonoBehaviour, IBattleCommands
     [HideInInspector] public ShrimpState playerActiveShrimp;
     [HideInInspector] public ShrimpState enemyActiveShrimp;
     [SerializeField] private TurnManager turnManager;
-    private ActionType action;
     private IBattleUI ui; 
     [SerializeField] private MonoBehaviour uiScript;
 
@@ -36,22 +35,12 @@ public class BattleController : MonoBehaviour, IBattleCommands
         // ui.QueueEvent();
     }
 
-    public void SelectMove(string moveID)
-    {
-        turnManager.RunTurn(moveID, action);
-    }
-
     public void Back()
     {
         throw new NotImplementedException();
     }
 
     public void TogglePause()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DialogueSkip()
     {
         throw new NotImplementedException();
     }
@@ -64,6 +53,11 @@ public class BattleController : MonoBehaviour, IBattleCommands
     public void DialogueConfirm()
     {
         throw new NotImplementedException();
+    }
+
+    public void SelectAction(string actionID, ActionType actionType)
+    {
+        turnManager.RunTurn(actionID, actionType);
     }
 }
 
