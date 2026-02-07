@@ -154,5 +154,11 @@ namespace Sh.UIContract
             // example:
             // public const string SPRITE_FROG = Paths.UI_ROOT_PATH + "shrimp.player.frog";
         }
+
+        public static class ShrimpMoves
+        {
+            // example:
+            // public const string MOVE_SLIMYSHRIMP_BASICATTACK = Paths.UI_ROOT_PATH + "moves.slimyShrimp.basicAttack";
+        }
     }
 }
