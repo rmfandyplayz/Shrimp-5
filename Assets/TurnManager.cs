@@ -1,4 +1,5 @@
 using System;
+using Mono.Cecil;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class TurnManager : MonoBehaviour
     public AbilityManager abilityManager;
     public void RunTurn(string playerActionID, ActionType action)
     {
-        int playerActionIndex = 0;
+        MoveDefinition playerMove = ResourceManager.Get<MoveDefinition>("resources/movedata");
         if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnTurnStart)
         {
             abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);

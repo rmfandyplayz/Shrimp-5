@@ -10,6 +10,7 @@ namespace Sh.UIContract
         BattleWon,
         BattleLost,
         ChoosingMove, // switch to active character
+        SwitchingShrimp,
         CharacterDied,
         StatusApplied,
         StatusRemoved,
