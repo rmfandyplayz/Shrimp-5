@@ -37,7 +37,7 @@ namespace Sh.UIContract
         public string targetId;    // i.e. shrimp.enemy.3
 
         // what happened
-        public string abilityId;   // "move.punch", "status.weaken", "move.heal", etc.
+        public string moveId;   // "move.punch", "status.weaken", "move.heal", etc.
         public string flavorText;  // "move.punch.effective", "move.heal", "move.status.apply", etc.
 
         // the change and the truth
@@ -51,6 +51,7 @@ namespace Sh.UIContract
         public List<int> ints;         // i.e. multi hit move -- you tell ui how many times to hit. put 3 inside ints[0] (obv we have to coordinate on this)
         public List<float> floats;     // i.e. play some animation at 1.5x the speed. put 1.5f inside floats[0]
         public List<string> strings;   // i.e. trigger a specific sound file that isn't an id. for example, "sound.bonk" inside strings[0]
+        public List<bool> bools;       // honestly, not sure what this could be for, but just in case
     }
 
 

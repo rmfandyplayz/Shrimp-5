@@ -7,12 +7,12 @@ using Unity.VisualScripting;
 
 public class BattleUIManager : MonoBehaviour, IBattleUI
 {
-    [Header("worker scripts")]
+    [Header("Worker Scripts (handlers)")]
     [SerializeField] private List<MonoBehaviour> handlerScripts;
 
     private List<IBattleEventHandler> handlers; // actual list of interfaces to be populated at runtime
 
-    private Queue<BattleEvent> eventQueue = new Queue<BattleEvent>();
+    private Queue<BattleEvent> eventQueue = new();
     private bool isBusy = false; // subsequent events won't be processed if true
 
     private void Awake()
