@@ -6,7 +6,7 @@ using UnityEngine;
 public static class ResourceManager
 {
     // cache
-    private static Dictionary<string, Object> cache = new Dictionary<string, Object>();
+    private static Dictionary<string, Object> cache = new();
 
     /// <summary>
     /// Loads an asset of type T from the Resources folder.
