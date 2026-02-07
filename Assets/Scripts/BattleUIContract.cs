@@ -9,14 +9,19 @@ namespace Sh.UIContract
     {
         BattleWon,
         BattleLost,
+
         ChoosingMove, // switch to active character
         SwitchingShrimp,
+
         CharacterDied,
+
         StatusApplied,
         StatusRemoved,
+
         Heal,
         TakeDamage,
         Attack,
+
         LogMessage, // flavor text probably
         PlaySound,
 
