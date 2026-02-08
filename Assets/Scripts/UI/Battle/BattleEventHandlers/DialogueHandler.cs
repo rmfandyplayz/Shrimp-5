@@ -2,8 +2,11 @@ using Sh.UIContract;
 using System.Collections;
 using UnityEngine;
 
+// written by andy
+// handles dialog
 public class DialogueHandler : MonoBehaviour, IBattleEventHandler
 {
+    [SerializeField] CommandBox commandBox;
 
 
     public bool CanHandle(BattleEventType eventType)
