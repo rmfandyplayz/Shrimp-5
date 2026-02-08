@@ -1,5 +1,6 @@
 using System;
 using Mono.Cecil;
+using Sh.UIContract;
 using UnityEditor;
 using UnityEngine;
 
@@ -34,10 +35,17 @@ public class TurnManager : MonoBehaviour
                     controller.playerTeam[i] = temp;
                 }
             }
+
+            BattleEvent switchOut = new BattleEvent();
+            switchOut.eventType = BattleEventType.SwitchingShrimp;
+            switchOut.sourceId = controller.playerActiveShrimp.definition.shrimpID;
+            controller.ui.QueueEvent(switchOut);
+
             if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnSwitchIn)
             {
                 abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);
             }
+
             attackManager.RunAttack(controller.enemyActiveShrimp, controller.playerActiveShrimp, attackManager.ChooseEnemyMove(null));
         }
         else
@@ -48,7 +56,7 @@ public class TurnManager : MonoBehaviour
                 System.Random rng = new System.Random();
                 int whoseTurn = rng.Next(0,2);
                 if (whoseTurn == 0) {playerSpeed++;}
-                if (whoseTurn == 0) {enemySpeed++;}
+                if (whoseTurn == 1) {enemySpeed++;}
             }
             if (playerSpeed > enemySpeed)
             {
@@ -64,16 +72,22 @@ public class TurnManager : MonoBehaviour
             }
         }
         deathManager.CheckForDeath();
+
         if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnTurnEnd)
         {
             abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);
         }
+
         if (controller.enemyActiveShrimp.definition.ability.trigger == AbilityTrigger.OnTurnEnd)
         {
             abilityManager.ActivateAbility(controller.enemyActiveShrimp, controller.playerActiveShrimp);
         }
+        
         statusManager.DecreaseStatusTurnsLeft(controller.playerActiveShrimp);
         statusManager.DecreaseStatusTurnsLeft(controller.enemyActiveShrimp);
-        
+
+        BattleEvent turnOver = new();
+        turnOver.eventType = BattleEventType.ChoosingMove;
+        controller.ui.QueueEvent(turnOver);
     }
 }

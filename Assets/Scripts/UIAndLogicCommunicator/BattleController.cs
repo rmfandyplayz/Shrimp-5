@@ -37,7 +37,7 @@ public class BattleController : MonoBehaviour, IBattleCommands
 
     public void TogglePause()
     {
-        throw new NotImplementedException();
+        
     }
 
     public void SelectAction(string actionID, ActionType actionType)

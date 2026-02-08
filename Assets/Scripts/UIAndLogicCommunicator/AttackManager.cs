@@ -1,3 +1,4 @@
+using Sh.UIContract;
 using UnityEngine;
 
 public class AttackManager : MonoBehaviour
@@ -8,14 +9,28 @@ public class AttackManager : MonoBehaviour
     
     public void RunAttack(ShrimpState attacker, ShrimpState target, MoveDefinition move)
     {
+        BattleEvent attack = new();
+        attack.eventType = BattleEventType.Attack;
+        attack.sourceId = attacker.definition.shrimpID;
+        attack.moveId = move.moveID;
+        controller.ui.QueueEvent(attack);
+
         int damage = attacker.GetAttack()*move.power;
         if (move.target == MoveTarget.Self)
         {
             attacker.currentHP = attacker.GetHP() - damage;
             if(damage > 0 && (attacker.definition.ability.trigger == AbilityTrigger.OnDamaged || attacker.definition.ability.trigger == AbilityTrigger.OnAttack))
             {
+                BattleEvent damageSelf = new();
+                damageSelf.sourceId = attacker.definition.shrimpID;
+                damageSelf.eventType = BattleEventType.TakeDamage;
+                damageSelf.finalValue = attacker.currentHP;
+                damageSelf.deltaValue = damage;
+                controller.ui.QueueEvent(damageSelf);
+
                 abilityManager.ActivateAbility(attacker, target);
             }
+
             if (move.hasEffect)
             {
                 AppliedStatus status = new AppliedStatus(move.effect, move.effect.turnDuration);
@@ -27,6 +42,13 @@ public class AttackManager : MonoBehaviour
             target.currentHP = target.GetHP() - damage;
             if (damage > 0)
             {
+                BattleEvent damageOpponent = new();
+                damageOpponent.sourceId = target.definition.shrimpID;
+                damageOpponent.eventType = BattleEventType.TakeDamage;
+                damageOpponent.finalValue = target.currentHP;
+                damageOpponent.deltaValue = damage;
+                controller.ui.QueueEvent(damageOpponent);
+
                 if (attacker.definition.ability.trigger == AbilityTrigger.OnAttack)
                 {
                     abilityManager.ActivateAbility(attacker, target);
