@@ -14,6 +14,10 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
     private Queue<BattleEvent> eventQueue = new();
     private bool isBusy = false; // subsequent events won't be processed if true
 
+    private Dictionary<string, UIShrimpState> shrimpStateCache = new(); // retrieve shrimp state cache via id
+
+
+
     private void Awake()
     {
         handlers = new List<IBattleEventHandler>();
@@ -33,16 +37,30 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
     // logic will call these two functions below.
     public void InitializeBattle(BattleSetupData setupData)
     {
-        // TODO: pass data to a setup script.
+        shrimpStateCache.Clear();
+
+        foreach(var charData in setupData.playerTeam)
+        {
+            
+        }
+        foreach(var charData in setupData.enemyTeam)
+        {
+
+        }
     }
 
-    public void QueueEvent(BattleEvent gameEvent)
+    public void AddToCache(CharacterInitialData data)
     {
-        eventQueue.Enqueue(gameEvent);
+        // TODO: finish this func and initialize battle. inform owen he might have to make changes to his code since
+        //       characterinitialdata will probably need a bit of rework
     }
 
 
     // everything else below is ui update control loop 
+    public void QueueEvent(BattleEvent gameEvent)
+    {
+        eventQueue.Enqueue(gameEvent);
+    }
 
     private void Update()
     {
@@ -71,4 +89,17 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
 
         isBusy = false;
     }
+}
+
+
+[System.Serializable]
+public class UIShrimpState
+{
+    public string shrimpId;
+    public int currentHP;
+
+
+    public Sprite pfp;
+    public List<string> moveIds;
+    public List<string> abilityIds;
 }
