@@ -26,7 +26,7 @@ public static class ResourceManager
         {
             // found; cast to T and return
             var cachedAsset = cache[path] as T;
-            if (cachedAsset != null) 
+            if (cachedAsset != null)
                 return cachedAsset;
         }
 
