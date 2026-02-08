@@ -151,12 +151,12 @@ namespace Sh.UIContract
             // public const int CAM_SHAKE_DURATION_IDX = 1;  // floats[1]
         }
 
-        public static class Paths
+        public static class RootPaths
         {
-            public const string UI_ROOT_PATH = "Art/UI/";
-            public const string SFX_ROOT_PATH = "Audio/SFX/";
-            public const string SHRIMP_DATA_ROOT_PATH = "ShrimpData/";
-            public const string SHRIMP_MOVE_ROOT_PATH = "MoveData/";
+            public const string UI = "Art/UI/";
+            public const string SFX = "Audio/SFX/";
+            public const string SHRIMP_DATA = "ShrimpData/";
+            public const string SHRIMP_MOVES = "MoveData/";
         }
 
 
