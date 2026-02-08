@@ -18,6 +18,8 @@ namespace Sh.UIContract
         StatusApplied,
         StatusRemoved,
 
+        AbilityTriggered,
+
         Heal,
         TakeDamage,
         Attack,
