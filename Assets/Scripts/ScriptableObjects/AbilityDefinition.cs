@@ -4,6 +4,7 @@ using UnityEngine;
 public class AbilityDefinition : ScriptableObject
 {
     public string displayName;
+    public string abilityID;
 
     public string iconID;
 

@@ -74,6 +74,6 @@ public class TurnManager : MonoBehaviour
         }
         statusManager.DecreaseStatusTurnsLeft(controller.playerActiveShrimp);
         statusManager.DecreaseStatusTurnsLeft(controller.enemyActiveShrimp);
-
+        
     }
 }

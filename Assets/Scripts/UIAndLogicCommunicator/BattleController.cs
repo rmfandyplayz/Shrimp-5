@@ -20,7 +20,7 @@ public class BattleController : MonoBehaviour, IBattleCommands
     [HideInInspector] public ShrimpState playerActiveShrimp;
     [HideInInspector] public ShrimpState enemyActiveShrimp;
     [SerializeField] private TurnManager turnManager;
-    private IBattleUI ui; 
+    [HideInInspector] public IBattleUI ui; 
     [SerializeField] private MonoBehaviour uiScript;
 
     void Awake()
@@ -33,11 +33,6 @@ public class BattleController : MonoBehaviour, IBattleCommands
         // example usage
         // ui.InitializeBattle();
         // ui.QueueEvent();
-    }
-
-    public void Back()
-    {
-        throw new NotImplementedException();
     }
 
     public void TogglePause()
