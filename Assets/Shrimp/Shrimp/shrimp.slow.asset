@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 478e5088755db424b9aa2eacd121e3b9, type: 3}
-  m_Name: SlowShrimp
+  m_Name: shrimp.slow
   m_EditorClassIdentifier: 
   displayName: Slow Shrimp
   shrimpSpriteID: slow.shrimp
