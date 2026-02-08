@@ -99,10 +99,6 @@ namespace Sh.UIContract
         void SelectAction(string actionID, ActionType actionType);
 
         void TogglePause();
-
-        void DialogueSkipAll();
-
-        void DialogueConfirm();
     }
 
 

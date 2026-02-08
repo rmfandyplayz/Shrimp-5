@@ -40,16 +40,6 @@ public class BattleController : MonoBehaviour, IBattleCommands
         throw new NotImplementedException();
     }
 
-    public void DialogueSkipAll()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void DialogueConfirm()
-    {
-        throw new NotImplementedException();
-    }
-
     public void SelectAction(string actionID, ActionType actionType)
     {
         turnManager.RunTurn(actionID, actionType);
