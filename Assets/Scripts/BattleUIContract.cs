@@ -67,22 +67,8 @@ namespace Sh.UIContract
     [Serializable]
     public struct BattleSetupData
     {
-        public List<CharacterInitialData> playerTeam;
-        public List<CharacterInitialData> enemyTeam;
-    }
-
-    // also used only once
-    [Serializable]
-    public struct CharacterInitialData
-    {
-        public string name;
-        public string spriteId;
-        public string pfpId;
-        public int maxHp;
-        public int currentHp;
-        public int attack;
-        public int attackSpeed;
-        public List<string> effects; // abilities, status effects
+        public List<ShrimpDefinition> playerTeam;
+        public ShrimpDefinition enemy;
     }
 
 

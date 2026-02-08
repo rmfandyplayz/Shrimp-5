@@ -14,7 +14,8 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
     private Queue<BattleEvent> eventQueue = new();
     private bool isBusy = false; // subsequent events won't be processed if true
 
-    private Dictionary<string, UIShrimpState> shrimpStateCache = new(); // retrieve shrimp state cache via id
+    private Dictionary<string, UIShrimpState> playerShrimpStateCache = new(); // retrieve shrimp state cache via id
+    private Dictionary<string, UIShrimpState> enemyShrimpStateCache = new();
 
 
 
@@ -37,22 +38,41 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
     // logic will call these two functions below.
     public void InitializeBattle(BattleSetupData setupData)
     {
-        shrimpStateCache.Clear();
+        playerShrimpStateCache.Clear();
 
         foreach(var charData in setupData.playerTeam)
         {
-            
+            AddToCache(charData);
         }
-        foreach(var charData in setupData.enemyTeam)
-        {
 
-        }
+        AddToCache(setupData.enemy, 1);
     }
 
-    public void AddToCache(CharacterInitialData data)
+    public void AddToCache(ShrimpDefinition data, int team = 0)
     {
-        // TODO: finish this func and initialize battle. inform owen he might have to make changes to his code since
-        //       characterinitialdata will probably need a bit of rework
+        UIShrimpState state = new()
+        {
+            displayName = data.displayName,
+            shrimpId = data.shrimpID,
+
+            spriteId = data.shrimpSpriteID,
+            //pfpId = data.pfpID,                                   TODO: owen add pfpId
+
+            maxHP = data.maxHP,
+            currentHP = data.maxHP,
+
+            speed = data.baseSpeed,
+            attack = data.baseAttack,
+
+            ability = data.ability,
+            moveData = data.moves,
+            statusEffectIds = new()
+        };
+
+        if(team == 0)
+            playerShrimpStateCache[data.shrimpID] = state;
+        else
+            enemyShrimpStateCache[data.shrimpID] = state;
     }
 
 
@@ -89,17 +109,30 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
 
         isBusy = false;
     }
+
+    private void SyncCacheWithEvent(BattleEvent evt)
+    {
+
+    }
 }
 
 
 [System.Serializable]
 public class UIShrimpState
 {
+    public string displayName;
     public string shrimpId;
+
+    public string spriteId;
+    public string pfpId;
+
     public int currentHP;
+    public int maxHP;
 
+    public int speed;
+    public int attack;
 
-    public Sprite pfp;
-    public List<string> moveIds;
-    public List<string> abilityIds;
+    public AbilityDefinition ability;
+    public MoveDefinition[] moveData;
+    public List<string> statusEffectIds;
 }
