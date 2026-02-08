@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: dfgtyh
   power: 0
+  moveID: move.shrimpleattack
   target: 1
-  description: 0 Damage, no reason to use
+  shortDescription: 
+  longDescription: 

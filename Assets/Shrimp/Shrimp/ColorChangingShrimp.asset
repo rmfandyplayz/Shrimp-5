@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Color Changing Shrimp
   shrimpSpriteID: colorchanging.shrimp
   maxHP: 145
+  shrimpID: shrimp.colorchanging
   baseSpeed: 40
   baseAttack: 8
   ability: {fileID: 11400000, guid: 678a78ee5fea34f458d932d5bc780342, type: 2}

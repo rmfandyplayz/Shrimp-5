@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Prickly
   m_EditorClassIdentifier: 
   displayName: Prickly
+  abilityID: ability.prickly
   iconID: fghjk
   trigger: 1
   effect: {fileID: 11400000, guid: 868e6092ae56fd4459db73d629e0cedf, type: 2}

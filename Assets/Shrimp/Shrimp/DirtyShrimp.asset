@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Dirty Shrimp
   shrimpSpriteID: dirty.shrimp
   maxHP: 50
+  shrimpID: shrimp.dirty
   baseSpeed: 500
   baseAttack: 0
   ability: {fileID: 11400000, guid: 93d433fe074e7f74e81f526cb34e91df, type: 2}

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Camouflage
   m_EditorClassIdentifier: 
   displayName: Camouflage
+  abilityID: ability.camouflage
   iconID: ftghjk
   trigger: 2
   effect: {fileID: 11400000, guid: 65489efa493d52c42a8198b1ef5f5ef1, type: 2}

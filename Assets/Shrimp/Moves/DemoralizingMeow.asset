@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: fb5aa72d9d6b8774989e50a76a7c65e3, type: 2}
   iconID: ghjk
   power: 0
+  moveID: move.demoralizingmeow
   target: 1
-  description: Lowers the opponents attack by 2
+  shortDescription: 
+  longDescription: 

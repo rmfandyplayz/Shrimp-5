@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Fluffy Shrimp
   shrimpSpriteID: fluffy.shrimp
   maxHP: 150
+  shrimpID: shrimp.fluffy
   baseSpeed: 100
   baseAttack: 5
   ability: {fileID: 11400000, guid: dc576a14d9150294b93f3ba343e62137, type: 2}

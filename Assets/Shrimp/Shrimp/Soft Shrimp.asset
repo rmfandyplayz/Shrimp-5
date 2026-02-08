@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Soft Shrimp
   shrimpSpriteID: soft.shrimp
   maxHP: 70
+  shrimpID: shrimp.soft
   baseSpeed: 150
   baseAttack: 3
   ability: {fileID: 11400000, guid: 561962141bd654a4a9866d5b473137c2, type: 2}

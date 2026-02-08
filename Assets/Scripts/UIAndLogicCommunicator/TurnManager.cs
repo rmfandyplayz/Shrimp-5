@@ -1,7 +1,4 @@
-using System;
-using Mono.Cecil;
 using Sh.UIContract;
-using UnityEditor;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour

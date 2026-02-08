@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: fghjk
   power: 10
+  moveID: move.oogabooga
   target: 1
-  description: 10 Damage, no additional effects
+  shortDescription: 
+  longDescription: 

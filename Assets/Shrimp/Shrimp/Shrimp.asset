@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Shrimp?
   shrimpSpriteID: maybe.shrimp
   maxHP: 100
+  shrimpID: shrimp.shrimp?
   baseSpeed: 50
   baseAttack: 5
   ability: {fileID: 11400000, guid: f7d5a3ec6075f5b45b21e24657c6f00e, type: 2}

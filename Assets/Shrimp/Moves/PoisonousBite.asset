@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: d2f77004eecec934fa9ab55a33af5ef0, type: 2}
   iconID: fghjk
   power: 1
+  moveID: move.poisonousbite
   target: 1
-  description: 1 Power, does 5 damage to the enemy every turn
+  shortDescription: 
+  longDescription: 

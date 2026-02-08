@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 9791dc069b1f08d4fb4732a5e38a8e0a, type: 2}
   iconID: rtyhhu
   power: 0
+  moveID: move.swiftswim
   target: 0
-  description: Increases Speed by 100 for 3 turns
+  shortDescription: 
+  longDescription: 

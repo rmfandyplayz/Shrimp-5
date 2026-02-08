@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 215bc65e1c6d7bf44bc4c4aadd4118fd, type: 2}
   iconID: tghj
   power: 0
+  moveID: move.gallop
   target: 0
-  description: Permanantly Doubles the Users Speed
+  shortDescription: 
+  longDescription: 

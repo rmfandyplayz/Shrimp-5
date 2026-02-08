@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Lying in Wait
   m_EditorClassIdentifier: 
   displayName: Lying In Wait
+  abilityID: ability.lyinginwait
   iconID: dfghj
   trigger: 1
   effect: {fileID: 11400000, guid: 393e28969acb8134a8714db69b3f9788, type: 2}

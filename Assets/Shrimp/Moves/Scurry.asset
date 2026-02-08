@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: tyuiuk
   power: 0
+  moveID: move.scurry
   target: 0
-  description: Does Nothing
+  shortDescription: 
+  longDescription: 

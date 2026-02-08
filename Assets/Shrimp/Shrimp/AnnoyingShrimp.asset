@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Annoying Shrimp
   shrimpSpriteID: annoying.shrimp
   maxHP: 140
+  shrimpID: shrimp.annoying
   baseSpeed: 110
   baseAttack: 4
   ability: {fileID: 11400000, guid: 1559ef4c56a378d449ed6da915d09490, type: 2}

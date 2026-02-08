@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 8be7ba945af44fe4daedaf2bf19658d9, type: 2}
   iconID: tyui
   power: 0
+  moveID: move.fetch
   target: 0
-  description: Boosts Users Attack by 4
+  shortDescription: 
+  longDescription: 

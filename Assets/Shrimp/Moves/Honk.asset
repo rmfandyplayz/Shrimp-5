@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: d3bfd89a3c04212479d09da061fe74f3, type: 2}
   iconID: ghjkl
   power: 0
+  moveID: move.honk
   target: 1
-  description: Cuts the opponents attack in half
+  shortDescription: 
+  longDescription: 

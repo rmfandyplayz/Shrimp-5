@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: 
   power: 20
+  moveID: move.constrict
   target: 1
-  description: 20 power, no additional effect
+  shortDescription: 
+  longDescription: 

@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: d221b2e656d7f864ab2933f85440ddb2, type: 2}
   iconID: fghjk
   power: 0
+  moveID: move.guardup
   target: 0
-  description: Heals up to 75HP
+  shortDescription: 
+  longDescription: 

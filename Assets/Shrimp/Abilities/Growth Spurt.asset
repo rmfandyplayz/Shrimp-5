@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Growth Spurt
   m_EditorClassIdentifier: 
   displayName: Growth Spurt
+  abilityID: ability.growthspurt
   iconID: fghjk
   trigger: 1
   effect: {fileID: 11400000, guid: 421be5730d2c37942bd9ca9da632ad5e, type: 2}

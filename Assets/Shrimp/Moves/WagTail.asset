@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 723580957f2af5b47881cb023ebe6c49, type: 2}
   iconID: fghjk
   power: 0
+  moveID: move.wagtail
   target: 1
-  description: Lowers opponents attack by 4
+  shortDescription: 
+  longDescription: 

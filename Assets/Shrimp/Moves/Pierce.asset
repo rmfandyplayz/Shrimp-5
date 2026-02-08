@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 02c8a86dc50f4f046a7867eda512c490, type: 2}
   iconID: fghbhj
   power: 5
+  moveID: move.pierce
   target: 1
-  description: 5 Power, lowers opponents HP by 2 every turn
+  shortDescription: 
+  longDescription: 

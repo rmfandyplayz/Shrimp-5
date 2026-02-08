@@ -1,5 +1,4 @@
 using Sh.UIContract;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class StatusManager : MonoBehaviour

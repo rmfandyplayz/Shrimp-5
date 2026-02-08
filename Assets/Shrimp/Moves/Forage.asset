@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 421be5730d2c37942bd9ca9da632ad5e, type: 2}
   iconID: gthjk
   power: 0
+  moveID: move.forage
   target: 0
-  description: Heals 50HP
+  shortDescription: 
+  longDescription: 

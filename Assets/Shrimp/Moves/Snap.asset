@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: bb94614518b7d3f4e809123aadd189e1, type: 2}
   iconID: cfvghj
   power: 3
+  moveID: move.snap
   target: 1
-  description: 3 Power, lowers the opponents attack by 3
+  shortDescription: 
+  longDescription: 

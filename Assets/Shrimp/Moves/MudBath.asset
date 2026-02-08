@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: fdf7004eab2501549a363e8f7aff3be3, type: 2}
   iconID: 
   power: 0
+  moveID: move.mudbath
   target: 0
-  description: Heals up to 50 HP
+  shortDescription: 
+  longDescription: 

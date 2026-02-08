@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: eheid
   power: 10
+  moveID: move.maul
   target: 1
-  description: 10 power, no additional effects
+  shortDescription: 
+  longDescription: 

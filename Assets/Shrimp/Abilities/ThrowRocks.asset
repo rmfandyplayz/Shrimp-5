@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ThrowRocks
   m_EditorClassIdentifier: 
   displayName: Throw Rocks
+  abilityID: ability.throwrocks
   iconID: dfghj
   trigger: 0
   effect: {fileID: 11400000, guid: c4bf839acf0a0ea40bd7dcbd5152a246, type: 2}

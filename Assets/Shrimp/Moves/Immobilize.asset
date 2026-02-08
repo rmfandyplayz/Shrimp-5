@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 9890d82ac8323dc41a15a9f44b5a468b, type: 2}
   iconID: balls
   power: 4
+  moveID: move.immobilize
   target: 1
-  description: 4 Power, Cuts the opponents attack in half
+  shortDescription: 
+  longDescription: 

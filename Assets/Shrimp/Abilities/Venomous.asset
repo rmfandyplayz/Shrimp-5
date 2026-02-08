@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Venomous
   m_EditorClassIdentifier: 
   displayName: Venomous
+  abilityID: ability.venomous
   iconID: dfgh
   trigger: 0
   effect: {fileID: 0}

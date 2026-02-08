@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 3697cee6d9906c7488173bddd61e2119, type: 2}
   iconID: ghjkl
   power: 0
+  moveID: move.warcry
   target: 0
-  description: Doubles the Users Attack for 2 Turns
+  shortDescription: 
+  longDescription: 

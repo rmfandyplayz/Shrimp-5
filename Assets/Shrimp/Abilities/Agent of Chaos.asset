@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Agent of Chaos
   m_EditorClassIdentifier: 
   displayName: Agent of Chaos
+  abilityID: ability.agentofchaos
   iconID: tgyhjk
   trigger: 0
   effect: {fileID: 11400000, guid: 3d31c09a487122049ac15069e43bfd63, type: 2}

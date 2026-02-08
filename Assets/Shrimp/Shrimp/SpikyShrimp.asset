@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Spiky Shrimp
   shrimpSpriteID: spiky.shrimp
   maxHP: 250
+  shrimpID: shrimp.spiky
   baseSpeed: 45
   baseAttack: 1
   ability: {fileID: 11400000, guid: 91c5eff1c9848c943a063461dfb2da1c, type: 2}

@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 4797022e074e46b4ea0bd68d8ff7cc92, type: 2}
   iconID: fghjk
   power: 1
+  moveID: move.piercingneedle
   target: 1
-  description: 1 Power, deals 20 damage per turn to the enemy for 3 turns
+  shortDescription: 
+  longDescription: 

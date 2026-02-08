@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Noble Steed
   m_EditorClassIdentifier: 
   displayName: Noble Steed
+  abilityID: ability.noblesteed
   iconID: fghj
   trigger: 3
   effect: {fileID: 11400000, guid: 5f27fb2e9fb35d94c9a365bfc9954ff1, type: 2}

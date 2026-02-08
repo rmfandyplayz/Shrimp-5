@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Tall Shrimp
   shrimpSpriteID: tall.shrimp
   maxHP: 300
+  shrimpID: shrimp.tall
   baseSpeed: 20
   baseAttack: 5
   ability: {fileID: 11400000, guid: b4d05d358039094478286343688a613b, type: 2}

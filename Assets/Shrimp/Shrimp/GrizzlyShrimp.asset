@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Grizzly Shrimp
   shrimpSpriteID: grizzly.shrimp
   maxHP: 300
+  shrimpID: shrimp.grizzly
   baseSpeed: 70
   baseAttack: 20
   ability: {fileID: 11400000, guid: 3643e6f339215724a911c8dfa8845353, type: 2}

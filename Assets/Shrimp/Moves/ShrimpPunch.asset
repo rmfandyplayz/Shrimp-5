@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: fghj
   power: 20
+  moveID: move.shrimp punch
   target: 1
-  description: 20 Power, no additional effects
+  shortDescription: 
+  longDescription: 

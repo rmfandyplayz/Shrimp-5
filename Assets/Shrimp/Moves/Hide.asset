@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: dfghyuik
   power: 0
+  moveID: move.hide
   target: 0
-  description: Does Nothing
+  shortDescription: 
+  longDescription: 

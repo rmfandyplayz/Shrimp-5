@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Asshole Shrimp
   shrimpSpriteID: asshole.shrimp
   maxHP: 125
+  shrimpID: shrimp.asshole
   baseSpeed: 100
   baseAttack: 5
   ability: {fileID: 11400000, guid: 8ae418cd9dd77f846b507e764770e6a3, type: 2}

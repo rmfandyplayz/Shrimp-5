@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Overprotective
   m_EditorClassIdentifier: 
   displayName: Overprotective
+  abilityID: ability.overprotective
   iconID: dfghj
   trigger: 1
   effect: {fileID: 11400000, guid: 5462b346215956743b201f80f53e41ef, type: 2}

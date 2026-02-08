@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: fghj
   power: 4
+  moveID: move.chasedown
   target: 1
-  description: 4 Power, Lowers opposing shrimp's attack by 5
+  shortDescription: 
+  longDescription: 

@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 353d07148be4cfb49b905069ee3f4b47, type: 2}
   iconID: bhjkl
   power: 0
+  moveID: move.hideinshell
   target: 0
-  description: Heals up to 100 HP
+  shortDescription: 
+  longDescription: 

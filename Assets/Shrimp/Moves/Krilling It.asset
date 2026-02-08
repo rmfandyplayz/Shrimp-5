@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 3921b5b38954b8843b573dc199426327, type: 2}
   iconID: fghjk
   power: 0
+  moveID: move.krillingit
   target: 0
-  description: Buffs its attack by 5 for 2 turns
+  shortDescription: 
+  longDescription: 

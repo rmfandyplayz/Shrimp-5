@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Aggrivated
   m_EditorClassIdentifier: 
   displayName: Aggrivated
+  abilityID: ability.aggrivated
   iconID: l
   trigger: 1
   effect: {fileID: 11400000, guid: 2afd7c60f4d80e542944c6c1b4ee8f07, type: 2}

@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: a1875248d77c9b74e871ecb9d962099b, type: 2}
   iconID: ghjk
   power: 7
+  moveID: move.chomp
   target: 1
-  description: 7 Power, halves opponents attack for 1 turn
+  shortDescription: 
+  longDescription: 

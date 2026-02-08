@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Horny Shrimp
   shrimpSpriteID: horny.shrimp
   maxHP: 500
+  shrimpID: shrimp.horny
   baseSpeed: 3
   baseAttack: 3
   ability: {fileID: 11400000, guid: 8d310eb792a48d64dbcce3195e154736, type: 2}

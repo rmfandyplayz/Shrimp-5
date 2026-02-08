@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: frghjk
   power: 5
+  moveID: move.bite
   target: 1
-  description: 5 Damage, no additional effects
+  shortDescription: 
+  longDescription: 

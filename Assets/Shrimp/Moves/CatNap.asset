@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: fghjk
   power: 0
+  moveID: move.catnap
   target: 0
-  description: Does Literally Nothing
+  shortDescription: 
+  longDescription: 

@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 84c2aa74df0073d4a975da8a4867d1c0, type: 2}
   iconID: fghjk
   power: 0
+  moveID: move.spray
   target: 1
-  description: Halves Opponents Attack
+  shortDescription: 
+  longDescription: 

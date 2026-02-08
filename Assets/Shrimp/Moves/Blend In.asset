@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 7c241718611d0b844a4940bfc1a575ad, type: 2}
   iconID: fghjk
   power: 0
+  moveID: move.blendin
   target: 0
-  description: Heals up to 75 HP
+  shortDescription: 
+  longDescription: 

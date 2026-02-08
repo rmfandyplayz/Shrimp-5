@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: AncientShrimp
   shrimpSpriteID: ancient.shrimp
   maxHP: 200
+  shrimpID: shrimp.ancient
   baseSpeed: 90
   baseAttack: 15
   ability: {fileID: 11400000, guid: 080d8ce8bced523479824f6ffe81ef08, type: 2}

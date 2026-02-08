@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: hyuio
   power: 5
+  moveID: move.scratch
   target: 1
-  description: 5 power, no additional effect
+  shortDescription: 
+  longDescription: 

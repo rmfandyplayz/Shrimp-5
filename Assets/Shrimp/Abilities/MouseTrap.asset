@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MouseTrap
   m_EditorClassIdentifier: 
   displayName: Mouse Trap
+  abilityID: ability.mousetrap
   iconID: ghjk
   trigger: 5
   effect: {fileID: 11400000, guid: 5cb7665fb4be3c2418b8d147d106b4af, type: 2}

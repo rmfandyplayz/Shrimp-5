@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 11400000, guid: 631bdaefac2fcbb4aadbd7dcb2b30906, type: 2}
   iconID: gfhjeks
   power: 0
+  moveID: move.zoomies
   target: 0
-  description: Doubles the users speed
+  shortDescription: 
+  longDescription: 

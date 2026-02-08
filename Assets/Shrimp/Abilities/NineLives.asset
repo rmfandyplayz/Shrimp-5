@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: NineLives
   m_EditorClassIdentifier: 
   displayName: Nine Lives
+  abilityID: ability.ninelives
   iconID: ghjukl
   trigger: 1
   effect: {fileID: 11400000, guid: 6fc1510f00cdf0446987cb2ef962a2ee, type: 2}

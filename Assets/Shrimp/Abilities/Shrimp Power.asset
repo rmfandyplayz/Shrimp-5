@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Shrimp Power
   m_EditorClassIdentifier: 
   displayName: Shrimp Power
+  abilityID: ability.shrimppower
   iconID: ghjk
   trigger: 2
   effect: {fileID: 11400000, guid: d5331878f0cd6004b870539e86933e62, type: 2}

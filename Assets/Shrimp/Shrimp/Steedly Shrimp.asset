@@ -15,6 +15,7 @@ MonoBehaviour:
   displayName: Steedly Shrimp
   shrimpSpriteID: steedly.shrimp
   maxHP: 250
+  shrimpID: shrimp.steedly
   baseSpeed: 100
   baseAttack: 10
   ability: {fileID: 11400000, guid: 1068b42bc9d9aa8459601290cdc62f93, type: 2}

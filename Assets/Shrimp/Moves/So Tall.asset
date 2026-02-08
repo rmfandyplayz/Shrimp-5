@@ -17,5 +17,7 @@ MonoBehaviour:
   effect: {fileID: 0}
   iconID: fghj
   power: 0
+  moveID: move.sotall
   target: 0
-  description: He's so tall
+  shortDescription: 
+  longDescription: 

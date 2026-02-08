@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Stinky
   m_EditorClassIdentifier: 
   displayName: Stinky
+  abilityID: ability.stinky
   iconID: fghj
   trigger: 1
   effect: {fileID: 11400000, guid: 84c2aa74df0073d4a975da8a4867d1c0, type: 2}

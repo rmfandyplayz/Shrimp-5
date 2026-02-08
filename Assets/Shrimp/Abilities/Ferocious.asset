@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Ferocious
   m_EditorClassIdentifier: 
   displayName: Ferocious
+  abilityID: ability.ferocious
   iconID: idk
   trigger: 0
   effect: {fileID: 11400000, guid: 5a2e29bc7d2fdd64fa33441b07bcd25d, type: 2}
