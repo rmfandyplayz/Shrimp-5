@@ -22,9 +22,9 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
     private void Awake()
     {
         handlers = new List<IBattleEventHandler>();
-        foreach(MonoBehaviour script in handlerScripts)
+        foreach (MonoBehaviour script in handlerScripts)
         {
-            if(script is IBattleEventHandler handler)
+            if (script is IBattleEventHandler handler)
             {
                 handlers.Add(handler);
             }
@@ -40,7 +40,7 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
     {
         playerShrimpStateCache.Clear();
 
-        foreach(var charData in setupData.playerTeam)
+        foreach (var charData in setupData.playerTeam)
         {
             AddToCache(charData);
         }
@@ -69,7 +69,7 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
             statusEffectIds = new()
         };
 
-        if(team == 0)
+        if (team == 0)
             playerShrimpStateCache[data.shrimpID] = state;
         else
             enemyShrimpStateCache[data.shrimpID] = state;
@@ -84,7 +84,7 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
 
     private void Update()
     {
-        if(!isBusy && eventQueue.Count > 0)
+        if (!isBusy && eventQueue.Count > 0)
         {
             StartCoroutine(ProcessNextEvent());
         }
@@ -97,7 +97,7 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
 
         IBattleEventHandler handler = handlers.FirstOrDefault(h => h.CanHandle(currentEvent.eventType));
 
-        if(handler != null) // get to work
+        if (handler != null) // get to work
         {
             yield return handler.HandleEvent(currentEvent);
         }
@@ -110,6 +110,7 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
         isBusy = false;
     }
 
+    // helper method for process next event to sync 
     private void SyncCacheWithEvent(BattleEvent evt)
     {
 
