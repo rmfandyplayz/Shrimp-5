@@ -16,7 +16,7 @@ public class DeathManager : MonoBehaviour
         {
             BattleEvent playerDied = new BattleEvent();
             playerDied.eventType = BattleEventType.CharacterDied;
-            playerDied.sourceId = controller.playerActiveShrimp.definition.shrimpID;
+            playerDied.sourceId = controller.playerActiveShrimp.instanceID;
             controller.ui.QueueEvent(playerDied);
 
             if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnDeath)
@@ -29,7 +29,7 @@ public class DeathManager : MonoBehaviour
 
             BattleEvent playerSwitchIn = new BattleEvent();
             playerSwitchIn.eventType = BattleEventType.SwitchingShrimp;
-            playerSwitchIn.sourceId = controller.playerActiveShrimp.definition.shrimpID;
+            playerSwitchIn.sourceId = controller.playerActiveShrimp.instanceID;
             controller.ui.QueueEvent(playerSwitchIn);
 
             if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnSwitchIn)
@@ -45,7 +45,7 @@ public class DeathManager : MonoBehaviour
         {
             BattleEvent enemyDied = new BattleEvent();
             enemyDied.eventType = BattleEventType.CharacterDied;
-            enemyDied.sourceId = controller.enemyActiveShrimp.definition.shrimpID;
+            enemyDied.sourceId = controller.enemyActiveShrimp.instanceID;
             controller.ui.QueueEvent(enemyDied);
 
             if (controller.enemyActiveShrimp.definition.ability.trigger == AbilityTrigger.OnDeath)
@@ -57,7 +57,7 @@ public class DeathManager : MonoBehaviour
 
             BattleEvent enemySwitchIn = new BattleEvent();
             enemySwitchIn.eventType = BattleEventType.SwitchingShrimp;
-            enemySwitchIn.sourceId = controller.enemyActiveShrimp.definition.shrimpID;
+            enemySwitchIn.sourceId = controller.enemyActiveShrimp.instanceID;
             controller.ui.QueueEvent(enemySwitchIn);
 
             if (controller.enemyActiveShrimp.definition.ability.trigger == AbilityTrigger.OnSwitchIn)

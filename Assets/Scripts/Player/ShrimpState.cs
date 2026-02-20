@@ -6,6 +6,7 @@ public class ShrimpState : MonoBehaviour
 {
     public ShrimpDefinition definition;
     [HideInInspector] public int currentHP;
+    [HideInInspector] public string instanceID;
     [HideInInspector] public List<AppliedStatus> statuses;
     
     public ShrimpState(ShrimpDefinition def)

@@ -10,7 +10,7 @@ public class AbilityManager : MonoBehaviour
     {
         BattleEvent abilityActivated = new();
         abilityActivated.eventType = BattleEventType.AbilityTriggered;
-        abilityActivated.sourceId = shrimp.definition.shrimpID;
+        abilityActivated.sourceId = shrimp.instanceID;
         abilityActivated.strings = new();
         abilityActivated.strings.Add(shrimp.definition.ability.abilityID);
 

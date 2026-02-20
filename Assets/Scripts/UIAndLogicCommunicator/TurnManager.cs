@@ -25,7 +25,7 @@ public class TurnManager : MonoBehaviour
             ShrimpDefinition newShrimp = ResourceManager.Get<ShrimpDefinition>("ShrimpData");
             for (int i = 0; i < controller.playerTeam.Count; i++)
             {
-                if (controller.playerTeam[i].definition.shrimpID == playerActionID)
+                if (controller.playerTeam[i].instanceID == playerActionID)
                 {
                     ShrimpState temp = controller.playerActiveShrimp;
                     controller.playerActiveShrimp = controller.playerTeam[i];
@@ -35,7 +35,7 @@ public class TurnManager : MonoBehaviour
 
             BattleEvent switchOut = new BattleEvent();
             switchOut.eventType = BattleEventType.SwitchingShrimp;
-            switchOut.sourceId = controller.playerActiveShrimp.definition.shrimpID;
+            switchOut.sourceId = controller.playerActiveShrimp.instanceID;
             controller.ui.QueueEvent(switchOut);
 
             if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnSwitchIn)

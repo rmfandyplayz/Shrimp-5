@@ -11,7 +11,7 @@ public class AttackManager : MonoBehaviour
     {
         BattleEvent attack = new();
         attack.eventType = BattleEventType.Attack;
-        attack.sourceId = attacker.definition.shrimpID;
+        attack.sourceId = attacker.instanceID;
         attack.moveId = move.moveID;
         controller.ui.QueueEvent(attack);
 
@@ -22,7 +22,7 @@ public class AttackManager : MonoBehaviour
             if(damage > 0 && (attacker.definition.ability.trigger == AbilityTrigger.OnDamaged || attacker.definition.ability.trigger == AbilityTrigger.OnAttack))
             {
                 BattleEvent damageSelf = new();
-                damageSelf.sourceId = attacker.definition.shrimpID;
+                damageSelf.sourceId = attacker.instanceID;
                 damageSelf.eventType = BattleEventType.TakeDamage;
                 damageSelf.finalValue = attacker.currentHP;
                 damageSelf.deltaValue = damage;
@@ -43,7 +43,7 @@ public class AttackManager : MonoBehaviour
             if (damage > 0)
             {
                 BattleEvent damageOpponent = new();
-                damageOpponent.sourceId = target.definition.shrimpID;
+                damageOpponent.sourceId = target.instanceID;
                 damageOpponent.eventType = BattleEventType.TakeDamage;
                 damageOpponent.finalValue = target.currentHP;
                 damageOpponent.deltaValue = damage;
