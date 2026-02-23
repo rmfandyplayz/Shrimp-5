@@ -255,11 +255,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueCanvasGroup: {fileID: 0}
-  dialogueText: {fileID: 0}
+  dialogueText: {fileID: 2295363625492494169}
   dialogueWordDelay: 0.075
-  moveSelectionGroup: {fileID: 0}
+  moveSelectionGroup: {fileID: 1776084714082593643}
   shrimpSelectionGroup: {fileID: 0}
-  promptText: {fileID: 0}
+  promptText: {fileID: 6934922279384140593}
   selectionTilePrefab: {fileID: 0}
 --- !u!1 &2370285517189144736
 GameObject:
@@ -518,6 +518,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -713,6 +714,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
