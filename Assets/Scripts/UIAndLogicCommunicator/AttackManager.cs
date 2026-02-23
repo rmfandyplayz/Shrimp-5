@@ -18,7 +18,7 @@ public class AttackManager : MonoBehaviour
         int damage = attacker.GetAttack()*move.power;
         if (move.target == MoveTarget.Self)
         {
-            attacker.currentHP = attacker.GetHP() - damage;
+            attacker.currentHP = attacker.currentHP - damage;
             if(damage > 0 && (attacker.definition.ability.trigger == AbilityTrigger.OnDamaged || attacker.definition.ability.trigger == AbilityTrigger.OnAttack))
             {
                 BattleEvent damageSelf = new();
@@ -39,7 +39,7 @@ public class AttackManager : MonoBehaviour
         }
         else
         {
-            target.currentHP = target.GetHP() - damage;
+            target.currentHP = target.currentHP - damage;
             if (damage > 0)
             {
                 BattleEvent damageOpponent = new();
