@@ -67,8 +67,7 @@ namespace Sh.UIContract
     [Serializable]
     public struct BattleSetupData
     {
-        public List<ShrimpDefinition> playerTeam;
-        public ShrimpDefinition enemy;
+        public List<ShrimpState> characterData;
     }
 
 
