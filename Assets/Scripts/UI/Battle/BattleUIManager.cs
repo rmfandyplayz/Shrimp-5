@@ -4,23 +4,27 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 
+// written by andy
+// the "master script" that manages smaller, more specialized ui scripts
+// has an "event queue" that processes ui changes in order
 public class BattleUIManager : MonoBehaviour, IBattleUI
 {
     [Header("Worker Scripts (handlers)")]
     [SerializeField] private List<MonoBehaviour> handlerScripts;
 
     private List<IBattleEventHandler> handlers; // actual list of interfaces to be populated at runtime
-
+    
     private Queue<BattleEvent> eventQueue = new();
     private bool isBusy = false; // subsequent events won't be processed if true
 
-    private Dictionary<string, UIShrimpState> playerShrimpStateCache = new(); // retrieve shrimp state cache via id
-    private Dictionary<string, UIShrimpState> enemyShrimpStateCache = new();
+    private Dictionary<string, UIShrimpState> shrimpStateCache = new(); // retrieve shrimp state cache via id
 
 
 
     private void Awake()
     {
+        // find all the handlers (mini scripts for each ui element that actually does the
+        // updating) and adds them to a list to keep track
         handlers = new List<IBattleEventHandler>();
         foreach (MonoBehaviour script in handlerScripts)
         {
@@ -35,52 +39,45 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
         }
     }
 
-    // logic will call these two functions below.
+    // logic code (owen's shit) will call this to init all ui
     public void InitializeBattle(BattleSetupData setupData)
     {
-        playerShrimpStateCache.Clear();
+        shrimpStateCache.Clear();
 
-        foreach (var charData in setupData.playerTeam)
+        foreach (ShrimpState charData in setupData.characterData) // for player team
         {
             AddToCache(charData);
         }
-
-        AddToCache(setupData.enemy, 1);
     }
 
-    public void AddToCache(ShrimpDefinition data, int team = 0)
+    // helper function for InitializeBattle() to make it less cluttered
+    // inits a UIShrimpState appropriately and adds it to the cache
+    private void AddToCache(ShrimpState charData)
     {
-        UIShrimpState state = new()
+        UIShrimpState uiState = new()
         {
-            displayName = data.displayName,
-            shrimpId = data.shrimpID,
+            shrimpUniqueId = charData.instanceID,
+            displayName = charData.name,
 
-            spriteId = data.shrimpSpriteID,
-            //pfpId = data.pfpID,                                   TODO: owen add pfpId
+            spriteId = charData.definition.shrimpSpriteID,
+            pfpId = charData.definition.pfpID,
 
-            maxHP = data.maxHP,
-            currentHP = data.maxHP,
+            currentHP = charData.GetHP(),
+            maxHP = charData.definition.maxHP,
 
-            speed = data.baseSpeed,
-            attack = data.baseAttack,
+            speed = charData.GetSpeed(),
+            attack = charData.GetAttack(),
 
-            ability = data.ability,
-            moveData = data.moves,
-            statusEffectIds = new()
+            ability = charData.definition.ability,
+            moveData = charData.definition.moves,
+            statusEffects = charData.statuses
         };
 
-        if (team == 0)
-            playerShrimpStateCache[data.shrimpID] = state;
-        else
-            enemyShrimpStateCache[data.shrimpID] = state;
+        shrimpStateCache.Add(uiState.shrimpUniqueId, uiState);
     }
 
 
-    // everything else below is ui update control loop 
-    public void QueueEvent(BattleEvent gameEvent)
-    {
-        eventQueue.Enqueue(gameEvent);
-    }
+    // everything else below is ui update control loop  ============================================================================================
 
     private void Update()
     {
@@ -90,10 +87,16 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
         }
     }
 
+    public void QueueEvent(BattleEvent gameEvent) // called by logic
+    {
+        eventQueue.Enqueue(gameEvent);
+    }
+
     IEnumerator ProcessNextEvent()
     {
         isBusy = true;
         BattleEvent currentEvent = eventQueue.Dequeue();
+        SyncCacheWithEvent(currentEvent);
 
         IBattleEventHandler handler = handlers.FirstOrDefault(h => h.CanHandle(currentEvent.eventType));
 
@@ -110,10 +113,28 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
         isBusy = false;
     }
 
-    // helper method for process next event to sync 
+    // update the UI's version of "truth model" before animations can play (so animations
+    // can play correctly as they rely on the ui's stored data)
+    // when an event is dequeued, it's passed to this function first to update the numbers
     private void SyncCacheWithEvent(BattleEvent evt)
     {
+        // do nothing if there isn't a target or it aint in the dictionary
+        if (string.IsNullOrEmpty(evt.targetId) || !shrimpStateCache.ContainsKey(evt.targetId))
+            return;
 
+        UIShrimpState character = shrimpStateCache[evt.targetId];
+
+        // update local cache based on what logic said happened
+        switch(evt.eventType)
+        {
+            case BattleEventType.TakeDamage:
+            case BattleEventType.Heal:
+                character.currentHP = evt.finalValue;
+                break;
+
+            // TODO: handling for all event types
+
+        }
     }
 }
 
@@ -121,8 +142,8 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
 [System.Serializable]
 public class UIShrimpState
 {
+    public string shrimpUniqueId;
     public string displayName;
-    public string shrimpId;
 
     public string spriteId;
     public string pfpId;
@@ -135,5 +156,5 @@ public class UIShrimpState
 
     public AbilityDefinition ability;
     public MoveDefinition[] moveData;
-    public List<string> statusEffectIds;
+    public List<AppliedStatus> statusEffects;
 }
