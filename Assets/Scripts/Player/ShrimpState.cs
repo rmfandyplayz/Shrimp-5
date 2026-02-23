@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Mono.Cecil.Cil;
 using UnityEngine;
@@ -68,16 +67,29 @@ public class ShrimpState : MonoBehaviour
         return totalSpeed;
     }
 
-    public void RecalculateHP(StatusDefinition status)
+    public int GetHP()
     {
-        if (status.buffType == TypeOfBuff.percent)
+        int totalHP = currentHP;
+        foreach (AppliedStatus status in statuses)
         {
-            currentHP = (int) (currentHP * status.valueChange);
+            if(status.status.statChanged == StatAffected.HP)
+            {
+                if (status.status.buffType == TypeOfBuff.percent)
+                {
+                totalHP = (int) (totalHP*status.status.valueChange);
+                }
+                else if (status.status.buffType == TypeOfBuff.value)
+                {
+                totalHP += (int) status.status.valueChange;
+                }
+            }
         }
-        else
+        if (totalHP > definition.maxHP)
         {
-            currentHP = (int) (currentHP + status.valueChange);
+            totalHP = definition.maxHP;
         }
+
+        return totalHP;
     }
 
     public List<int> UpdateStatuses()

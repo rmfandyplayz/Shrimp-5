@@ -10,14 +10,13 @@ public class StatusManager : MonoBehaviour
         shrimp.statuses.Add(status);
         if (status.status.statChanged == StatAffected.HP)
         {
-            shrimp.RecalculateHP(status.status);
                 if(status.status.valueChange > 0)
                 {
                     BattleEvent healed = new();
                     healed.eventType = BattleEventType.Heal;
                     healed.sourceId = shrimp.definition.shrimpID;
                     healed.deltaValue = (int) status.status.valueChange;
-                    healed.finalValue = shrimp.currentHP;
+                    healed.finalValue = shrimp.GetHP();
 
                     controller.ui.QueueEvent(healed);
                 }
@@ -27,7 +26,7 @@ public class StatusManager : MonoBehaviour
                     damaged.eventType = BattleEventType.TakeDamage;
                     damaged.sourceId = shrimp.definition.shrimpID;
                     damaged.deltaValue = (int) -status.status.valueChange;
-                    damaged.finalValue = shrimp.currentHP;
+                    damaged.finalValue = shrimp.GetHP();
                     controller.ui.QueueEvent(damaged);
                 }
         }
