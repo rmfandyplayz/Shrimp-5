@@ -24,7 +24,7 @@ namespace Sh.UIContract
         TakeDamage,
         Attack,
 
-        LogMessage, // flavor text probably
+        LogMessage, // flavor text probably... lowk might not be used that much?
         PlaySound,
 
         // junk drawer
@@ -45,7 +45,7 @@ namespace Sh.UIContract
         public string targetId;    // i.e. shrimp.enemy.3
 
         // what happened
-        public string moveId;   // "move.punch", "status.weaken", "move.heal", etc.
+        public string moveId;      // "move.punch", "status.weaken", "move.heal", etc.
         public string flavorText;  // "move.punch.effective", "move.heal", "move.status.apply", etc.
 
         // the change and the truth
@@ -70,7 +70,7 @@ namespace Sh.UIContract
         public List<ShrimpState> characterData;
     }
 
-
+    // probably only inherited by one script (BattleUIManager), serves as the communicator between logic/ui
     public interface IBattleUI
     {
         void InitializeBattle(BattleSetupData setupData);
@@ -95,6 +95,11 @@ namespace Sh.UIContract
         /// <param name="eventType"></param>
         /// <returns></returns>
         bool CanHandle(BattleEventType eventType);
+
+        /// <summary>
+        /// Skips the current event and updates values immediately if necessary
+        /// </summary>
+        void ForceSkip();
 
         IEnumerator HandleEvent(BattleEvent evt);
     }

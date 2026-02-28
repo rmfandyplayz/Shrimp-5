@@ -14,6 +14,11 @@ public class DialogueHandler : MonoBehaviour, IBattleEventHandler
         throw new System.NotImplementedException();
     }
 
+    public void ForceSkip()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public IEnumerator HandleEvent(BattleEvent evt)
     {
         throw new System.NotImplementedException();

@@ -2,7 +2,6 @@ using UnityEngine;
 using Sh.UIContract;
 using System.Collections.Generic;
 using System.Collections;
-using System.Linq;
 
 // written by andy
 // the "master script" that manages smaller, more specialized ui scripts
@@ -92,13 +91,25 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
         eventQueue.Enqueue(gameEvent);
     }
 
+    // finds the first handler within the handlers list that can take care of
+    // the current BattleEvent at hand, and waits for the handler to finish
+    // before proceeding to the next one
     IEnumerator ProcessNextEvent()
     {
         isBusy = true;
         BattleEvent currentEvent = eventQueue.Dequeue();
         SyncCacheWithEvent(currentEvent);
 
-        IBattleEventHandler handler = handlers.FirstOrDefault(h => h.CanHandle(currentEvent.eventType));
+        IBattleEventHandler handler = null;
+        foreach (IBattleEventHandler h in handlers)
+        {
+            if (h.CanHandle(currentEvent.eventType))
+            {
+                handler = h;
+                break; // found
+            }
+        }
+
 
         if (handler != null) // get to work
         {
