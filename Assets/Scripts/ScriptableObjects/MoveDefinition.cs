@@ -13,6 +13,7 @@ public class MoveDefinition : ScriptableObject
 
     [TextArea]
     public string shortDescription;
+    [TextArea]
     public string longDescription;
 }
 public enum MoveTarget

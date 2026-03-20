@@ -119,17 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &133990829 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2327509253894908556, guid: 1ce21e84ff86d6d46b592c06652e4cca, type: 3}
-  m_PrefabInstance: {fileID: 7585604182296680438}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a97efa3048ef2b14eb25e0b1fdff4a51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &584773607
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +466,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1880658466833659530, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1880658466833659530, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294017448326217723, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294017448326217723, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294017448326217723, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294017448326217723, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1887.9397
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294017448326217723, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 135.9925
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294017448326217723, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -1.3358
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294017448326217723, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 84.0264
+      objectReference: {fileID: 0}
     - target: {fileID: 2370285517189144736, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
       propertyPath: m_Name
       value: UI (Canvas)
@@ -489,9 +514,17 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3940056012795029632, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7320159206369101919, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8152733040929193459, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_Name
+      value: Prompt
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -554,14 +587,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BattleUIManager
       objectReference: {fileID: 0}
-    - target: {fileID: 6376476450912690558, guid: 1ce21e84ff86d6d46b592c06652e4cca, type: 3}
-      propertyPath: handlerScripts.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6376476450912690558, guid: 1ce21e84ff86d6d46b592c06652e4cca, type: 3}
-      propertyPath: 'handlerScripts.Array.data[0]'
-      value: 
-      objectReference: {fileID: 133990829}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

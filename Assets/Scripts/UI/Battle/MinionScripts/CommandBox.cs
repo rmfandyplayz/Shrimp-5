@@ -10,21 +10,21 @@ using Sh.UIContract;
 // written by andy
 public class CommandBox : MonoBehaviour
 {
-    [Header("Dialogue-releated")]
+    [Header("dialogue mode refs")]
     [SerializeField] CanvasGroup dialogueCanvasGroup;
     [SerializeField] TextMeshProUGUI dialogueText;
     [SerializeField, Tooltip("how much delay between displaying each word in the dialog?")]
     float dialogueWordDelay;
 
-    [Header("Move Selection-related")]
+    [Header("move selection mode refs")]
     [SerializeField] CanvasGroup moveSelectionGroup;
     private List<GameObject> moveSelectionTiles;
 
-    [Header("Shrimp Selection-related")]
+    [Header("shrimp selection mode refs")]
     [SerializeField] CanvasGroup shrimpSelectionGroup;
     private List<GameObject> shrimpSelectionTiles;
 
-    [Header("Misc")]
+    [Header("misc")]
     [SerializeField] TextMeshProUGUI promptText;
     [SerializeField] GameObject selectionTilePrefab; // will be duplicated
 
@@ -78,12 +78,6 @@ public class CommandBox : MonoBehaviour
             shrimpSelectionGroup.gameObject.SetActive(true);
             EventSystem.current.SetSelectedGameObject(shrimpSelectionTiles[0]);
         }
-    }
-
-
-    public void PopulateTiles()
-    {
-
     }
 
     public void StartDialogueTyping(string textToDisplay) // note: it's recommend to use skipdialog() before running this:

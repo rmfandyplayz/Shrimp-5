@@ -110,7 +110,6 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
             }
         }
 
-
         if (handler != null) // get to work
         {
             yield return handler.HandleEvent(currentEvent);
@@ -144,7 +143,6 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
                 break;
 
             // TODO: handling for all event types
-
         }
     }
 }
