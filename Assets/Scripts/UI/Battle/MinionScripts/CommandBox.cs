@@ -11,13 +11,13 @@ using Sh.UIContract;
 public class CommandBox : MonoBehaviour
 {
     [Header("dialogue mode refs")]
-    [SerializeField] CanvasGroup dialogueCanvasGroup;
-    [SerializeField] TextMeshProUGUI dialogueText;
+    [SerializeField] private CanvasGroup dialogueCanvasGroup;
+    [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField, Tooltip("how much delay between displaying each word in the dialog?")]
-    float dialogueWordDelay;
+    private float dialogueWordDelay;
 
     [Header("move selection mode refs")]
-    [SerializeField] CanvasGroup moveSelectionGroup;
+    [SerializeField] private CanvasGroup moveSelectionGroup;
     private List<GameObject> moveSelectionTiles;
 
     [Header("shrimp selection mode refs")]
@@ -25,8 +25,7 @@ public class CommandBox : MonoBehaviour
     private List<GameObject> shrimpSelectionTiles;
 
     [Header("misc")]
-    [SerializeField] TextMeshProUGUI promptText;
-    [SerializeField] GameObject selectionTilePrefab; // will be duplicated
+    [SerializeField] private GameObject selectionTilePrefab; // will be duplicated
 
     private CommandBoxMode currentDisplayMode; // default display type
     private Coroutine dialogueTextCoroutine;
@@ -45,7 +44,7 @@ public class CommandBox : MonoBehaviour
             return;
 
         // TODO: maybe add animation?????
-        if(currentDisplayMode == CommandBoxMode.DIALOGUE_DISPLAY)
+        if(currentDisplayMode == CommandBoxMode.DIALOGUE_DISPLAY) // display text
         {
             moveSelectionGroup.interactable = false;
             moveSelectionGroup.gameObject.SetActive(false);
@@ -56,7 +55,7 @@ public class CommandBox : MonoBehaviour
             dialogueCanvasGroup.interactable = true;
             dialogueCanvasGroup.gameObject.SetActive(true);
         }
-        else if(currentDisplayMode == CommandBoxMode.MOVE_SELECT)
+        else if(currentDisplayMode == CommandBoxMode.MOVE_SELECT) // shrimp select move
         {
             dialogueCanvasGroup.interactable = false;
             dialogueCanvasGroup.gameObject.SetActive(false);
@@ -67,7 +66,7 @@ public class CommandBox : MonoBehaviour
             moveSelectionGroup.gameObject.SetActive(true);
             EventSystem.current.SetSelectedGameObject(moveSelectionTiles[0]);
         }
-        else if(currentDisplayMode == CommandBoxMode.SHRIMP_SELECT)
+        else if(currentDisplayMode == CommandBoxMode.SHRIMP_SELECT) // select another team member
         {
             moveSelectionGroup.interactable = false;
             moveSelectionGroup.gameObject.SetActive(false);

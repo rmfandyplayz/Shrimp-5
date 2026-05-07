@@ -35,6 +35,8 @@ namespace Sh.UIContract
 
     // fields can be null. fill in only what's necessary
     // the one "god struct"
+    // realistically, for the record, everything except eventType could be in the junk drawer,
+    // but the fields that aren't the junk drawer are commonly used enough to deserve their own thing
     [Serializable]
     public struct BattleEvent
     {
