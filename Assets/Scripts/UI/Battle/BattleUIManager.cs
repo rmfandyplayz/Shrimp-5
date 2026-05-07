@@ -38,7 +38,7 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
         }
     }
 
-    // logic code (owen's shit) will call this to init all ui
+    // logic code (owen's stuf) will call this to init all ui
     public void InitializeBattle(BattleSetupData setupData)
     {
         shrimpStateCache.Clear();

@@ -3,8 +3,8 @@ using System.Collections;
 using UnityEngine;
 
 // written by andy
-// handles dialog
-public class DialogueHandler : MonoBehaviour, IBattleEventHandler
+// handles all necessary changes to the command box
+public class CommandBoxHandler : MonoBehaviour, IBattleEventHandler
 {
     [SerializeField] CommandBox commandBox;
 
