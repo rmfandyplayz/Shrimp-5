@@ -18,11 +18,11 @@ public class CommandBox : MonoBehaviour
 
     [Header("move selection mode refs")]
     [SerializeField] private CanvasGroup moveSelectionGroup;
-    private List<GameObject> moveSelectionTiles;
+    [SerializeField] private List<GameObject> moveSelectionTiles;
 
     [Header("shrimp selection mode refs")]
     [SerializeField] CanvasGroup shrimpSelectionGroup;
-    private List<GameObject> shrimpSelectionTiles;
+    [SerializeField] private List<GameObject> shrimpSelectionTiles;
 
     [Header("misc")]
     [SerializeField] private GameObject selectionTilePrefab; // will be duplicated
@@ -31,20 +31,29 @@ public class CommandBox : MonoBehaviour
     private Coroutine dialogueTextCoroutine;
 
 
-    private void Awake()
+    // TESTING DELETE LATER TESTING DELETE LATER TESTING DELETE LATER TESTING DELETE LATER TESTING DELETE LATER TESTING DELETE LATER 
+    public void SwitchToShrimpSelect()
     {
-        moveSelectionTiles = new();
-        shrimpSelectionTiles = new();
+        SwitchCommandBoxDisplayMode(CommandBoxMode.SHRIMP_SELECT);
+    }
+
+    public void SwitchToMoveSelect()
+    {
+        SwitchCommandBoxDisplayMode(CommandBoxMode.MOVE_SELECT);
+    }
+    public void SwitchToDialogue()
+    {
         SwitchCommandBoxDisplayMode(CommandBoxMode.DIALOGUE_DISPLAY);
     }
-    
+    // TESTING DELETE LATER TESTING DELETE LATER TESTING DELETE LATER TESTING DELETE LATER TESTING DELETE LATER TESTING DELETE LATER 
+
+
     public void SwitchCommandBoxDisplayMode(CommandBoxMode newDisplayMode)
     {
         if (newDisplayMode == currentDisplayMode)
             return;
 
-        // TODO: maybe add animation?????
-        if(currentDisplayMode == CommandBoxMode.DIALOGUE_DISPLAY) // display text
+        if(newDisplayMode == CommandBoxMode.DIALOGUE_DISPLAY) // display text
         {
             moveSelectionGroup.interactable = false;
             moveSelectionGroup.gameObject.SetActive(false);
@@ -54,8 +63,10 @@ public class CommandBox : MonoBehaviour
 
             dialogueCanvasGroup.interactable = true;
             dialogueCanvasGroup.gameObject.SetActive(true);
+
+            currentDisplayMode = newDisplayMode;
         }
-        else if(currentDisplayMode == CommandBoxMode.MOVE_SELECT) // shrimp select move
+        else if(newDisplayMode == CommandBoxMode.MOVE_SELECT) // shrimp select move
         {
             dialogueCanvasGroup.interactable = false;
             dialogueCanvasGroup.gameObject.SetActive(false);
@@ -65,8 +76,10 @@ public class CommandBox : MonoBehaviour
             moveSelectionGroup.interactable = true;
             moveSelectionGroup.gameObject.SetActive(true);
             EventSystem.current.SetSelectedGameObject(moveSelectionTiles[0]);
+
+            currentDisplayMode = newDisplayMode;
         }
-        else if(currentDisplayMode == CommandBoxMode.SHRIMP_SELECT) // select another team member
+        else if(newDisplayMode == CommandBoxMode.SHRIMP_SELECT) // select another team member
         {
             moveSelectionGroup.interactable = false;
             moveSelectionGroup.gameObject.SetActive(false);
@@ -76,6 +89,8 @@ public class CommandBox : MonoBehaviour
             shrimpSelectionGroup.interactable = true;
             shrimpSelectionGroup.gameObject.SetActive(true);
             EventSystem.current.SetSelectedGameObject(shrimpSelectionTiles[0]);
+
+            currentDisplayMode = newDisplayMode;
         }
     }
 

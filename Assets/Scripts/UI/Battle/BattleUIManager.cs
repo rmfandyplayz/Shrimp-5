@@ -38,7 +38,14 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
         }
     }
 
-    // logic code (owen's stuf) will call this to init all ui
+    /// <summary>
+    /// Initializes the UI's memory of what's going on with the game.
+    /// 
+    /// Note that it doesn't do things such as setting the scene up. It just populates the UI's
+    /// memory of all the characters that exist in the battle, so it can be referenced.
+    /// 
+    /// Chances are, this function will only be called by Owen's code.
+    /// </summary>
     public void InitializeBattle(BattleSetupData setupData)
     {
         shrimpStateCache.Clear();
@@ -49,8 +56,10 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
         }
     }
 
-    // helper function for InitializeBattle() to make it less cluttered
-    // inits a UIShrimpState appropriately and adds it to the cache
+    /// <summary>
+    /// Initializes a <c>UIShrimpState</c> appropriately, and adds it to the cache.
+    /// Helper function for <c>InitializeBattle()</c>
+    /// </summary>
     private void AddToCache(ShrimpState charData)
     {
         UIShrimpState uiState = new()
