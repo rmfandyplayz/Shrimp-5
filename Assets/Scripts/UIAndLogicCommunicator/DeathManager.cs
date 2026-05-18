@@ -8,10 +8,7 @@ public class DeathManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void CheckForDeath()
     {
-        if (controller.playerTeam.Count ==0)
-        {
-            Die(User.Player);
-        }
+        
         if (controller.playerActiveShrimp.currentHP <= 0)
         {
             BattleEvent playerDied = new BattleEvent();
@@ -22,6 +19,11 @@ public class DeathManager : MonoBehaviour
             if (controller.playerActiveShrimp.definition.ability.trigger == AbilityTrigger.OnDeath)
             {
                 abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);
+            }
+            
+            if (controller.playerTeam.Count == 0)
+            {
+                Die(User.Player); 
             }
 
             controller.playerActiveShrimp = controller.playerTeam[0];
@@ -37,10 +39,7 @@ public class DeathManager : MonoBehaviour
                 abilityManager.ActivateAbility(controller.playerActiveShrimp, controller.enemyActiveShrimp);
             }
         }
-        if (controller.enemyTeam.Count ==0)
-        {
-            Die(User.Enemy);
-        }
+        
         if (controller.enemyActiveShrimp.currentHP <= 0)
         {
             BattleEvent enemyDied = new BattleEvent();
@@ -52,6 +51,12 @@ public class DeathManager : MonoBehaviour
             {
                 abilityManager.ActivateAbility(controller.enemyActiveShrimp, controller.playerActiveShrimp);
             }
+            
+            if (controller.enemyTeam.Count ==0)
+            {
+                Die(User.Enemy);
+            }
+            
             controller.enemyActiveShrimp = controller.enemyTeam[0];
             controller.enemyTeam.RemoveAt(0);
 
