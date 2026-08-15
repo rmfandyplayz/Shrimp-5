@@ -490,6 +490,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3385578881402109643, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_text
+      value: battle cat
+      objectReference: {fileID: 0}
     - target: {fileID: 3708874058802152316, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -574,6 +578,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5567490880501033231, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_text
+      value: 500 balls
+      objectReference: {fileID: 0}
     - target: {fileID: 5771814461427556625, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -598,8 +606,15 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8628565476395842101, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+      propertyPath: m_text
+      value: rebars
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8282080290988762739, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+    - {fileID: 8261689674438038685, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
+    - {fileID: 7485309369500455030, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64ca67e27daa5434cb2981624a75ca5a, type: 3}
