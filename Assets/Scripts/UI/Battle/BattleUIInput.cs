@@ -16,7 +16,10 @@ public class BattleUIInput : MonoBehaviour
     [SerializeField] private CommandBox commandBox;
 
     private IBattleCommands battleLogic;
-    private GameControls gameControls;
+
+    // the shared controls, so the player's rebinds actually apply here.
+    // do NOT go back to `new GameControls()` -- see the comment in GameInput
+    private GameControls Controls => GameInput.Controls;
 
     private void Awake()
     {
@@ -27,33 +30,21 @@ public class BattleUIInput : MonoBehaviour
             Debug.LogWarning("[BattleUIInput] >> no BattleController in the scene. the player's " +
                 "choices won't go anywhere (fine for ui-only testing).");
         }
-
-        gameControls = new();
-    }
-
-    private void OnEnable()
-    {
-        gameControls.Battle.Enable();
-    }
-
-    private void OnDisable()
-    {
-        gameControls.Battle.Disable();
     }
 
     private void Update()
     {
-        if (gameControls.Battle.Confirm.WasPerformedThisFrame())
+        if (Controls.Battle.Confirm.WasPerformedThisFrame())
         {
             OnConfirmPressed();
         }
 
-        if (gameControls.Battle.Back.WasPerformedThisFrame())
+        if (Controls.Battle.Back.WasPerformedThisFrame())
         {
             OnBackPressed();
         }
 
-        if (gameControls.Battle.Pause.WasPerformedThisFrame())
+        if (Controls.Battle.Pause.WasPerformedThisFrame())
         {
             TogglePause();
         }

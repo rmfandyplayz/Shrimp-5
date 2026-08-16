@@ -1,116 +1,97 @@
-using DG.Tweening;
-using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 // written by andy
+// converted to data driven animation by Claude Opus 5
 // name might be confusing, but this is for the main part of the main menu
 // where it shows play settings credits exit.
+//
+// the animation itself now lives in MenuBase's step lists. the fields below are only kept so
+// the scene's existing references survive and so "Restore original animation" has something
+// to point the steps at.
 public class MainMenu : MenuBase
 {
+    [Header("animation targets (used to seed the step lists)")]
     [SerializeField] List<TextMeshProUGUI> waterfallElements = new();
     [SerializeField] Image gameLogo;
     [SerializeField] RectTransform blackPanel;
     [SerializeField] Image backgroundArt;
 
-    private Vector2 blackPanelDefPos;
-    private Vector2 logoDefPos;
-    private Vector2 artDefPos;
-    private List<Vector2> waterfallDefPos = new();
+    // sometimes i write code so bad i hope people will never trust my programming
+    // skills again and therefore i can just design the ui without programming them
 
-    public override void Awake()
+    // however i for some fking reason still like programming so i'm just screwing
+    // myself up i suppose
+
+    /// <summary>
+    /// Refills the step lists with the waterfall animation this menu originally had hard coded.
+    ///
+    /// Right click the component and pick this to get back to the known good version -- either
+    /// to set it up the first time, or after experimenting in the inspector.
+    /// </summary>
+    [ContextMenu("Restore original animation")]
+    public void RestoreOriginalAnimation()
     {
-        base.Awake();
+        animateInSteps = BuildInSteps();
+        animateOutSteps = BuildOutSteps();
 
-        blackPanelDefPos = blackPanel.anchoredPosition;
-        logoDefPos = gameLogo.rectTransform.anchoredPosition;
-        artDefPos = backgroundArt.rectTransform.anchoredPosition;
+        MenuAnimSeeding.MarkDirty(this);
+    }
 
-        foreach (var item in waterfallElements)
+    private List<MenuAnimStep> BuildInSteps()
+    {
+        List<MenuAnimStep> steps = new()
         {
-            waterfallDefPos.Add(item.rectTransform.anchoredPosition);
-        }
-    }
+            MenuAnimSeeding.Step("black panel", blackPanel, MenuAnimProperty.AnchorPosX, 500f, 0f, 0.5f, Ease.OutQuad),
 
-    public override void AnimateIn(Action onComplete)
-    {
-        // sometimes i write code so bad i hope people will never trust my programming
-        // skills again and therefore i can just design the ui without programming them
+            MenuAnimSeeding.Step("logo slide", gameLogo, MenuAnimProperty.AnchorPosX, 300f, 0.4f, 0.35f, Ease.OutCubic),
+            MenuAnimSeeding.Step("logo fade", gameLogo, MenuAnimProperty.Fade, 0f, 0.4f, 0.35f, Ease.OutQuad),
 
-        // however i for some fking reason still like programming so i'm just screwing
-        // myself up i suppose
+            MenuAnimSeeding.Step("art slide", backgroundArt, MenuAnimProperty.AnchorPosY, -50f, 0.2f, 0.7f, Ease.OutQuint),
+            MenuAnimSeeding.Step("art fade", backgroundArt, MenuAnimProperty.Fade, 0f, 0.2f, 0.45f, Ease.OutQuad)
+        };
 
-        ResetState();
-
-        Sequence sequence = DOTween.Sequence();
-
-        sequence.Insert(0f, blackPanel.DOAnchorPosX(500, 0.5f).From().SetEase(Ease.OutQuad));
-
-        sequence.Insert(0.4f, gameLogo.rectTransform.DOAnchorPosX(300, 0.35f).From().SetEase(Ease.OutCubic));
-        sequence.Insert(0.4f, gameLogo.DOFade(0, 0.35f).From());
-
-        sequence.Insert(0.5f, waterfallElements[0].rectTransform.DOAnchorPosX(300, 0.5f).From().SetEase(Ease.OutQuad));
-        sequence.Insert(0.5f, waterfallElements[0].DOFade(0, 0.5f).From());
-        sequence.Insert(0.6f, waterfallElements[1].rectTransform.DOAnchorPosX(300, 0.5f).From().SetEase(Ease.OutQuad));
-        sequence.Insert(0.6f, waterfallElements[1].DOFade(0, 0.5f).From());
-        sequence.Insert(0.7f, waterfallElements[2].rectTransform.DOAnchorPosX(300, 0.5f).From().SetEase(Ease.OutQuad));
-        sequence.Insert(0.7f, waterfallElements[2].DOFade(0, 0.5f).From());
-        sequence.Insert(0.8f, waterfallElements[3].rectTransform.DOAnchorPosX(300, 0.5f).From().SetEase(Ease.OutQuad));
-        sequence.Insert(0.8f, waterfallElements[3].DOFade(0, 0.5f).From());
-
-        sequence.Insert(0.2f, backgroundArt.rectTransform.DOAnchorPosY(-50, 0.7f).From().SetEase(Ease.OutQuint));
-        sequence.Insert(0.2f, backgroundArt.DOFade(0, 0.45f).From());
-
-        sequence.OnComplete(() => onComplete?.Invoke());
-    }
-
-    public override void AnimateOut(Action onComplete)
-    {
-        Sequence sequence = DOTween.Sequence();
-
-        sequence.Insert(0.3f, blackPanel.DOAnchorPosX(500, 0.5f).SetEase(Ease.OutQuad));
-
-        sequence.Insert(0.55f, gameLogo.rectTransform.DOAnchorPosX(300, 0.2f).SetEase(Ease.OutCubic));
-        sequence.Insert(0.55f, gameLogo.DOFade(0, 0.2f));
-
-        sequence.Insert(0.5f, waterfallElements[0].rectTransform.DOAnchorPosX(300, 0.2f).SetEase(Ease.OutQuad));
-        sequence.Insert(0.5f, waterfallElements[0].DOFade(0, 0.2f));
-        sequence.Insert(0.45f, waterfallElements[1].rectTransform.DOAnchorPosX(300, 0.2f).SetEase(Ease.OutQuad));
-        sequence.Insert(0.45f, waterfallElements[1].DOFade(0, 0.2f));
-        sequence.Insert(0.4f, waterfallElements[2].rectTransform.DOAnchorPosX(300, 0.2f).SetEase(Ease.OutQuad));
-        sequence.Insert(0.4f, waterfallElements[2].DOFade(0, 0.2f));
-        sequence.Insert(0.35f, waterfallElements[3].rectTransform.DOAnchorPosX(300, 0.2f).SetEase(Ease.OutQuad));
-        sequence.Insert(0.35f, waterfallElements[3].DOFade(0, 0.2f));
-
-        sequence.Insert(0.35f, backgroundArt.rectTransform.DOAnchorPosY(-50, 0.7f).SetEase(Ease.OutQuint));
-        sequence.Insert(0.35f, backgroundArt.DOFade(0, 0.45f));
-
-        sequence.OnComplete(() => onComplete?.Invoke());
-    }
-
-    public override void ResetState(bool resetAlpha = false)
-    {
-        base.ResetState(resetAlpha);
-
-        blackPanel.DOKill();
-        gameLogo.DOKill();
-        backgroundArt.DOKill();
-        foreach (var item in waterfallElements) 
-            item.DOKill();
-
-        blackPanel.anchoredPosition = blackPanelDefPos;
-        gameLogo.rectTransform.anchoredPosition = logoDefPos;
-        backgroundArt.rectTransform.anchoredPosition = artDefPos;
-
+        // the buttons cascade in 0.1s apart, hence "waterfall"
         for (int i = 0; i < waterfallElements.Count; i++)
         {
-            waterfallElements[i].rectTransform.anchoredPosition = waterfallDefPos[i];
-            waterfallElements[i].alpha = 1; // Reset text alpha
+            float delay = 0.5f + (i * 0.1f);
+
+            steps.Add(MenuAnimSeeding.Step($"button {i + 1} slide", waterfallElements[i],
+                MenuAnimProperty.AnchorPosX, 300f, delay, 0.5f, Ease.OutQuad));
+            steps.Add(MenuAnimSeeding.Step($"button {i + 1} fade", waterfallElements[i],
+                MenuAnimProperty.Fade, 0f, delay, 0.5f, Ease.OutQuad));
         }
 
-        gameLogo.color = new Color(gameLogo.color.r, gameLogo.color.g, gameLogo.color.b, 1);
-        backgroundArt.color = new Color(backgroundArt.color.r, backgroundArt.color.g, backgroundArt.color.b, 1);
+        return steps;
+    }
+
+    private List<MenuAnimStep> BuildOutSteps()
+    {
+        List<MenuAnimStep> steps = new()
+        {
+            MenuAnimSeeding.Step("black panel", blackPanel, MenuAnimProperty.AnchorPosX, 500f, 0.3f, 0.5f, Ease.OutQuad),
+
+            MenuAnimSeeding.Step("logo slide", gameLogo, MenuAnimProperty.AnchorPosX, 300f, 0.55f, 0.2f, Ease.OutCubic),
+            MenuAnimSeeding.Step("logo fade", gameLogo, MenuAnimProperty.Fade, 0f, 0.55f, 0.2f, Ease.OutQuad),
+
+            MenuAnimSeeding.Step("art slide", backgroundArt, MenuAnimProperty.AnchorPosY, -50f, 0.35f, 0.7f, Ease.OutQuint),
+            MenuAnimSeeding.Step("art fade", backgroundArt, MenuAnimProperty.Fade, 0f, 0.35f, 0.45f, Ease.OutQuad)
+        };
+
+        // leaving runs the waterfall backwards -- last button first
+        for (int i = 0; i < waterfallElements.Count; i++)
+        {
+            float delay = 0.5f - (i * 0.05f);
+
+            steps.Add(MenuAnimSeeding.Step($"button {i + 1} slide", waterfallElements[i],
+                MenuAnimProperty.AnchorPosX, 300f, delay, 0.2f, Ease.OutQuad));
+            steps.Add(MenuAnimSeeding.Step($"button {i + 1} fade", waterfallElements[i],
+                MenuAnimProperty.Fade, 0f, delay, 0.2f, Ease.OutQuad));
+        }
+
+        return steps;
     }
 }

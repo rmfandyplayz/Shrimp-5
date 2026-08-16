@@ -1,12 +1,14 @@
+using System.Collections.Generic;
 using DG.Tweening;
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-
+// written by andy
+// converted to data driven animation by Claude Opus 5
+// the credits screen. everything pops in from oversized and fades, staggered down the list.
 public class CreditsMenu : MenuBase
 {
+    [Header("animation targets (used to seed the step lists)")]
     [SerializeField] TextMeshProUGUI settingsText;
     [SerializeField] TextMeshProUGUI soundCreditsText;
     [SerializeField] CanvasGroup andyGroup;
@@ -14,108 +16,48 @@ public class CreditsMenu : MenuBase
     [SerializeField] CanvasGroup owenGroup;
     [SerializeField] CanvasGroup soundCreditsList;
 
-    private Vector2 settingsTxtDefPos;
-    private Vector2 soundCreditsTxtDefPos;
-    private Vector2 andyGroupDefPos;
-    private Vector2 cassandraGroupDefPos;
-    private Vector2 owenGroupDefPos;
-    private Vector2 soundCreditsListDefPos;
-
-    public override void Awake()
+    /// <summary>
+    /// Refills the step lists with the animation this menu originally had hard coded.
+    /// </summary>
+    [ContextMenu("Restore original animation")]
+    public void RestoreOriginalAnimation()
     {
-        base.Awake();
+        animateInSteps = new List<MenuAnimStep>();
+        animateOutSteps = new List<MenuAnimStep>();
 
-        settingsTxtDefPos = settingsText.rectTransform.anchoredPosition;
-        soundCreditsTxtDefPos = soundCreditsText.rectTransform.anchoredPosition;
-        andyGroupDefPos = andyGroup.transform.localPosition;
-        cassandraGroupDefPos = cassandraGroup.transform.localPosition;
-        owenGroupDefPos = owenGroup.transform.localPosition;
-        soundCreditsListDefPos = soundCreditsList.transform.localPosition;
+        // entering: each entry fades up from nothing while shrinking down from oversized,
+        // 0.05s apart down the list
+        AddPopIn("title", settingsText, 0f, 3.5f);
+        AddPopIn("andy", andyGroup, 0.05f, 3.5f);
+        AddPopIn("cassandra", cassandraGroup, 0.1f, 3.5f);
+        AddPopIn("owen", owenGroup, 0.15f, 3.5f);
+        AddPopIn("sound title", soundCreditsText, 0.2f, 3.5f);
+        AddPopIn("sound list", soundCreditsList, 0.25f, 1.15f);
+
+        // leaving: same thing in reverse order, faster, and it grows on the way out
+        AddPopOut("sound list", soundCreditsList, 0f, 1.15f);
+        AddPopOut("sound title", soundCreditsText, 0.05f, 2f);
+        AddPopOut("owen", owenGroup, 0.1f, 2f);
+        AddPopOut("cassandra", cassandraGroup, 0.15f, 2f);
+        AddPopOut("andy", andyGroup, 0.2f, 2f);
+        AddPopOut("title", settingsText, 0.25f, 2f);
+
+        MenuAnimSeeding.MarkDirty(this);
     }
 
-    public override void AnimateIn(Action onComplete)
+    private void AddPopIn(string label, Component target, float delay, float fromScale)
     {
-        ResetState();
-
-        Sequence sequence = DOTween.Sequence();
-
-        sequence.Insert(0, settingsText.DOFade(0, 0.8f).From());
-        sequence.Insert(0, settingsText.rectTransform.DOScale(3.5f, 0.8f).From().SetEase(Ease.OutExpo));
-
-        sequence.Insert(0.05f, andyGroup.DOFade(0, 0.8f).From());
-        sequence.Insert(0.05f, andyGroup.transform.DOScale(3.5f, 0.8f).From().SetEase(Ease.OutExpo));
-
-        sequence.Insert(0.1f, cassandraGroup.DOFade(0, 0.8f).From());
-        sequence.Insert(0.1f, cassandraGroup.transform.DOScale(3.5f, 0.8f).From().SetEase(Ease.OutExpo));
-
-        sequence.Insert(0.15f, owenGroup.DOFade(0, 0.8f).From());
-        sequence.Insert(0.15f, owenGroup.transform.DOScale(3.5f, 0.8f).From().SetEase(Ease.OutExpo));
-
-        sequence.Insert(0.2f, soundCreditsText.DOFade(0, 0.8f).From());
-        sequence.Insert(0.2f, soundCreditsText.rectTransform.DOScale(3.5f, 0.8f).From().SetEase(Ease.OutExpo));
-
-        sequence.Insert(0.25f, soundCreditsList.DOFade(0, 0.8f).From());
-        sequence.Insert(0.25f, soundCreditsList.transform.DOScale(1.15f, 0.8f).From().SetEase(Ease.OutExpo));
-
-        sequence.OnComplete(() => onComplete.Invoke());
+        animateInSteps.Add(MenuAnimSeeding.Step($"{label} fade", target,
+            MenuAnimProperty.Fade, 0f, delay, 0.8f, Ease.OutQuad));
+        animateInSteps.Add(MenuAnimSeeding.Step($"{label} scale", target,
+            MenuAnimProperty.Scale, fromScale, delay, 0.8f, Ease.OutExpo));
     }
 
-    public override void AnimateOut(Action onComplete)
+    private void AddPopOut(string label, Component target, float delay, float toScale)
     {
-        Sequence sequence = DOTween.Sequence();
-
-        sequence.Insert(0.25f, settingsText.DOFade(0, 0.4f));
-        sequence.Insert(0.25f, settingsText.rectTransform.DOScale(2f, 0.4f).SetEase(Ease.InQuart));
-
-        sequence.Insert(0.2f, andyGroup.DOFade(0, 0.4f));
-        sequence.Insert(0.2f, andyGroup.transform.DOScale(2f, 0.4f).SetEase(Ease.InQuart));
-
-        sequence.Insert(0.15f, cassandraGroup.DOFade(0, 0.4f));
-        sequence.Insert(0.15f, cassandraGroup.transform.DOScale(2f, 0.4f).SetEase(Ease.InQuart));
-
-        sequence.Insert(0.1f, owenGroup.DOFade(0, 0.4f));
-        sequence.Insert(0.1f, owenGroup.transform.DOScale(2f, 0.4f).SetEase(Ease.InQuart));
-
-        sequence.Insert(0.05f, soundCreditsText.DOFade(0, 0.4f));
-        sequence.Insert(0.05f, soundCreditsText.rectTransform.DOScale(2f, 0.4f).SetEase(Ease.InQuart));
-
-        sequence.Insert(0f, soundCreditsList.DOFade(0, 0.4f));
-        sequence.Insert(0f, soundCreditsList.transform.DOScale(1.15f, 0.4f).SetEase(Ease.InQuart));
-
-        sequence.OnComplete(() => onComplete.Invoke());
-    }
-
-
-    public override void ResetState(bool resetAlpha = false)
-    {
-        base.ResetState(resetAlpha);
-
-        settingsText.DOKill();
-        soundCreditsText.DOKill();
-        andyGroup.DOKill();
-        cassandraGroup.DOKill();
-        owenGroup.DOKill();
-        soundCreditsList.DOKill();
-
-        settingsText.rectTransform.anchoredPosition = settingsTxtDefPos;
-        soundCreditsText.rectTransform.anchoredPosition = soundCreditsTxtDefPos;
-        andyGroup.transform.localPosition = andyGroupDefPos;
-        cassandraGroup.transform.localPosition = cassandraGroupDefPos;
-        owenGroup.transform.localPosition = owenGroupDefPos;
-        soundCreditsList.transform.localPosition = soundCreditsListDefPos;
-
-        settingsText.alpha = 1;
-        soundCreditsText.alpha = 1;
-        andyGroup.alpha = 1;
-        cassandraGroup.alpha = 1;
-        owenGroup.alpha = 1;
-        soundCreditsList.alpha = 1;
-
-        settingsText.rectTransform.localScale = Vector3.one;
-        soundCreditsText.rectTransform.localScale = Vector3.one;
-        andyGroup.transform.localScale = Vector3.one;
-        cassandraGroup.transform.localScale = Vector3.one;
-        owenGroup.transform.localScale = Vector3.one;
-        soundCreditsList.transform.localScale = Vector3.one;
+        animateOutSteps.Add(MenuAnimSeeding.Step($"{label} fade", target,
+            MenuAnimProperty.Fade, 0f, delay, 0.4f, Ease.OutQuad));
+        animateOutSteps.Add(MenuAnimSeeding.Step($"{label} scale", target,
+            MenuAnimProperty.Scale, toScale, delay, 0.4f, Ease.InQuart));
     }
 }
