@@ -132,7 +132,12 @@ itself). A menu with no modules falls back to a plain fade.
 
 `MenuManager` drives transitions and calls the `OnMenuOpened`/`OnMenuClosed` hooks; `MenuBase`
 also exposes matching `UnityEvent`s for inspector-wired responders. `SettingsMenu` uses those
-hooks to start and commit the keybind session.
+hooks to start and commit the keybind session; `MainMenu` and `CreditsMenu` are deliberately
+empty subclasses that exist only to hold the scene's script reference.
+
+The three menus are **fully migrated** — 9 `MenuAnim_Transition` modules are wired in
+`MainMenu.unity` (4 / 3 / 2) and confirmed working, so the old migration helper is gone. Don't
+reintroduce animation data on `MenuBase`.
 
 `MenuInteractable` + `IMenuFeedback` is the same composition pattern for button feedback — add
 `UIFeedback_*` components alongside it rather than writing per-button behaviour.
@@ -147,27 +152,38 @@ Data lives in ScriptableObjects under `Assets/Shrimp/{Shrimp,Moves,Abilities,Sta
 **not** under `Resources/`, so they can't be loaded by id — the UI reaches moves and statuses
 through the `UIShrimpState` that already holds references to them.
 
-## Known gaps in the game logic (as of 2026-08)
+## Current state / known issues
 
-The UI codes defensively around these. Re-check before assuming they still hold.
+**The wiki's [TODOs, known issues, and things to revisit](https://github.com/rmfandyplayz/Shrimp-5/wiki/TODOs,-known-issues,-and-things-to-revisit)
+page is the live list** — read it before starting anything, and update it when something changes.
+It is split by owner (Andy's scene work / needs Owen / deliberately punted).
 
-- **`ShrimpState.instanceID` is never assigned** — always null, so every event's `sourceId` is
-  null and the UI can't tell shrimp apart. Intended format is `shrimp.player.1` / `shrimp.enemy.3`,
-  documented only in `BattleUIContract`'s own comments.
-- **No player/enemy marker** in `BattleSetupData` or `UIShrimpState`. The UI derives side by
-  parsing that convention (`BattleSideResolver`, extensible via `IShrimpSideParser`).
-- **`targetId`, `flavorText`, `maxValue`, `ints`, `floats`, `bools` are never populated.** They are
-  just-in-case escape hatches for designers. The UI generates its own flavor text
-  (`BattleTextBuilder`) and treats a populated `flavorText` as an override.
-- **No move category field** on `MoveDefinition`. The UI guesses from the sign of `power`,
-  quarantined in `MoveCategory.cs` pending a real decision.
-- `statusID` is blank on all status assets and `iconID`s are placeholder text with no matching art.
-- Statuses change resolved attack/speed but nothing tells the UI the new numbers.
-- The settings screen's three volume sliders are wired to nothing — `AudioManager.cs` and the
-  audio mixer were deleted by commit `fe5fc78` and are recoverable from `git show fe5fc78^`.
+The short version, as of 2026-08-30:
+
+- **Menus are done.** Animation modules migrated and verified working.
+- **Keybinding is code-complete**, and partly wired: all 8 `KeybindRow`s have their action set and
+  `KeybindEditSession` sits on `SettingsMenu`. Only `bindingText` is unassigned, so rows work but
+  display nothing.
+- **The battle UI is scripts-only.** All 6 handlers are in `UITestNoTouchie.unity`, but the minion
+  scripts aren't in the scene yet and the handler→minion refs are unset. Note the
+  `BattleUIManager.handlerScripts` list is currently size 5 with every entry pointing at the same
+  `CommandBoxHandler`, so only `ChoosingMove`/`LogMessage` are actually dispatched.
+- **`ShrimpState.instanceID` is still never assigned** (always null), so every event's `sourceId`
+  is null and the UI can't tell shrimp apart. This blocks most of the battle UI and is Owen's to
+  fix. The UI derives player/enemy by parsing the intended `shrimp.player.1` format
+  (`BattleSideResolver`), since nothing else marks a side.
+- Several reproducible crashes and a win/lose inversion exist in `UIAndLogicCommunicator/`.
+  **Report them, don't fix them** — see the wiki page for the specifics.
 
 ## Docs
 
 The GitHub wiki is the only real documentation (the README is a one-line joke) and is not cloned
-locally — fetch it: <https://github.com/rmfandyplayz/Shrimp-5/wiki>. It covers the contract, the
-manager/handler/minion architecture, and per-event field docs.
+locally. It's a plain git repo, so you can read *and write* it:
+
+```bash
+git clone https://github.com/rmfandyplayz/Shrimp-5.wiki.git
+```
+
+Pages: the contract, the manager/handler/minion architecture, per-event field docs, a
+handler/minion reference, the menu animation modules, and the TODO/known-issues list. Andy likes
+new systems documented there — the wiki's voice is lowercase and informal, match it.

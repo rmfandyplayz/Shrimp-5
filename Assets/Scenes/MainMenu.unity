@@ -687,6 +687,10 @@ GameObject:
   - component: {fileID: 87531093}
   - component: {fileID: 87531095}
   - component: {fileID: 87531096}
+  - component: {fileID: 87531100}
+  - component: {fileID: 87531099}
+  - component: {fileID: 87531098}
+  - component: {fileID: 87531097}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -752,9 +756,13 @@ MonoBehaviour:
   backMenu: {fileID: 0}
   firstSelected: {fileID: 1410678625}
   cg: {fileID: 0}
-  animateInSteps: []
-  animateOutSteps: []
   fallbackFadeDuration: 0.2
+  onMenuOpenedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onMenuClosedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   waterfallElements:
   - {fileID: 1410678628}
   - {fileID: 841674874}
@@ -763,6 +771,229 @@ MonoBehaviour:
   gameLogo: {fileID: 1029260041}
   blackPanel: {fileID: 211982587}
   backgroundArt: {fileID: 587855656}
+--- !u!114 &87531097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87531090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccf2cd32e86a8144bd3ea930444f99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuAnim_Transition
+  targets:
+  - {fileID: 587855656}
+  label: background art
+  inSettings:
+    delay: 0.2
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 1
+      space: 0
+      value: -50
+      duration: 0.7
+      ease: 15
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.45
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+  outSettings:
+    delay: 0.35
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 1
+      space: 0
+      value: -50
+      duration: 0.7
+      ease: 15
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.45
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+--- !u!114 &87531098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87531090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccf2cd32e86a8144bd3ea930444f99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuAnim_Transition
+  targets:
+  - {fileID: 1410678628}
+  - {fileID: 841674874}
+  - {fileID: 1901675615}
+  - {fileID: 1937206126}
+  label: button waterfall
+  inSettings:
+    delay: 0.5
+    stagger: 0.1
+    move:
+      enabled: 1
+      axis: 0
+      space: 0
+      value: 300
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.5
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+  outSettings:
+    delay: 0.5
+    stagger: -0.05
+    move:
+      enabled: 1
+      axis: 0
+      space: 0
+      value: 300
+      duration: 0.2
+      ease: 6
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.2
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+--- !u!114 &87531099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87531090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccf2cd32e86a8144bd3ea930444f99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuAnim_Transition
+  targets:
+  - {fileID: 1029260041}
+  label: logo
+  inSettings:
+    delay: 0.4
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 0
+      space: 0
+      value: 300
+      duration: 0.35
+      ease: 9
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.35
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+  outSettings:
+    delay: 0.55
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 0
+      space: 0
+      value: 300
+      duration: 0.2
+      ease: 9
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.2
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+--- !u!114 &87531100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87531090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccf2cd32e86a8144bd3ea930444f99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuAnim_Transition
+  targets:
+  - {fileID: 211982587}
+  label: black panel
+  inSettings:
+    delay: 0
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 0
+      space: 0
+      value: 500
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+  outSettings:
+    delay: 0.3
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 0
+      space: 0
+      value: 500
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
 --- !u!1 &101242338
 GameObject:
   m_ObjectHideFlags: 0
@@ -5643,6 +5874,9 @@ GameObject:
   - component: {fileID: 798947700}
   - component: {fileID: 798947701}
   - component: {fileID: 798947702}
+  - component: {fileID: 798947705}
+  - component: {fileID: 798947704}
+  - component: {fileID: 798947703}
   m_Layer: 5
   m_Name: SettingsMenu
   m_TagString: Untagged
@@ -5695,16 +5929,13 @@ MonoBehaviour:
   backMenu: {fileID: 87531096}
   firstSelected: {fileID: 710320956}
   cg: {fileID: 0}
-  animateInSteps:
-  - label: 
-    target: {fileID: 0}
-    property: 0
-    value: 0
-    delay: 0
-    duration: 0
-    ease: 0
-  animateOutSteps: []
   fallbackFadeDuration: 0.2
+  onMenuOpenedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onMenuClosedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   keybindSession: {fileID: 0}
   backgroundImage: {fileID: 558956628}
   blackPanel: {fileID: 389325281}
@@ -5722,6 +5953,171 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KeybindEditSession
   resetAllOnConflict: 1
+--- !u!114 &798947703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798947697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccf2cd32e86a8144bd3ea930444f99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuAnim_Transition
+  targets:
+  - {fileID: 180444879}
+  label: scroll panel
+  inSettings:
+    delay: 0.5
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 0
+      space: 1
+      value: 850
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.5
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+  outSettings:
+    delay: 0
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 0
+      space: 1
+      value: 850
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.5
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+--- !u!114 &798947704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798947697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccf2cd32e86a8144bd3ea930444f99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuAnim_Transition
+  targets:
+  - {fileID: 558956628}
+  label: background art
+  inSettings:
+    delay: 0.2
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 1
+      space: 0
+      value: -50
+      duration: 0.7
+      ease: 15
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.45
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+  outSettings:
+    delay: 0
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 1
+      space: 0
+      value: -50
+      duration: 0.7
+      ease: 15
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.45
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+--- !u!114 &798947705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798947697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccf2cd32e86a8144bd3ea930444f99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuAnim_Transition
+  targets:
+  - {fileID: 389325281}
+  label: black panel
+  inSettings:
+    delay: 0
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 0
+      space: 0
+      value: -1440
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+  outSettings:
+    delay: 0
+    stagger: 0
+    move:
+      enabled: 1
+      axis: 0
+      space: 0
+      value: -1440
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+    scale:
+      enabled: 0
+      value: 0
+      duration: 0.5
+      ease: 6
 --- !u!1 &825561766
 GameObject:
   m_ObjectHideFlags: 0
@@ -5769,6 +6165,8 @@ GameObject:
   - component: {fileID: 828872066}
   - component: {fileID: 828872068}
   - component: {fileID: 828872067}
+  - component: {fileID: 828872070}
+  - component: {fileID: 828872069}
   m_Layer: 5
   m_Name: CreditsMenu
   m_TagString: Untagged
@@ -5812,9 +6210,13 @@ MonoBehaviour:
   backMenu: {fileID: 87531096}
   firstSelected: {fileID: 1115860585}
   cg: {fileID: 0}
-  animateInSteps: []
-  animateOutSteps: []
   fallbackFadeDuration: 0.2
+  onMenuOpenedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onMenuClosedEvent:
+    m_PersistentCalls:
+      m_Calls: []
   settingsText: {fileID: 339684384}
   soundCreditsText: {fileID: 1881743486}
   andyGroup: {fileID: 2144031635}
@@ -5829,6 +6231,120 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828872065}
   m_CullTransparentMesh: 1
+--- !u!114 &828872069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828872065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccf2cd32e86a8144bd3ea930444f99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuAnim_Transition
+  targets:
+  - {fileID: 598273741}
+  label: sound list
+  inSettings:
+    delay: 0.25
+    stagger: 0
+    move:
+      enabled: 0
+      axis: 0
+      space: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.8
+      ease: 6
+    scale:
+      enabled: 1
+      value: 1.15
+      duration: 0.8
+      ease: 18
+  outSettings:
+    delay: 0
+    stagger: 0
+    move:
+      enabled: 0
+      axis: 0
+      space: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.4
+      ease: 6
+    scale:
+      enabled: 1
+      value: 1.15
+      duration: 0.4
+      ease: 11
+--- !u!114 &828872070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828872065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccf2cd32e86a8144bd3ea930444f99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuAnim_Transition
+  targets:
+  - {fileID: 339684384}
+  - {fileID: 2144031635}
+  - {fileID: 675793463}
+  - {fileID: 666660788}
+  - {fileID: 1881743486}
+  label: credits entries
+  inSettings:
+    delay: 0
+    stagger: 0.05
+    move:
+      enabled: 0
+      axis: 0
+      space: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.8
+      ease: 6
+    scale:
+      enabled: 1
+      value: 3.5
+      duration: 0.8
+      ease: 18
+  outSettings:
+    delay: 0.25
+    stagger: -0.05
+    move:
+      enabled: 0
+      axis: 0
+      space: 0
+      value: 0
+      duration: 0.5
+      ease: 6
+    fade:
+      enabled: 1
+      value: 0
+      duration: 0.4
+      ease: 6
+    scale:
+      enabled: 1
+      value: 2
+      duration: 0.4
+      ease: 11
 --- !u!1 &833454566
 GameObject:
   m_ObjectHideFlags: 0
