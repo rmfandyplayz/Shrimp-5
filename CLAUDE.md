@@ -34,30 +34,17 @@ Gemini 3 Pro, checked by andy`), so AI authorship is expected to be stated, not 
 or test files) and **no asmdefs** — every script compiles into `Assembly-CSharp`.
 
 The only way to verify a change without opening the Unity editor is to compile against Unity's
-assemblies. Unity generates `Assembly-CSharp.csproj` with an *explicit* file list that goes stale
-as soon as you add a script, so build a temp copy that includes the new files:
+assemblies:
 
 ```bash
-python -c "
-import io, glob, re, os
-src = io.open('Assembly-CSharp.csproj', encoding='utf-8-sig').read()
-existing = set(m.lower() for m in re.findall(r'<Compile Include=\"([^\"]+)\"', src))
-new = []
-for f in glob.glob('Assets/**/*.cs', recursive=True):
-    p = f.replace('/', os.sep); parts = p.split(os.sep)
-    # Plugins/ compiles into Assembly-CSharp-firstpass and is referenced as a dll;
-    # including its sources too causes duplicate-definition errors
-    if p.lower() in existing or 'Editor' in parts or 'Plugins' in parts: continue
-    new.append(p)
-block = ''.join('    <Compile Include=\"%s\" />\n' % p for p in new)
-io.open('_compilecheck.csproj','w',encoding='utf-8').write(
-    src.replace('</Project>', '  <ItemGroup>\n' + block + '  </ItemGroup>\n</Project>'))
-"
-dotnet build _compilecheck.csproj -v q --nologo -t:Rebuild 2>&1 | grep -E "error|warning|Build succeeded"
-rm -f _compilecheck.csproj
+python Tools/compilecheck.py
 ```
 
-Always delete `_compilecheck.csproj` afterwards — it is a scratch file, not part of the project.
+Exits non-zero on any compile error, so it works as a gate. It builds a throwaway copy of
+Unity's generated `Assembly-CSharp.csproj` with the file list corrected, then deletes it —
+necessary because Unity only regenerates that project when the editor has focus, so its
+explicit `<Compile Include>` list misses scripts you just added (phantom "type not found"
+errors on your own new code) and still lists ones you just deleted (CS2001).
 
 Everything else (play mode, scene wiring, verifying animations) requires the Unity editor and is
 the user's job. Say so plainly rather than claiming a change is verified when it isn't.
@@ -126,13 +113,28 @@ The live actions asset is `Assets/Input/GameControls.inputactions` (map `Battle`
 
 ### Menus
 
-`MenuBase` (`UI/Menus/`) runs open/close animations from serialized `List<MenuAnimStep>` data
-rather than hand-written DOTween sequences, and auto-caches/restores every animated target.
-`MainMenu`/`SettingsMenu`/`CreditsMenu` are thin subclasses that mostly exist to seed their
-original animation via `[ContextMenu("Restore original animation")]`. `MenuManager` drives
-transitions and calls the `OnMenuOpened`/`OnMenuClosed` hooks.
+Menu animation is **composition, not inheritance**. `MenuBase` (`UI/Menus/`) knows nothing about
+how a menu animates: it collects `IMenuAnimation` components off itself and its children, plays
+them all, and fires `onComplete` when the last one reports back. Same shape as `MenuInteractable`
+collecting `IMenuFeedback[]`, just with completion callbacks since animations take time.
 
-`MenuInteractable` + `IMenuFeedback` is a composition pattern for button feedback — add
+`MenuAnim_Transition` (`UI/Menus/MenuAnimationModules/`) is the workhorse module: a list of
+targets plus separate opening/closing settings, each with independently toggleable **move / fade
+/ scale** channels. Modules are grouped by *shared timing*, not by property — one module means
+"these things animate together, like this". `stagger` is what the target list is for; the main
+menu's four-button waterfall is one module with four targets and `stagger: 0.1`, and a negative
+stagger runs the cascade backwards for the exit.
+
+A new kind of animation is a new class implementing `IMenuAnimation` — no changes to `MenuBase`.
+Subclass `MenuAnimationBase` to inherit the snapshot/restore bookkeeping (it caches each target's
+position/scale/alpha on Awake and puts them back in `ResetState`, so a module cleans up after
+itself). A menu with no modules falls back to a plain fade.
+
+`MenuManager` drives transitions and calls the `OnMenuOpened`/`OnMenuClosed` hooks; `MenuBase`
+also exposes matching `UnityEvent`s for inspector-wired responders. `SettingsMenu` uses those
+hooks to start and commit the keybind session.
+
+`MenuInteractable` + `IMenuFeedback` is the same composition pattern for button feedback — add
 `UIFeedback_*` components alongside it rather than writing per-button behaviour.
 
 ### Assets

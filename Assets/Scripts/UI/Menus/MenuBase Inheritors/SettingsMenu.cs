@@ -1,13 +1,12 @@
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
 // written by andy
-// converted to data driven animation, and wired to the keybind session, by Claude Opus 5
-// animations for settings menu
+// animation moved out into MenuAnim_Transition modules, keybind session wired, by Claude Opus 5
+// the settings screen.
 //
-// besides the animation this is the screen that owns key rebinding. the important bit is that
+// besides its animation this is the screen that owns key rebinding. the important bit is that
 // opening it drops the game to factory default controls and closing it commits whatever the
 // player changed -- see KeybindEditSession for why.
 public class SettingsMenu : MenuBase
@@ -16,7 +15,7 @@ public class SettingsMenu : MenuBase
     [SerializeField, Tooltip("leave blank to find one on this object or its children")]
     private KeybindEditSession keybindSession;
 
-    [Header("animation targets (used to seed the step lists)")]
+    [Header("legacy refs (only used by the migration button)")]
     [SerializeField] Image backgroundImage;
     [SerializeField] RectTransform blackPanel;
     [SerializeField] CanvasGroup scrollCanvasGroup;
@@ -60,36 +59,42 @@ public class SettingsMenu : MenuBase
     }
 
     /// <summary>
-    /// Refills the step lists with the animation this menu originally had hard coded.
+    /// Rebuilds this menu's animation as MenuAnim_Transition modules, using the exact timings
+    /// the hand written sequence had. Right click the component and pick this.
     /// </summary>
-    [ContextMenu("Restore original animation")]
-    public void RestoreOriginalAnimation()
+    [ContextMenu("Migrate animation to modules")]
+    public void MigrateAnimationToModules()
     {
-        animateInSteps = new List<MenuAnimStep>
-        {
-            MenuAnimSeeding.Step("black panel", blackPanel, MenuAnimProperty.AnchorPosX, -1440f, 0f, 0.5f, Ease.OutQuad),
+        MenuAnimMigration.ClearExisting(gameObject);
 
-            MenuAnimSeeding.Step("art slide", backgroundImage, MenuAnimProperty.AnchorPosY, -50f, 0.2f, 0.7f, Ease.OutQuint),
-            MenuAnimSeeding.Step("art fade", backgroundImage, MenuAnimProperty.Fade, 0f, 0.2f, 0.45f, Ease.OutQuad),
+        MenuAnimMigration.Add(gameObject, "black panel",
+            new Component[] { blackPanel },
+            MenuAnimMigration.Settings(0f, 0f,
+                move: MenuAnimMigration.Move(MenuMoveAxis.X, -1440f, 0.5f, Ease.OutQuad)),
+            MenuAnimMigration.Settings(0f, 0f,
+                move: MenuAnimMigration.Move(MenuMoveAxis.X, -1440f, 0.5f, Ease.OutQuad)));
 
-            // world space on purpose -- this one was written with DOMoveX and an anchored
-            // version would land somewhere else
-            MenuAnimSeeding.Step("scroll slide", scrollCanvasGroup, MenuAnimProperty.WorldMoveX, 850f, 0.5f, 0.5f, Ease.OutQuad),
-            MenuAnimSeeding.Step("scroll fade", scrollCanvasGroup, MenuAnimProperty.Fade, 0f, 0.5f, 0.5f, Ease.OutQuad)
-        };
+        MenuAnimMigration.Add(gameObject, "background art",
+            new Component[] { backgroundImage },
+            MenuAnimMigration.Settings(0.2f, 0f,
+                move: MenuAnimMigration.Move(MenuMoveAxis.Y, -50f, 0.7f, Ease.OutQuint),
+                fade: MenuAnimMigration.Channel(0f, 0.45f, Ease.OutQuad)),
+            MenuAnimMigration.Settings(0f, 0f,
+                move: MenuAnimMigration.Move(MenuMoveAxis.Y, -50f, 0.7f, Ease.OutQuint),
+                fade: MenuAnimMigration.Channel(0f, 0.45f, Ease.OutQuad)));
 
-        // everything leaves at once here, no stagger
-        animateOutSteps = new List<MenuAnimStep>
-        {
-            MenuAnimSeeding.Step("black panel", blackPanel, MenuAnimProperty.AnchorPosX, -1440f, 0f, 0.5f, Ease.OutQuad),
+        // world space X on purpose -- this one was written with DOMoveX, and an anchored
+        // version would slide in from somewhere else entirely
+        MenuAnimMigration.Add(gameObject, "scroll panel",
+            new Component[] { scrollCanvasGroup },
+            MenuAnimMigration.Settings(0.5f, 0f,
+                move: MenuAnimMigration.Move(MenuMoveAxis.X, 850f, 0.5f, Ease.OutQuad, MenuMoveSpace.World),
+                fade: MenuAnimMigration.Channel(0f, 0.5f, Ease.OutQuad)),
+            MenuAnimMigration.Settings(0f, 0f,
+                move: MenuAnimMigration.Move(MenuMoveAxis.X, 850f, 0.5f, Ease.OutQuad, MenuMoveSpace.World),
+                fade: MenuAnimMigration.Channel(0f, 0.5f, Ease.OutQuad)));
 
-            MenuAnimSeeding.Step("art slide", backgroundImage, MenuAnimProperty.AnchorPosY, -50f, 0f, 0.7f, Ease.OutQuint),
-            MenuAnimSeeding.Step("art fade", backgroundImage, MenuAnimProperty.Fade, 0f, 0f, 0.45f, Ease.OutQuad),
-
-            MenuAnimSeeding.Step("scroll slide", scrollCanvasGroup, MenuAnimProperty.WorldMoveX, 850f, 0f, 0.5f, Ease.OutQuad),
-            MenuAnimSeeding.Step("scroll fade", scrollCanvasGroup, MenuAnimProperty.Fade, 0f, 0f, 0.5f, Ease.OutQuad)
-        };
-
-        MenuAnimSeeding.MarkDirty(this);
+        MenuAnimMigration.MarkDirty(this);
+        Debug.Log("[SettingsMenu] >> migrated to 3 transition modules.");
     }
 }

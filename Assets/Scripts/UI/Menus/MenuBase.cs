@@ -1,20 +1,20 @@
 using UnityEngine;
 using DG.Tweening;
 using System;
-using System.Collections.Generic;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 // written by andy
-// rebuilt as a data driven animator by Claude Opus 5
-// the base class for all menu animations
+// animation moved out into attachable modules by Claude Opus 5
+// the base class for all menus
 //
-// menus used to each hand write their own AnimateIn/AnimateOut sequences plus a pile of
-// blackPanelDefPos style fields to remember where everything started. that was the same
-// ~120 lines three times over. now the animation is a list of MenuAnimSteps in the inspector
-// and this class does the sequencing, the caching and the resetting for everyone.
+// this no longer knows anything about HOW a menu animates. it collects whatever
+// IMenuAnimation modules are attached, tells them to play, and waits for the slowest one --
+// the same composition pattern MenuInteractable uses with IMenuFeedback[], just with
+// completion callbacks since animations take time.
 //
-// each menu keeps its own subclass so its original animation can be seeded from a context
-// menu -- see MainMenu/SettingsMenu/CreditsMenu.
+// so: to give a menu an animation, add a MenuAnim_Transition to it. to take it away, remove
+// the component. to invent a new kind, write a class implementing IMenuAnimation. nothing in
+// here changes either way.
 public class MenuBase : MonoBehaviour
 {
     [SerializeField]
@@ -27,16 +27,17 @@ public class MenuBase : MonoBehaviour
     [SerializeField] protected CanvasGroup cg;
 
     [Header("animation")]
-    [SerializeField, Tooltip("plays when the menu opens. values are where things come FROM")]
-    protected List<MenuAnimStep> animateInSteps = new();
-    [SerializeField, Tooltip("plays when the menu closes. values are where things go TO")]
-    protected List<MenuAnimStep> animateOutSteps = new();
-    [SerializeField, Tooltip("fallback fade time when a menu has no steps set up yet")]
+    [SerializeField, Tooltip("fade time used only when no IMenuAnimation modules are attached")]
     protected float fallbackFadeDuration = 0.2f;
 
-    // whatever the animated elements looked like in the scene before anything tweened them.
-    // captured automatically so no menu has to keep its own defPos fields any more
-    private List<TargetSnapshot> snapshots = new();
+    [Header("events")]
+    [SerializeField, Tooltip("fires once this menu has finished opening and is taking input")]
+    private UnityEvent onMenuOpenedEvent;
+    [SerializeField, Tooltip("fires as this menu starts closing, before it animates out")]
+    private UnityEvent onMenuClosedEvent;
+
+    // everything attached that wants to animate when this menu opens or closes
+    private IMenuAnimation[] animations;
 
     protected GameControls Controls => GameInput.Controls;
 
@@ -44,9 +45,9 @@ public class MenuBase : MonoBehaviour
     {
         if (cg == null)
         {
-            // GetComponentInChildren would happily grab a CanvasGroup from deep inside the
-            // menu (on the settings screen it picked up the scroll area's one), and then
-            // cg.interactable would be gating on the wrong thing. only accept our own.
+            // deliberately GetComponent and not GetComponentInChildren -- the latter would
+            // happily grab a CanvasGroup from deep inside the menu (on the settings screen it
+            // picked up the scroll area's), and then cg.interactable gated the wrong thing
             cg = GetComponent<CanvasGroup>();
         }
 
@@ -57,7 +58,8 @@ public class MenuBase : MonoBehaviour
                 $"added. assign it in the inspector to silence this.");
         }
 
-        CacheAnimatedTargets();
+        // includeInactive so a module sitting on a hidden child still gets found
+        animations = GetComponentsInChildren<IMenuAnimation>(includeInactive: true);
     }
 
     protected virtual void Update()
@@ -68,9 +70,9 @@ public class MenuBase : MonoBehaviour
         }
     }
 
-    // note: the old version enabled/disabled the Battle map here. that's gone now the controls
-    // are shared -- whichever menu happened to close last would have switched input off for
-    // everything else. GameInput keeps the map enabled and cg.interactable does the gating.
+    // note: the battle map used to get enabled/disabled here. that's gone now the controls are
+    // shared -- whichever menu closed last would have switched input off for everything else.
+    // GameInput keeps the map enabled and cg.interactable does the gating.
 
 
     // getters vvvvvvv (wow i'm being such a goody two shoes by following what CS1420 taught me)
@@ -90,14 +92,19 @@ public class MenuBase : MonoBehaviour
 
     /// <summary>
     /// Called by <c>MenuManager</c> once this menu has finished animating in and is taking input.
-    /// Override for anything that should only run while the menu is actually up.
     /// </summary>
-    public virtual void OnMenuOpened() { }
+    public virtual void OnMenuOpened()
+    {
+        onMenuOpenedEvent?.Invoke();
+    }
 
     /// <summary>
     /// Called by <c>MenuManager</c> as this menu starts closing, before it animates out.
     /// </summary>
-    public virtual void OnMenuClosed() { }
+    public virtual void OnMenuClosed()
+    {
+        onMenuClosedEvent?.Invoke();
+    }
 
 
     // animation  ===========================================================================
@@ -111,9 +118,13 @@ public class MenuBase : MonoBehaviour
         transform.DOKill();
         cg.DOKill();
 
-        foreach (TargetSnapshot snapshot in snapshots)
+        // can be called before Awake has run if something resets a menu very early
+        if (animations != null)
         {
-            snapshot.Restore();
+            foreach (IMenuAnimation animation in animations)
+            {
+                animation.ResetState();
+            }
         }
 
         if (resetAlpha)
@@ -126,9 +137,10 @@ public class MenuBase : MonoBehaviour
 
         cg.gameObject.SetActive(true);
 
-        if (animateInSteps.Count == 0)
+        if (animations.Length == 0)
         {
-            // nothing authored yet -- fall back to the plain fade this class always did
+            // no modules attached -- fall back to the plain fade this class always did, so a
+            // menu without an animation still appears rather than popping in
             cg.alpha = 0;
             cg.DOFade(1, fallbackFadeDuration).SetUpdate(true)
                 .OnComplete(() => onComplete?.Invoke());
@@ -136,12 +148,12 @@ public class MenuBase : MonoBehaviour
         }
 
         cg.alpha = 1;
-        PlaySteps(animateInSteps, isEntering: true, onComplete);
+        PlayAll(isEntering: true, onComplete);
     }
 
     public virtual void AnimateOut(Action onComplete)
     {
-        if (animateOutSteps.Count == 0)
+        if (animations.Length == 0)
         {
             cg.DOFade(0, fallbackFadeDuration).SetUpdate(true).OnComplete(() =>
             {
@@ -151,115 +163,29 @@ public class MenuBase : MonoBehaviour
             return;
         }
 
-        PlaySteps(animateOutSteps, isEntering: false, onComplete);
+        PlayAll(isEntering: false, onComplete);
     }
 
-    // turns a step list into one sequence. this is the bit that used to be copy pasted into
-    // every menu as a wall of sequence.Insert calls
-    private void PlaySteps(List<MenuAnimStep> steps, bool isEntering, Action onComplete)
+    // runs every module and fires onComplete when the LAST one reports back.
+    // counted rather than timed, because modules can't know each other's length
+    private void PlayAll(bool isEntering, Action onComplete)
     {
-        Sequence sequence = DOTween.Sequence().SetUpdate(true);
+        int remaining = animations.Length;
 
-        foreach (MenuAnimStep step in steps)
+        void ReportDone()
         {
-            Tween tween = step.CreateTween(isEntering);
+            remaining--;
 
-            if (tween != null)
-            {
-                sequence.Insert(step.delay, tween);
-            }
+            if (remaining <= 0)
+                onComplete?.Invoke();
         }
 
-        sequence.OnComplete(() => onComplete?.Invoke());
-    }
-
-
-    // target caching  ======================================================================
-
-    // walks both step lists and remembers the starting state of everything they touch.
-    // replaces the per menu "blackPanelDefPos = blackPanel.anchoredPosition" bookkeeping
-    private void CacheAnimatedTargets()
-    {
-        snapshots.Clear();
-
-        HashSet<Component> seen = new();
-
-        CacheFrom(animateInSteps, seen);
-        CacheFrom(animateOutSteps, seen);
-    }
-
-    private void CacheFrom(List<MenuAnimStep> steps, HashSet<Component> seen)
-    {
-        foreach (MenuAnimStep step in steps)
+        foreach (IMenuAnimation animation in animations)
         {
-            if (step.target == null || seen.Contains(step.target))
-                continue;
-
-            seen.Add(step.target);
-            snapshots.Add(new TargetSnapshot(step.target));
-        }
-    }
-
-    // everything we need to undo any of the MenuAnimProperty tweens on one object
-    private class TargetSnapshot
-    {
-        private readonly Component target;
-        private readonly RectTransform rect;
-        private readonly CanvasGroup canvasGroup;
-        private readonly Graphic graphic;
-
-        private readonly Vector2 anchoredPosition;
-        private readonly Vector3 worldPosition;
-        private readonly Vector3 localScale;
-        private readonly float alpha;
-
-        public TargetSnapshot(Component target)
-        {
-            this.target = target;
-
-            rect = target.transform as RectTransform;
-            canvasGroup = target as CanvasGroup;
-            graphic = target as Graphic;
-
-            if (rect != null)
-                anchoredPosition = rect.anchoredPosition;
-
-            worldPosition = target.transform.position;
-            localScale = target.transform.localScale;
-
-            if (canvasGroup != null)
-                alpha = canvasGroup.alpha;
-            else if (graphic != null)
-                alpha = graphic.color.a;
+            if (isEntering)
+                animation.PlayIn(ReportDone);
             else
-                alpha = 1f;
-        }
-
-        public void Restore()
-        {
-            if (target == null)
-                return;
-
-            target.transform.DOKill();
-
-            if (rect != null)
-                rect.anchoredPosition = anchoredPosition;
-            else
-                target.transform.position = worldPosition;
-
-            target.transform.localScale = localScale;
-
-            if (canvasGroup != null)
-            {
-                canvasGroup.DOKill();
-                canvasGroup.alpha = alpha;
-            }
-            else if (graphic != null)
-            {
-                graphic.DOKill();
-                Color color = graphic.color;
-                graphic.color = new Color(color.r, color.g, color.b, alpha);
-            }
+                animation.PlayOut(ReportDone);
         }
     }
 
