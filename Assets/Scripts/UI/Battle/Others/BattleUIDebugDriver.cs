@@ -1,13 +1,16 @@
 using Sh.UIContract;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // written by Claude Opus 5
+// auto-init, faked status bookkeeping and the target controls for BattleDebugPanel added by Claude Opus 5.5
 // test rig for the battle ui. lets us drive every BattleEventType by hand without needing
 // owen's side to work yet.
 //
-// how to use: drop this next to the BattleUIManager, drag some ShrimpStates into the two team
-// lists, enter play mode, then right click the component header and pick things off the menu.
+// how to use: drop this in the scene, point it at the BattleUIManager, drag some ShrimpStates
+// into the two team lists and enter play mode. then either use the on-screen BattleDebugPanel
+// buttons, or right click the component header and pick things off the menu.
 //
 // it also assigns instanceIDs, since the logic doesn't do that yet and the ui can't tell
 // shrimp apart without them. delete that bit once owen's assigning them properly.
@@ -16,6 +19,10 @@ public class BattleUIDebugDriver : MonoBehaviour
     [Header("refs")]
     [SerializeField] private BattleUIManager uiManager;
 
+    [Header("setup")]
+    [SerializeField, Tooltip("initialize the fake battle by itself a frame after play starts")]
+    private bool initializeOnStart = true;
+
     [Header("fake teams")]
     [SerializeField] private List<ShrimpState> playerTeam = new();
     [SerializeField] private List<ShrimpState> enemyTeam = new();
@@ -23,6 +30,9 @@ public class BattleUIDebugDriver : MonoBehaviour
     [Header("fake event values")]
     [SerializeField] private int fakeDamage = 12;
     [SerializeField] private int fakeHeal = 8;
+    [SerializeField, Tooltip("what StatusApplied puts on the target. the logic normally does " +
+        "the adding, so the driver fakes that part too")]
+    private StatusDefinition debugStatus;
     [SerializeField, Tooltip("which shrimp events get pointed at. 0 = first on the team")]
     private int targetIndex = 0;
     [SerializeField] private bool targetEnemy = false;
@@ -33,6 +43,19 @@ public class BattleUIDebugDriver : MonoBehaviour
         {
             uiManager = GetComponent<BattleUIManager>();
         }
+    }
+
+    private IEnumerator Start()
+    {
+        if (!initializeOnStart)
+            yield break;
+
+        // wait a frame. ShrimpState.Start sets its hp and swaps in a fresh statuses list, and
+        // the ui keeps a live reference to that list -- initializing before it runs would
+        // leave the ui watching a list nothing ever writes to
+        yield return null;
+
+        InitializeFakeBattle();
     }
 
     /// <summary>
@@ -47,8 +70,8 @@ public class BattleUIDebugDriver : MonoBehaviour
 
         // TEMP: the logic never sets instanceID, so nothing in the ui can tell shrimp apart.
         // stamping the ids the contract's comments describe (shrimp.player.1 / shrimp.enemy.3)
-        AssignInstanceIds(playerTeam, "shrimp.player.");
-        AssignInstanceIds(enemyTeam, "shrimp.enemy.");
+        PrepareTeam(playerTeam, "shrimp.player.");
+        PrepareTeam(enemyTeam, "shrimp.enemy.");
 
         List<ShrimpState> everyone = new();
         everyone.AddRange(playerTeam);
@@ -61,7 +84,9 @@ public class BattleUIDebugDriver : MonoBehaviour
             $"{enemyTeam.Count} enemy shrimp.");
     }
 
-    private static void AssignInstanceIds(List<ShrimpState> team, string prefix)
+    // stamps the ids and puts everyone back to a fresh battle (full hp, no statuses), so
+    // initializing again mid-test actually starts over
+    private static void PrepareTeam(List<ShrimpState> team, string prefix)
     {
         for (int i = 0; i < team.Count; i++)
         {
@@ -75,6 +100,13 @@ public class BattleUIDebugDriver : MonoBehaviour
             if (team[i].statuses == null)
             {
                 team[i].statuses = new List<AppliedStatus>();
+            }
+
+            team[i].statuses.Clear();
+
+            if (team[i].definition != null)
+            {
+                team[i].currentHP = team[i].definition.maxHP;
             }
         }
     }
@@ -95,59 +127,100 @@ public class BattleUIDebugDriver : MonoBehaviour
         });
     }
 
+    // hp lives on the ShrimpState, same as in the real logic. NOT read back off the ui's
+    // cache -- that only catches up as each event drains, so two hits queued back to back
+    // would both be worked out from the same starting hp
+
     [ContextMenu("Events/TakeDamage")]
     public void FireTakeDamage()
     {
-        UIShrimpState shrimp = GetTargetShrimp();
-        int currentHP = shrimp != null ? shrimp.currentHP : fakeDamage * 3;
+        ShrimpState target = GetTargetState();
+        int finalHP = 0;
+
+        if (target != null)
+        {
+            target.currentHP = Mathf.Max(0, target.currentHP - fakeDamage);
+            finalHP = target.currentHP;
+        }
 
         Queue(new BattleEvent
         {
             eventType = BattleEventType.TakeDamage,
             sourceId = GetTargetId(),
             deltaValue = fakeDamage,
-            finalValue = Mathf.Max(0, currentHP - fakeDamage)
+            finalValue = finalHP
         });
     }
 
     [ContextMenu("Events/Heal")]
     public void FireHeal()
     {
-        UIShrimpState shrimp = GetTargetShrimp();
-        int currentHP = shrimp != null ? shrimp.currentHP : 0;
-        int maxHP = shrimp != null ? shrimp.maxHP : fakeHeal * 4;
+        ShrimpState target = GetTargetState();
+        int finalHP = 0;
+
+        if (target != null)
+        {
+            int maxHP = target.definition != null ? target.definition.maxHP : target.currentHP + fakeHeal;
+            target.currentHP = Mathf.Min(maxHP, target.currentHP + fakeHeal);
+            finalHP = target.currentHP;
+        }
 
         Queue(new BattleEvent
         {
             eventType = BattleEventType.Heal,
             sourceId = GetTargetId(),
             deltaValue = fakeHeal,
-            finalValue = Mathf.Min(maxHP, currentHP + fakeHeal)
+            finalValue = finalHP
         });
     }
 
 
     // statuses  ============================================================================
 
+    // the logic changes the shrimp's status list BEFORE it reports the change, and the ui
+    // reads that list live. so these two do the same: edit the list, then send the event
+
     [ContextMenu("Events/StatusApplied")]
     public void FireStatusApplied()
     {
+        ShrimpState target = GetTargetState();
+
+        if (target != null && debugStatus != null)
+        {
+            target.statuses ??= new List<AppliedStatus>();
+            target.statuses.Add(new AppliedStatus(debugStatus));
+        }
+        else
+        {
+            Debug.LogWarning("[BattleUIDebugDriver] >> no debugStatus or no target, so nothing " +
+                "was put on the shrimp. the event still goes out but there's no icon to show.");
+        }
+
         Queue(new BattleEvent
         {
             eventType = BattleEventType.StatusApplied,
             sourceId = GetTargetId(),
-            strings = new List<string> { GetFirstStatusId() }
+            strings = new List<string> { debugStatus != null ? debugStatus.statusID : "" }
         });
     }
 
     [ContextMenu("Events/StatusRemoved")]
     public void FireStatusRemoved()
     {
+        ShrimpState target = GetTargetState();
+        AppliedStatus removed = null;
+
+        if (target != null && target.statuses != null && target.statuses.Count > 0)
+        {
+            removed = target.statuses[target.statuses.Count - 1];
+            target.statuses.RemoveAt(target.statuses.Count - 1);
+        }
+
         Queue(new BattleEvent
         {
             eventType = BattleEventType.StatusRemoved,
             sourceId = GetTargetId(),
-            strings = new List<string> { GetFirstStatusId() }
+            strings = new List<string> { removed != null && removed.status != null ? removed.status.statusID : "" }
         });
     }
 
@@ -180,11 +253,22 @@ public class BattleUIDebugDriver : MonoBehaviour
             eventType = BattleEventType.SwitchingShrimp,
             sourceId = GetIdAt(team, next)
         });
+
+        // follow whoever just came out, so the next events hit the shrimp that's on screen
+        // and pressing this again keeps cycling instead of switching to the same one
+        targetIndex = next;
     }
 
     [ContextMenu("Events/CharacterDied")]
     public void FireCharacterDied()
     {
+        ShrimpState target = GetTargetState();
+
+        if (target != null)
+        {
+            target.currentHP = 0;
+        }
+
         Queue(new BattleEvent
         {
             eventType = BattleEventType.CharacterDied,
@@ -281,6 +365,35 @@ public class BattleUIDebugDriver : MonoBehaviour
     }
 
 
+    // target controls  =====================================================================
+    // so the on-screen debug panel can repoint events without opening the inspector
+
+    [ContextMenu("Target/Toggle player or enemy")]
+    public void ToggleTargetSide()
+    {
+        targetEnemy = !targetEnemy;
+
+        List<ShrimpState> team = targetEnemy ? enemyTeam : playerTeam;
+        targetIndex = Mathf.Clamp(targetIndex, 0, Mathf.Max(0, team.Count - 1));
+    }
+
+    [ContextMenu("Target/Next shrimp on team")]
+    public void CycleTargetIndex()
+    {
+        List<ShrimpState> team = targetEnemy ? enemyTeam : playerTeam;
+        targetIndex = team.Count > 0 ? (targetIndex + 1) % team.Count : 0;
+    }
+
+    /// <summary>
+    /// Who events are currently pointed at, e.g. <c>enemy #2 (shrimp.enemy.2)</c>.
+    /// </summary>
+    public string GetTargetDescription()
+    {
+        string id = GetTargetId();
+        return $"{(targetEnemy ? "enemy" : "player")} #{targetIndex + 1} ({id ?? "nobody"})";
+    }
+
+
     // helpers  =============================================================================
 
     private void Queue(BattleEvent evt)
@@ -337,14 +450,14 @@ public class BattleUIDebugDriver : MonoBehaviour
         return null;
     }
 
-    private string GetFirstStatusId()
+    // the logic-side object behind the current target, for faking the logic's own bookkeeping
+    private ShrimpState GetTargetState()
     {
-        UIShrimpState shrimp = GetTargetShrimp();
+        List<ShrimpState> team = targetEnemy ? enemyTeam : playerTeam;
 
-        if (shrimp == null || shrimp.statusEffects == null || shrimp.statusEffects.Count == 0)
-            return "";
+        if (team == null || targetIndex < 0 || targetIndex >= team.Count)
+            return null;
 
-        AppliedStatus first = shrimp.statusEffects[0];
-        return first != null && first.status != null ? first.status.statusID : "";
+        return team[targetIndex];
     }
 }

@@ -3,7 +3,9 @@ using System.Collections;
 using UnityEngine;
 
 // written by Claude Opus 5
+// battle-start binding added by Claude Opus 5.5
 // handles shrimp coming and going -- someone getting knocked out, and someone else stepping in.
+// also puts the starting shrimp on the info displays when the battle is initialized.
 //
 // note that SwitchingShrimp is a RESULT, not a request. by the time we see it the swap has
 // already happened in the logic and sourceId is whoever is now out. the player asking to
@@ -23,6 +25,48 @@ public class RosterHandler : BattleEventHandlerBase
         BattleEventType.SwitchingShrimp,
         BattleEventType.CharacterDied
     };
+
+    private void OnEnable()
+    {
+        if (uiManager != null)
+        {
+            uiManager.BattleInitialized += BindStartingShrimp;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (uiManager != null)
+        {
+            uiManager.BattleInitialized -= BindStartingShrimp;
+        }
+    }
+
+    /// <summary>
+    /// Points both displays at whoever starts out. Instant and silent on purpose -- this is
+    /// the scene being set, not something happening in the battle.
+    /// </summary>
+    private void BindStartingShrimp()
+    {
+        if (infoDisplays == null)
+        {
+            Debug.LogWarning("[RosterHandler] >> no infoDisplays assigned, can't show the starting shrimp.");
+            return;
+        }
+
+        BindSide(BattleSide.Player);
+        BindSide(BattleSide.Enemy);
+    }
+
+    private void BindSide(BattleSide side)
+    {
+        ShrimpInfoDisplay display = infoDisplays.GetBySide(side);
+
+        if (display != null)
+        {
+            display.Bind(uiManager.GetActiveShrimp(side));
+        }
+    }
 
     protected override IEnumerator Handle(BattleEvent evt)
     {

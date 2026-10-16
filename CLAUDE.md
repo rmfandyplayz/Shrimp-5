@@ -46,8 +46,38 @@ necessary because Unity only regenerates that project when the editor has focus,
 explicit `<Compile Include>` list misses scripts you just added (phantom "type not found"
 errors on your own new code) and still lists ones you just deleted (CS2001).
 
-Everything else (play mode, scene wiring, verifying animations) requires the Unity editor and is
-the user's job. Say so plainly rather than claiming a change is verified when it isn't.
+**As of 2026-10-16 compilecheck is broken:** `dotnet build` fails with `MSB3107` on the
+`Assembly-CSharp-firstpass.csproj` project reference before compiling anything. It's in
+`Tools/`, so ask before fixing it. Until then, use the live editor's compiler (below).
+
+### Driving the editor (Unity CLI)
+
+The project has the `com.unity.pipeline` package, so when Andy has Unity open the `unity` CLI
+(`/opt/homebrew/bin/unity`) can drive the live editor: edit scenes and prefabs, compile, enter
+play mode, run C#, and capture the game view. Check `unity status` first. **Prefer this over
+hand-editing `.unity`/`.prefab` YAML** whenever the editor is reachable. Things that bit last time:
+
+- Pass `--caller plugin --skill unity-cli` on every `unity command`.
+- `eval`/`eval_file` wrap your code in a method body, so `using` directives don't compile. For
+  anything big, use `run_script` with a `public static class` and a static entry method; the
+  file can live in the scratchpad. Use `--dry_run true` first to get compile diagnostics.
+- After editing `.cs` files, call `AssetDatabase.Refresh()` through eval, then poll
+  `recompile_status`. `recompile` alone says "up_to_date" because the editor hasn't noticed
+  the files changed.
+- `editor_play` sent during a domain reload is silently dropped, and `eval` then runs against
+  the **edit-mode** scene and can dirty it. Poll `Application.isPlaying` before poking anything.
+- Play mode barely ticks while Unity isn't the focused window. `Application.runInBackground =
+  true` fixes that, **but in the editor it writes `PlayerSettings.runInBackground` and gets
+  saved into `ProjectSettings.asset`**. The same goes for `Time.timeScale` → `TimeManager.asset`.
+  Put both back afterwards (`PlayerSettings.runInBackground = false`, `Time.timeScale = 1`) and
+  check `git status` for stray `ProjectSettings/` changes. Playing also grows the dynamic TMP
+  font's atlas (`Assets/Fonts/*.asset`); `git checkout` that if you didn't mean to change it.
+- `capture_game_view --save_path` resolves relative to `Assets/` and refuses paths outside the
+  project, so it creates real assets. Copy the screenshot out and `AssetDatabase.DeleteAsset`
+  the folder afterwards.
+
+Scene wiring and play mode are verifiable this way. Still say plainly what you did *not*
+check (feel, animation, anything only visible when you actually play).
 
 ## Architecture
 
@@ -83,6 +113,19 @@ Three tiers (documented on the wiki, see below):
 3. **Minions** (`UI/Battle/MinionScripts/`) — do the actual visual work and know nothing about
    `BattleEvent`. `CommandBox` is a coordinator over `ICommandBoxPanel` implementations;
    `ShrimpInfoDisplay` ×2 sits behind `InfoDisplayGroup`, which routes an id to the right display.
+
+The logic never sends a "battle started" event, so `BattleUIManager` raises a plain C# event,
+`BattleInitialized`, at the end of `InitializeBattle`. `RosterHandler` listens for it and binds
+both info displays to the starting shrimp. Without it the displays stay blank until the first
+`SwitchingShrimp`.
+
+**Where the battle UI lives.** The real UI is in two prefabs, `Assets/Prefabs/UI (Canvas).prefab`
+(command box panels, info displays) and `Assets/Prefabs/BattleUIManager.prefab` (manager,
+handlers, `BattleUIInput`). Right now only `UITestNoTouchie.unity` uses them. A prefab can't
+reference objects in another prefab, so the handler→`CommandBox`/`InfoDisplayGroup` and
+`BattleUIInput`→`CommandBox` refs are **scene overrides** and need re-wiring in any new scene.
+Debug-only pieces (`BattleDebug` with `BattleUIDebugDriver` + fake `ShrimpState` teams,
+`DebugCanvas` with `BattleDebugPanel`) are scene objects and must not go into the prefabs.
 
 **Animation seam:** every minion mutator takes an `Action onComplete` and handlers wait via
 `yield return WaitFor(done => display.SetHealth(hp, max, done))`. Today the callbacks fire
@@ -158,16 +201,19 @@ through the `UIShrimpState` that already holds references to them.
 page is the live list** — read it before starting anything, and update it when something changes.
 It is split by owner (Andy's scene work / needs Owen / deliberately punted).
 
-The short version, as of 2026-08-30:
+The short version, as of 2026-10-16:
 
 - **Menus are done.** Animation modules migrated and verified working.
-- **Keybinding is code-complete**, and partly wired: all 8 `KeybindRow`s have their action set and
-  `KeybindEditSession` sits on `SettingsMenu`. Only `bindingText` is unassigned, so rows work but
-  display nothing.
-- **The battle UI is scripts-only.** All 6 handlers are in `UITestNoTouchie.unity`, but the minion
-  scripts aren't in the scene yet and the handler→minion refs are unset. Note the
-  `BattleUIManager.handlerScripts` list is currently size 5 with every entry pointing at the same
-  `CommandBoxHandler`, so only `ChoosingMove`/`LogMessage` are actually dispatched.
+- **Keybinding is code-complete**, and partly wired (last checked 2026-08-30): all 8 `KeybindRow`s
+  have their action set and `KeybindEditSession` sits on `SettingsMenu`. Only `bindingText` is
+  unassigned, so rows work but display nothing. **Andy is working on the settings screen himself;
+  don't touch it until he hands it back.**
+- **The battle UI is wired and runs** in `UITestNoTouchie.unity` as an ugly debug layout (Andy
+  does the visuals). All 6 handlers dispatch (`handlerScripts` has 6 distinct entries), every
+  minion exists and is referenced, and a play-mode pass through every event type ran clean.
+  Since the logic can't drive a battle yet, `BattleUIDebugDriver` auto-initializes a fake 3v3
+  and `BattleDebugPanel` gives it a keyboard-navigable button grid. The panel also reselects a
+  button whenever the selection falls off the screen.
 - **`ShrimpState.instanceID` is still never assigned** (always null), so every event's `sourceId`
   is null and the UI can't tell shrimp apart. This blocks most of the battle UI and is Owen's to
   fix. The UI derives player/enemy by parsing the intended `shrimp.player.1` format

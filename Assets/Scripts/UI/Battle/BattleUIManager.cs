@@ -5,6 +5,7 @@ using System.Collections;
 
 // written by andy
 // cache/lookup additions and the sourceId sync fix by Claude Opus 5
+// BattleInitialized hook (so the info displays get bound at battle start) by Claude Opus 5.5
 // the "master script" that manages smaller, more specialized ui scripts
 // has an "event queue" that processes ui changes in order
 public class BattleUIManager : MonoBehaviour, IBattleUI
@@ -25,6 +26,12 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
     private string activePlayerId;
     private string activeEnemyId;
 
+    /// <summary>
+    /// Fires at the end of <c>InitializeBattle</c>, once the cache is filled and the starting
+    /// shrimp are known. It isn't a BattleEvent because the logic never sends one -- without
+    /// this, nothing would point the info displays at anyone until the first switch.
+    /// </summary>
+    public event System.Action BattleInitialized;
 
 
     private void Awake()
@@ -74,6 +81,8 @@ public class BattleUIManager : MonoBehaviour, IBattleUI
         // find on each side. a SwitchingShrimp event will correct this the moment one arrives
         activePlayerId = GetFirstIdOnSide(BattleSide.Player);
         activeEnemyId = GetFirstIdOnSide(BattleSide.Enemy);
+
+        BattleInitialized?.Invoke();
     }
 
     /// <summary>
